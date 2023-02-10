@@ -1,0 +1,161 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Luminosity.IO;
+using System;
+
+public class PlayerCam : MonoBehaviour
+{
+    public int state;
+
+    public float xSensitivity;
+    public float ySensitivity;
+    public float heightSpeed;
+    public float distanceSpeed;
+
+    public GameObject crosshair;
+
+    float cameraHeight;
+    float cameraDistance;
+    float currHeight;
+    float currDistance;
+
+    public GameObject body;
+    Transform tf;
+
+    float xRotation;
+    float yRotation;
+
+    void Start()
+    {
+        tf = body.transform;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
+        if (state == 0)
+        {
+            cameraDistance = 2.0f;
+        }
+        else if (state == 1)
+        {
+            cameraDistance = 0.3f;
+        }
+        currHeight = cameraHeight;
+        currDistance = cameraDistance;
+    }
+
+    void Update()
+    {
+        MouseLockState();
+        MouseControl();
+        MoveCam();
+        MoveCrosshair();
+    }
+    
+    void MouseLockState()
+    {
+        if (!InputManager.GetButton("Slash"))
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+    }
+
+    void MouseControl()
+    {
+        if (!InputManager.GetButton("Slash"))
+        {
+            float mouseX = InputManager.GetAxisRaw("Mouse X") * Time.deltaTime * xSensitivity;
+            float mouseY = InputManager.GetAxisRaw("Mouse Y") * Time.deltaTime * ySensitivity;
+            float xMax = PlayerMovement.sliding ? 15f : 75f;
+
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -60f, xMax);
+            yRotation += mouseX;
+
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+            if (!PlayerMovement.onWall)
+                tf.rotation = Quaternion.Euler(tf.rotation.eulerAngles.x, yRotation, tf.rotation.eulerAngles.z);
+        }
+    }
+
+    void MoveCam()
+    {
+        Action<float, float> UpdateCurrLoc = (distance, height) =>
+        {
+            float dis = distanceSpeed * Time.deltaTime;
+            float hei = heightSpeed * Time.deltaTime;
+            if (currDistance < distance)
+            {
+                currDistance += dis;
+                if (currDistance > distance)
+                    currDistance = distance;
+            }
+            else if (currDistance > distance)
+            {
+                currDistance -= dis;
+                if (currDistance < distance)
+                    currDistance = distance;
+            }
+            if (currHeight < height)
+            {
+                currHeight += hei;
+                if (currHeight > height)
+                    currHeight = height;
+            }
+            else if (currHeight > height)
+            {
+                currHeight -= hei;
+                if (currHeight < height)
+                    currHeight = height;
+            }
+        };
+
+        if (state == 0)
+        {
+            float distance = cameraDistance;
+            float height = cameraHeight;
+            if (PlayerMovement.sliding)
+            {
+                distance += body.GetComponent<CapsuleCollider>().height;
+                height *= 0.5f;
+            }
+            else if (PlayerMovement.crouching)
+            {
+                height *= 0.5f;
+            }
+            UpdateCurrLoc(distance, height);
+            transform.localPosition = tf.localPosition - transform.forward * currDistance + Vector3.up * currHeight;
+        }
+        else if (state == 1)
+        {
+            float distance = cameraDistance;
+            cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
+            if (PlayerMovement.sliding)
+            {
+                distance *= 2f;
+            }
+            UpdateCurrLoc(distance, cameraHeight);
+            transform.localPosition = tf.localPosition + tf.forward * currDistance + tf.up * currHeight;
+        }
+    }
+
+    void MoveCrosshair()
+    {
+        if (InputManager.GetButton("Slash"))
+        {
+            float border = 20f;
+            float pos_x = Mathf.Clamp(InputManager.mousePosition.x, border, Screen.width - border);
+            float pos_y = Mathf.Clamp(InputManager.mousePosition.y, border, Screen.height - border);
+            crosshair.transform.position = new Vector3(pos_x, pos_y, 0f);
+        }
+        else
+        {
+            crosshair.transform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0f);
+        }
+    }
+}
