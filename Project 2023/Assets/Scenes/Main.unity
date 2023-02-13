@@ -730,7 +730,7 @@ Transform:
   m_GameObject: {fileID: 186160309}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2, y: 3, z: 25}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1474491661}
@@ -3529,9 +3529,9 @@ MonoBehaviour:
   controlPosition: {x: -1, y: 0, z: 2}
   controlCD: 0.5
   controlDistance: 50
-  moveSpeed: 5
+  moveSpeed: 8
   throwSpeed: 20
-  throwAngle: 30
+  throwAngle: 10
   numPoints: 5
 --- !u!1 &1084126424
 GameObject:
@@ -4563,7 +4563,7 @@ MonoBehaviour:
     - m_name: Dash
       m_description: 
       m_bindings:
-      - m_positive: 113
+      - m_positive: 304
         m_negative: 0
         m_deadZoneType: 0
         m_deadZone: 0
@@ -6265,8 +6265,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.4
-  m_Height: 1.9
+  m_Radius: 0.5
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!54 &1725540783
