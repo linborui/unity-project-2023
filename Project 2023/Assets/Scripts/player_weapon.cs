@@ -25,8 +25,9 @@ public class player_weapon : MonoBehaviour
     public GameObject Base, Tip;
     private Vector3 _base, _tip;
     private Vector3 pos;
+    private Vector3 moveVel;
     private float prevX, prevY;
-    private bool sweaping = false;
+    private bool sweaping = false, swapeDone = false;
     private Quaternion desDeg;
     private Vector3 sweapNormal;
     public void OnTriggerEnter(Collider other)
@@ -59,31 +60,37 @@ public class player_weapon : MonoBehaviour
     void SwapeSword() { 
         float xAxis = InputManager.mousePosition.x;
         float yAxis = InputManager.mousePosition.y;
-        if(InputManager.GetButton("Slash") && !sweaping){
-            float vx = xAxis - prevX, vy = yAxis - prevY;
-            float v = Mathf.Sqrt(vx * vx + vy * vy) * Time.deltaTime;
-            if(v > 0.1f){
-                sweapNormal = Vector3.Cross(new Vector3( vx, vy, 0), new Vector3( 0, 0, 1)).normalized;
-                transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(vx, -vy) * 180 / Mathf.PI);
-                desDeg = Quaternion.AngleAxis(-179, sweapNormal) * transform.localRotation;
-                sweaping = true;
+        if(InputManager.GetButton("Slash")){
+            transform.localPosition = new Vector3(xAxis / Screen.width - 0.5f, yAxis / Screen.height - 0.5f, 0.9f);
+            if(!swapeDone){
+                float vx = xAxis - prevX, vy = yAxis - prevY;
+                float v = Mathf.Sqrt(vx * vx + vy * vy) * Time.deltaTime;
+                if(v > 0.3f){
+                    sweapNormal = Vector3.Cross(new Vector3( vx, vy, 0), new Vector3( 0, 0, 1)).normalized;
+                    transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(vx, -vy) * 180 / Mathf.PI);
+                    desDeg = Quaternion.AngleAxis(-179, sweapNormal) * transform.localRotation;
+                    sweaping = true;
+                }else if(sweaping) swapeDone = true;
+                
             }
         }
-        if(sweaping) {
+        if(swapeDone) {
             //Debug.DrawRay(transform.position, sweapNormal, Color.blue);
             //Debug.Log(desDeg.eulerAngles);
             if(transform.localRotation != desDeg){
-                transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 12f * Time.deltaTime);
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 25f * Time.deltaTime);
                 Debug.Log("rotating");
                 particle.SetActive(true);
             }else{
+                swapeDone = false;
                 sweaping = false;
                 Debug.Log("rotate off");
                 particle.SetActive(false);
             }
         }
-        else
+        else if(!InputManager.GetButton("Slash"))
         {
+            transform.localPosition = Vector3.SmoothDamp(transform.localPosition, new Vector3(0.5f, -0.1f, 0.9f),ref moveVel, 0.1f);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(0f, 0f, 0f), 6f * Time.deltaTime);
         }
         prevX = xAxis;
@@ -251,8 +258,12 @@ public class player_weapon : MonoBehaviour
         }else{
             if(origin.GetComponent<SkinnedMeshRenderer>() != null) origin.GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
             else origin.GetComponent<MeshFilter>().mesh = mesh;
-            
+            //hide the box collider from origin object
+            if(origin.GetComponent<BoxCollider>() != null) origin.GetComponent<BoxCollider>().enabled = false; 
+            if(origin.GetComponent<MeshCollider>() == null) origin.AddComponent<MeshCollider>();
+            //set cooldown for origin
             origin.GetComponent<sliceable>().Sleep();
+
             MeshCollider collider = origin.GetComponent<MeshCollider>();
             collider.sharedMesh = mesh;
             collider.convex = true;
