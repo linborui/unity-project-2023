@@ -128,9 +128,17 @@ public class ObjectControl : MonoBehaviour
 
     void ThrowObject()
     {
+        Vector3 Throw  = cam.transform.forward;
+        RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, controlDistance, -1, QueryTriggerInteraction.Ignore))
+        {
+            var v = (hit.point - controledObject.transform.position).normalized;
+            Throw = new Vector3(v.x, v.y, v.z);
+            Throw = Quaternion.AngleAxis(-throwAngle, cam.transform.right) * Throw;
+        }
         controledObject.GetComponent<Collider>().enabled = true;
         controledObject.GetComponent<Rigidbody>().useGravity = true;
-        controledObject.GetComponent<Rigidbody>().velocity += cam.transform.rotation * Quaternion.Euler(-throwAngle, 0f, 0f)  * Vector3.forward * throwSpeed;
+        controledObject.GetComponent<Rigidbody>().velocity += Throw * throwSpeed;
         controledObject = null;
         objectState = 0;
     }

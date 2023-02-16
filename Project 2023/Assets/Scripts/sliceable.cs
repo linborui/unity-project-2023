@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class sliceable : MonoBehaviour
 {
+    public bool act = true;
+    
+    public IEnumerator sleep(){
+        act = false;
+        yield return new WaitForSeconds(0.1f);
+        act = true;
+    }
+    public void Sleep(){
+        StartCoroutine(sleep());
+    }
     // Start is called before the first frame update
     void Start()
     {

@@ -31,14 +31,14 @@ public class player_weapon : MonoBehaviour
     private Vector3 sweapNormal;
     public void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<sliceable>() == null) return; 
+        if(other.GetComponent<sliceable>() == null || !other.GetComponent<sliceable>().act) return; 
 
         _tip = Tip.transform.position;
         _base = Base.transform.position;
     }
     public void OnTriggerExit(Collider other)
     {
-        if(other.GetComponent<sliceable>() == null) return; 
+        if(other.GetComponent<sliceable>() == null || !other.GetComponent<sliceable>().act) return; 
         if(!InputManager.GetButton("Slash")) return;
 
         Vector3 slide1 = Tip.transform.position - _base;
@@ -70,8 +70,8 @@ public class player_weapon : MonoBehaviour
             }
         }
         if(sweaping) {
-            Debug.DrawRay(transform.position, sweapNormal, Color.blue);
-            Debug.Log(desDeg.eulerAngles);
+            //Debug.DrawRay(transform.position, sweapNormal, Color.blue);
+            //Debug.Log(desDeg.eulerAngles);
             if(transform.localRotation != desDeg){
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 12f * Time.deltaTime);
                 Debug.Log("rotating");
@@ -222,33 +222,44 @@ public class player_weapon : MonoBehaviour
         e2.mesh.triangles   = e2.triangles.ToArray();
     }
 
-    private GameObject createObject(GameObject origin, Mesh mesh, Vector3 transNormal){
-        GameObject obj = new GameObject();
-        MeshCollider collider = obj.AddComponent<MeshCollider>();
-        obj.AddComponent<sliceable>();
-        obj.AddComponent<MeshFilter>();
-        obj.AddComponent<MeshRenderer>();
-        var rig = obj.AddComponent<Rigidbody>();
-        Material[] origin_met;
-        
-        if(origin.GetComponent<MeshRenderer>() != null) origin_met = origin.GetComponent<MeshRenderer>().materials;
-        else origin_met = origin.GetComponent<SkinnedMeshRenderer>().materials;
-        
-        obj.GetComponent<MeshFilter>().mesh = mesh;
-        obj.GetComponent<MeshRenderer>().materials = origin_met;
-        collider.sharedMesh = mesh;
-        collider.convex = true;
-        rig.useGravity = true;
-        
-        obj.transform.localScale = origin.transform.localScale;
-        obj.transform.rotation = origin.transform.rotation;
-        obj.transform.position = origin.transform.position;
-        obj.transform.tag = origin.tag;
+    private void createObject(GameObject origin, Mesh mesh, Vector3 transNormal, bool set){
+        Rigidbody rigBody;
+        if(set){
+            GameObject obj = new GameObject();
+            MeshCollider collider = obj.AddComponent<MeshCollider>();
+            obj.AddComponent<sliceable>();
+            obj.AddComponent<MeshFilter>();
+            obj.AddComponent<MeshRenderer>();
+            var rig = obj.AddComponent<Rigidbody>();
+            Material[] origin_met;
+            
+            if(origin.GetComponent<MeshRenderer>() != null) origin_met = origin.GetComponent<MeshRenderer>().materials;
+            else origin_met = origin.GetComponent<SkinnedMeshRenderer>().materials;
+            
+            obj.GetComponent<MeshFilter>().mesh = mesh;
+            obj.GetComponent<MeshRenderer>().materials = origin_met;
+            collider.sharedMesh = mesh;
+            collider.convex = true;
+            rig.useGravity = true;
+            
+            obj.transform.localScale = origin.transform.localScale;
+            obj.transform.rotation = origin.transform.rotation;
+            obj.transform.position = origin.transform.position;
+            obj.transform.tag = origin.tag;
 
-        Rigidbody rigBody = obj.GetComponent<Rigidbody>();
-        Vector3 newNormal = transNormal + Vector3.up * 1f;
+            rigBody = obj.GetComponent<Rigidbody>();
+        }else{
+            if(origin.GetComponent<SkinnedMeshRenderer>() != null) origin.GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
+            else origin.GetComponent<MeshFilter>().mesh = mesh;
+            
+            origin.GetComponent<sliceable>().Sleep();
+            MeshCollider collider = origin.GetComponent<MeshCollider>();
+            collider.sharedMesh = mesh;
+            collider.convex = true;
+            rigBody = origin.GetComponent<Rigidbody>();
+        }
+        Vector3 newNormal = (Quaternion.FromToRotation(Vector3.up, transNormal) * transform.rotation).eulerAngles * 0.02f;
         rigBody.AddForce(newNormal, ForceMode.Impulse);
-        return obj;
     }
 
     public void slice(GameObject a, Plane plane, Vector3 transNormal){
@@ -313,8 +324,8 @@ public class player_weapon : MonoBehaviour
         joinPointsAlongPlane(ref positive, ref negative, plane, vertexOnPlane);
         setMesh(ref positive,ref negative);
 
-        createObject(a, positive.mesh, transNormal);
-        createObject(a, negative.mesh, transNormal);
-        Destroy(a);
+        createObject(a, positive.mesh, transNormal, true);
+        createObject(a, negative.mesh, transNormal, false);
+        //Destroy(a);
     }
 }
