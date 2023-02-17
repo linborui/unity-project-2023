@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Luminosity.IO;
@@ -16,6 +18,7 @@ public class Element
         normals     = new List<Vector3>();
         uvs         = new List<Vector2>();
         triangles   = new List<int>();
+        
     }
 }
 
@@ -79,12 +82,12 @@ public class player_weapon : MonoBehaviour
             //Debug.Log(desDeg.eulerAngles);
             if(transform.localRotation != desDeg){
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 25f * Time.deltaTime);
-                Debug.Log("rotating");
+                //Debug.Log("rotating");
                 particle.SetActive(true);
             }else{
                 swapeDone = false;
                 sweaping = false;
-                Debug.Log("rotate off");
+                //Debug.Log("rotate off");
                 particle.SetActive(false);
             }
         }
@@ -152,7 +155,7 @@ public class player_weapon : MonoBehaviour
             }
         }
     }
-
+ 
     private Vector3 GetHalfwayPoint(List<Vector3> vertexOnPlane, out float dis){
         if(vertexOnPlane.Count > 0) {
             Vector3 firstPoint = vertexOnPlane[0], furthestPoint = Vector3.zero;
@@ -173,34 +176,88 @@ public class player_weapon : MonoBehaviour
         }
     }
 
-    private void joinPointsAlongPlane(ref Element pos, ref Element neg, Plane plane, List<Vector3> vertexOnPlane){
-        Vector3 halfway = GetHalfwayPoint(vertexOnPlane, out float distance);
-        
-        for (int i = 0; i < vertexOnPlane.Count; i += 2)
+    private void fillGap(Element e, Element e1, Plane plane, bool face, List<Vector3> vertexOnPlane){
+        List<Vector3> newVertexOnPlane = vertexOnPlane.Where(x => e.vertices.Contains(x)).ToList();
+        //List<Vector3> newVertexOnPlane = vertexOnPlane;
+
+        Vector3 beg = GetHalfwayPoint(newVertexOnPlane, out float distance);;
+
+        for (int i = 0; i < newVertexOnPlane.Count; i += 2)
         {
             Vector3 firstVertex, secondVertex;
 
-            firstVertex = vertexOnPlane[i];
-            secondVertex = vertexOnPlane[i + 1];
+            firstVertex = newVertexOnPlane[i];
+            secondVertex = newVertexOnPlane[(i + 1) % newVertexOnPlane.Count];
 
-            Vector3 normal = computeNormal(halfway, secondVertex, firstVertex);
+            Vector3 normal = computeNormal(beg, secondVertex, firstVertex);
             normal.Normalize();
 
             var direction = Vector3.Dot(normal, plane.normal);
-            Vector3[] vertex1   = {halfway, firstVertex, secondVertex}, vertex2   = {halfway, secondVertex, firstVertex};
+            Vector3[] vertex1   = {beg, firstVertex, secondVertex}, vertex2   = {beg, secondVertex, firstVertex};
             Vector3[] normal1   = {-normal, -normal, -normal}, normal2   = {normal, normal, normal};
             Vector2[] uv        = {Vector2.zero, Vector2.zero, Vector2.zero};
-            if(direction > 0)
-            {   
-                add_meshSide(false, ref pos, ref neg, vertex2, uv, normal1, false, false);
-                add_meshSide(true, ref pos, ref neg, vertex1, uv, normal2, false, false);
-            }
-            else
-            {
-                add_meshSide(false, ref pos, ref neg, vertex1, uv, normal2, false, false);
-                add_meshSide(true, ref pos, ref neg, vertex2, uv, normal1, false, false);
-            }               
+            if(face && direction > 0 || !face && direction < 0){
+                add_mesh(ref e.vertices, ref e.uvs, ref  e.triangles, ref e.normals, vertex1, uv, normal2, false, false);
+                add_mesh(ref e1.vertices, ref e1.uvs, ref  e1.triangles, ref e1.normals, vertex2, uv, normal1, false, false);
+            }else{
+                add_mesh(ref e.vertices, ref e.uvs, ref  e.triangles, ref e.normals, vertex2, uv, normal1, false, false);
+                add_mesh(ref e1.vertices, ref e1.uvs, ref  e1.triangles, ref e1.normals, vertex1, uv, normal2, false, false);  
+            }           
         }
+    }
+
+    //can't use disjoint set to count number of group that are unconnect
+    private int find_boss(ref List<int> boss, int x){
+        if(boss[x] == x) return x;
+        return boss[x] = find_boss(ref boss, boss[x]);
+    }
+
+    private int disjointSet_split(ref Element e, ref List<Element> objs){
+        //Debug.Log(e.vertices.Count);
+        List<int> boss = new List<int>(new int[e.vertices.Count]);
+        Dictionary<int, Element> group = new Dictionary<int, Element>();
+        Dictionary<Vector3, int> samePosPoint = new Dictionary<Vector3, int>();
+        //if model have multiple vertex with same position, we need define there have same boss
+        for(int i = 0; i < boss.Count; ++i){
+            if(samePosPoint.ContainsKey(e.vertices[i])){
+                int v = 0;
+                samePosPoint.TryGetValue(e.vertices[i], out v);
+                boss[i] = v;
+            }else{
+                samePosPoint.Add(e.vertices[i], i);
+                boss[i] = i;
+            }
+        }
+        //union
+        for(int i = 0; i < e.triangles.Count; i += 3){
+            if(find_boss(ref boss, e.triangles[i + 1]) != find_boss(ref boss, e.triangles[i])) boss[find_boss(ref boss, e.triangles[i + 1])] = find_boss(ref boss, e.triangles[i]);
+            if(find_boss(ref boss, e.triangles[i + 2]) != find_boss(ref boss, e.triangles[i + 1])) boss[find_boss(ref boss, e.triangles[i + 2])] = find_boss(ref boss, e.triangles[i + 1]);
+        }
+        for(int j = 0; j < e.vertices.Count; ++j)
+            find_boss(ref boss, j);
+        
+        for(int i = 0; i < e.vertices.Count; ++i)
+            if(!group.ContainsKey(boss[i])) group.Add(boss[i], new Element());
+        if(group.Count == 1){
+            objs.Add(e);
+        }else{
+            Element obj = new Element();
+            for(int j = 0 ; j < e.triangles.Count; j += 3){
+                int key = boss[e.triangles[j]];
+                List<Vector2> uvs = new List<Vector2>();
+                List<Vector3> vertices = new List<Vector3>();
+                List<Vector3> normals = new List<Vector3>();
+                for(int i = 0; i < 3; ++i){
+                    vertices.Add(e.vertices[e.triangles[j + i]]);
+                    uvs.Add(e.uvs[e.triangles[j + i]]);
+                    normals.Add(e.normals[e.triangles[j + i]]);
+                }
+                add_mesh(ref group[key].vertices, ref group[key].uvs, ref group[key].triangles, ref group[key].normals, vertices.ToArray(), uvs.ToArray(), normals.ToArray(), false, false);
+            }
+            foreach(KeyValuePair<int, Element> it in group)
+                objs.Add(it.Value);
+        }
+        return group.Count;
     }
 
     private void add_all(ref List<Vector3> vertices, ref List<Vector2> uvs, ref List<int> triangles, ref List<Vector3> normals, Vector3 vertex, Vector2 uv, Vector3 normal, int index){
@@ -217,36 +274,40 @@ public class player_weapon : MonoBehaviour
             triangles.Insert(i, i);
         }
     }
-
-    private void setMesh(ref Element e1, ref Element e2){
-        e1.mesh.vertices    = e1.vertices.ToArray();
-        e1.mesh.uv          = e1.uvs.ToArray();
-        e1.mesh.normals     = e1.normals.ToArray();
-        e1.mesh.triangles   = e1.triangles.ToArray();
-        e2.mesh.vertices    = e2.vertices.ToArray();
-        e2.mesh.uv          = e2.uvs.ToArray();
-        e2.mesh.normals     = e2.normals.ToArray();
-        e2.mesh.triangles   = e2.triangles.ToArray();
+    private void set_all(Element e){
+        e.mesh.vertices    = e.vertices.ToArray();
+        e.mesh.uv          = e.uvs.ToArray();
+        e.mesh.normals     = e.normals.ToArray();
+        e.mesh.triangles   = e.triangles.ToArray();
+        e.mesh.RecalculateNormals();
+        e.mesh.RecalculateBounds();
     }
-
     private void createObject(GameObject origin, Mesh mesh, Vector3 transNormal, bool set){
         Rigidbody rigBody;
         if(set){
             GameObject obj = new GameObject();
             MeshCollider collider = obj.AddComponent<MeshCollider>();
+            obj.transform.localScale = origin.transform.localScale;
             obj.AddComponent<sliceable>();
             obj.AddComponent<MeshFilter>();
             obj.AddComponent<MeshRenderer>();
-            var rig = obj.AddComponent<Rigidbody>();
             Material[] origin_met;
             
-            if(origin.GetComponent<MeshRenderer>() != null) origin_met = origin.GetComponent<MeshRenderer>().materials;
-            else origin_met = origin.GetComponent<SkinnedMeshRenderer>().materials;
+            
+            if(origin.GetComponent<MeshRenderer>() != null) origin_met = origin.GetComponentInChildren<MeshRenderer>().materials;
+            else origin_met = origin.GetComponentInChildren<SkinnedMeshRenderer>().materials;
             
             obj.GetComponent<MeshFilter>().mesh = mesh;
             obj.GetComponent<MeshRenderer>().materials = origin_met;
             collider.sharedMesh = mesh;
-            collider.convex = true;
+            try{
+                collider.convex = true;
+            }catch(Exception e){
+                Debug.LogError(e.Message);
+                Destroy(obj);
+                return;
+            }
+            var rig = obj.AddComponent<Rigidbody>();
             rig.useGravity = true;
             
             obj.transform.localScale = origin.transform.localScale;
@@ -256,10 +317,10 @@ public class player_weapon : MonoBehaviour
 
             rigBody = obj.GetComponent<Rigidbody>();
         }else{
-            if(origin.GetComponent<SkinnedMeshRenderer>() != null) origin.GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
+            if(origin.GetComponentInChildren<SkinnedMeshRenderer>() != null) origin.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh = mesh;
             else origin.GetComponent<MeshFilter>().mesh = mesh;
             //hide the box collider from origin object
-            if(origin.GetComponent<BoxCollider>() != null) origin.GetComponent<BoxCollider>().enabled = false; 
+            if(origin.GetComponentInChildren<BoxCollider>() != null) origin.GetComponentInChildren<BoxCollider>().enabled = false; 
             if(origin.GetComponent<MeshCollider>() == null) origin.AddComponent<MeshCollider>();
             //set cooldown for origin
             origin.GetComponent<sliceable>().Sleep();
@@ -282,13 +343,12 @@ public class player_weapon : MonoBehaviour
             mesh = a.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
         }
         Element     positive = new Element(), negative = new Element();
-        
+
         int[]       meshTriangles   = mesh.triangles;
         Vector3[]   vertices        = mesh.vertices;
         Vector3[]   normals         = mesh.normals;
         Vector2[]   UVs             = mesh.uv;
         List<Vector3> vertexOnPlane = new List<Vector3>();
-
         for(int i = 0; i < meshTriangles.Length; i += 3){
             //在這邊面是由三角形組成, 三角形又是由三個點組成的,所以說
             Vector3[] vertice   = new Vector3[3];
@@ -332,11 +392,32 @@ public class player_weapon : MonoBehaviour
                 vertexOnPlane.Add(intersectionPoint[1]);
             }
         }
-        joinPointsAlongPlane(ref positive, ref negative, plane, vertexOnPlane);
-        setMesh(ref positive,ref negative);
+        List<Element> objs = new List<Element>();
+        int positiveNum = 0, negativeNum = 0;
 
-        createObject(a, positive.mesh, transNormal, true);
-        createObject(a, negative.mesh, transNormal, false);
+        positiveNum = disjointSet_split(ref positive, ref objs);
+        negativeNum = disjointSet_split(ref negative, ref objs);
+        
+        for(int i = 0; i < objs.Count; ++i){
+            if(positiveNum >= negativeNum) {
+                if(i != objs.Count - 1) fillGap(objs[i], objs[objs.Count - 1], plane, true,vertexOnPlane);
+                if(i == 0) {
+                    set_all(objs[0]);
+                    createObject(a, objs[i].mesh, transNormal, false);
+                }
+            }
+            else{
+                if(i != 0) fillGap(objs[i], objs[0], plane, false,vertexOnPlane);
+                if(i == objs.Count - 1){
+                    set_all(objs[0]);
+                    createObject(a, objs[0].mesh, transNormal, false);
+                }
+            }
+            if(i != 0){
+                set_all(objs[i]);
+                createObject(a, objs[i].mesh, transNormal, true);
+            }
+        }
         //Destroy(a);
     }
 }
