@@ -51,7 +51,7 @@ public class player_weapon : MonoBehaviour
         Vector3 transformedNormal = ((Vector3)(other.gameObject.transform.localToWorldMatrix.transpose * sweapNormal)).normalized;
         Vector3 otherCutPoint = other.gameObject.transform.InverseTransformPoint(_tip);
         
-        Plane slicePlane = new Plane(sweapNormal, otherCutPoint);
+        Plane slicePlane = new Plane(Quaternion.Inverse(other.transform.rotation) * sweapNormal, otherCutPoint);
         var direction = Vector3.Dot(Vector3.up, transformedNormal);
         //Flip the plane so that we always know which side the positive mesh is on
         if (direction < 0)
@@ -177,8 +177,9 @@ public class player_weapon : MonoBehaviour
     }
 
     private void fillGap(Element e, Element e1, Plane plane, bool face, List<Vector3> vertexOnPlane){
-        List<Vector3> newVertexOnPlane = vertexOnPlane.Where(x => e.vertices.Contains(x)).ToList();
+        List<Vector3> newVertexOnPlane = vertexOnPlane.Where(x => e.vertices.Contains(x)).ToList();;
         //List<Vector3> newVertexOnPlane = vertexOnPlane;
+        //List<Vector3> newVertexOnPlane = vertexOnPlane.Intersect(e.vertices).ToList(); 
 
         Vector3 beg = GetHalfwayPoint(newVertexOnPlane, out float distance);;
 
@@ -202,7 +203,7 @@ public class player_weapon : MonoBehaviour
             }else{
                 add_mesh(ref e.vertices, ref e.uvs, ref  e.triangles, ref e.normals, vertex2, uv, normal1, false, false);
                 add_mesh(ref e1.vertices, ref e1.uvs, ref  e1.triangles, ref e1.normals, vertex1, uv, normal2, false, false);  
-            }           
+            }         
         }
     }
 
