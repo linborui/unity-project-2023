@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class sliceable : MonoBehaviour
 {
+    public Vector3 scale = new Vector3(1f, 1f, 1f);
     public bool act = true;
     
     public IEnumerator sleep(){
