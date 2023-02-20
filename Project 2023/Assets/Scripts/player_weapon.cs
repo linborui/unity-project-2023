@@ -317,6 +317,7 @@ public class player_weapon : MonoBehaviour
         e.mesh.uv          = e.uvs.ToArray();
         e.mesh.normals     = e.normals.ToArray();
         e.mesh.triangles   = e.triangles.ToArray();
+        if(e.skinned) e.mesh.boneWeights = e.bws.ToArray();
         e.mesh.RecalculateNormals();
         e.mesh.RecalculateBounds();
     }
@@ -370,7 +371,7 @@ public class player_weapon : MonoBehaviour
             if(origin.GetComponentInParent<SkinnedMeshRenderer>()){
                 GameObject parent = origin.GetComponentInParent<SkinnedMeshRenderer>().gameObject;
                 SkinnedMeshRenderer old = parent.GetComponent<SkinnedMeshRenderer>();
-
+                mesh.bindposes = old.sharedMesh.bindposes;
                 old.sharedMesh = mesh;
             }
             else{
@@ -413,10 +414,10 @@ public class player_weapon : MonoBehaviour
             sharedMesh = a.GetComponentInParent<SkinnedMeshRenderer>().sharedMesh;
             sharedMesh.UploadMeshData(false);
             mesh = new Mesh();
-            mesh.bindposes = sharedMesh.bindposes;
             a.GetComponentInParent<SkinnedMeshRenderer>().BakeMesh(mesh);
             skin = true;
             positive.skinned = true;
+            negative.skinned = true;
         }
 
         int[]           meshTriangles   = mesh.triangles;
@@ -513,6 +514,5 @@ public class player_weapon : MonoBehaviour
             }
             if(i != 0) createObject(a, objs[i], transNormal, true);
         }
-        //Destroy(a);
     }
 }
