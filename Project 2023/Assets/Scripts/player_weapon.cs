@@ -384,7 +384,7 @@ public class player_weapon : MonoBehaviour
                 isObj = true;
             }
             //hide the box collider from origin object
-            if(origin.GetComponent<BoxCollider>() != null) origin.GetComponent<BoxCollider>().enabled = false; 
+            //if(origin.GetComponent<BoxCollider>() != null) origin.GetComponent<BoxCollider>().enabled = false; 
             if(isObj && origin.GetComponent<MeshCollider>() == null) {
                 origin.AddComponent<MeshCollider>();
                 MeshCollider collider = origin.GetComponent<MeshCollider>();
@@ -474,11 +474,14 @@ public class player_weapon : MonoBehaviour
                         float d1,d2;
                         intersectionPoint[0] = getIntersectionVertexOnPlane(plane, vertice[v1], vertice[v2], out d1);
                         intersectionPoint[1] = getIntersectionVertexOnPlane(plane, vertice[v2], vertice[v0], out d2);
+                        d1 /= MathF.Abs((vertice[v1] - vertice[v2]).magnitude);
+                        d2 /= MathF.Abs((vertice[v2] - vertice[v0]).magnitude);
                         intersectionUV[0] = Vector2.Lerp(uv[v1], uv[v2], d1);
                         intersectionUV[1] = Vector2.Lerp(uv[v2], uv[v0], d2);
                         if(skin){
-                            intersectionPoint[2] = Vector3.Lerp(vertice1[v1], vertice1[v2], d1 / (vertice[v1] - vertice[v2]).magnitude);
-                            intersectionPoint[3] = Vector3.Lerp(vertice1[v2], vertice1[v0], d2 / (vertice[v2] - vertice[v0]).magnitude);
+                            Debug.Log(d1 / (vertice[v1] - vertice[v2]).magnitude);
+                            intersectionPoint[2] = Vector3.Lerp(vertice1[v1], vertice1[v2], d1);
+                            intersectionPoint[3] = Vector3.Lerp(vertice1[v2], vertice1[v0], d2);
                             intersectionPoint[0] = intersectionPoint[2];
                             intersectionPoint[1] = intersectionPoint[3];
                             vertice = vertice1;
