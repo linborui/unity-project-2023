@@ -344,7 +344,7 @@ public class player_weapon : MonoBehaviour
             else origin_met = origin.GetComponentInParent<SkinnedMeshRenderer>().materials;
 
             obj.GetComponent<MeshFilter>().mesh = mesh;
-            obj.GetComponent<MeshRenderer>().materials = origin_met;
+            obj.GetComponent<MeshRenderer>().sharedMaterials = origin_met;
             
             MeshCollider collider = obj.AddComponent<MeshCollider>();
             collider.sharedMesh = mesh;
