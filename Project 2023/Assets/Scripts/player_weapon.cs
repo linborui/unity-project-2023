@@ -331,6 +331,7 @@ public class player_weapon : MonoBehaviour
         Vector3 size = origin.GetComponentInParent<sliceable>().scale;
         Mesh mesh;
         if(set){
+            for(int j = 0; size.x != 1f && j < element.vertices.Count; ++j) element.vertices[j] *= size.x;
             set_all(element);
             mesh = element.mesh;
             GameObject obj = new GameObject();
@@ -367,7 +368,6 @@ public class player_weapon : MonoBehaviour
         }else{
             bool isObj = false;
             
-            for(int j = 0; size.x != 1f && j < element.vertices.Count; ++j) element.vertices[j] *= size.x;
             if(origin.GetComponentInParent<SkinnedMeshRenderer>()) element.skinned = true;
 
             set_all(element);
@@ -427,6 +427,7 @@ public class player_weapon : MonoBehaviour
 
         int[]           meshTriangles   = mesh.triangles;
         Vector3[]       vertices        = mesh.vertices;
+        Vector3[]       vertices1       = sharedMesh.vertices;
         Vector3[]       normals         = mesh.normals;
         Vector2[]       UVs             = mesh.uv;
         BoneWeight[]    BWs;
@@ -438,6 +439,7 @@ public class player_weapon : MonoBehaviour
         for(int i = 0; i < meshTriangles.Length; i += 3){
             //在這邊面是由三角形組成, 三角形又是由三個點組成的,所以說
             Vector3[]       vertice   = new Vector3[3];
+            Vector3[]       vertice1  = new Vector3[3];
             Vector3[]       normal    = new Vector3[3];
             Vector2[]       uv        = new Vector2[3];
             BoneWeight[]    bw        = new BoneWeight[3];
@@ -446,13 +448,15 @@ public class player_weapon : MonoBehaviour
             for(int j = 0; j < 3; ++j){
                 int index   = meshTriangles[i + j];
                 vertice[j]  = vertices[index];
+                vertice1[j] = vertices1[index];
                 normal[j]   = normals[index];
                 uv[j]       = UVs[index];
                 if(skin)    bw[j] = BWs[index];
                 vSide[j]    = plane.GetSide(vertice[j]);
             }
             Group g = new Group();
-            g.vertices = vertice;
+            if(!skin) g.vertices = vertice;
+            else      g.vertices = vertice1;
             g.normals = normal;
             g.uvs = uv;
             if(skin) g.bws = bw;
@@ -460,7 +464,7 @@ public class player_weapon : MonoBehaviour
             if(vSide[0] == vSide[1] && vSide[1] == vSide[2]){ //3 vertex at the same side
                 add_meshSide(vSide[0], positive, negative, g, true);
             }else{
-                Vector3[] intersectionPoint = new Vector3[2];
+                Vector3[] intersectionPoint = new Vector3[4];
                 Vector2[] intersectionUV    = new Vector2[2];
 
                 for(int j = 0; j < 3; ++j){
@@ -472,6 +476,13 @@ public class player_weapon : MonoBehaviour
                         intersectionPoint[1] = getIntersectionVertexOnPlane(plane, vertice[v2], vertice[v0], out d2);
                         intersectionUV[0] = Vector2.Lerp(uv[v1], uv[v2], d1);
                         intersectionUV[1] = Vector2.Lerp(uv[v2], uv[v0], d2);
+                        if(skin){
+                            intersectionPoint[2] = Vector3.Lerp(vertice1[v1], vertice1[v2], d1 / (vertice[v1] - vertice[v2]).magnitude);
+                            intersectionPoint[3] = Vector3.Lerp(vertice1[v2], vertice1[v0], d2 / (vertice[v2] - vertice[v0]).magnitude);
+                            intersectionPoint[0] = intersectionPoint[2];
+                            intersectionPoint[1] = intersectionPoint[3];
+                            vertice = vertice1;
+                        }
 
                         Vector3[] vert1   = {vertice[v0], vertice[v1], intersectionPoint[0]},   vert2   = {vertice[v0], intersectionPoint[0], intersectionPoint[1]},    vert3   = {intersectionPoint[0], vertice[v2], intersectionPoint[1]};
                         Vector3[] nor1    = {Vector3.zero, Vector3.zero, Vector3.zero},         nor2    = {Vector3.zero, Vector3.zero, Vector3.zero},                   nor3 = {Vector3.zero, Vector3.zero, Vector3.zero};
