@@ -8,7 +8,7 @@ using Luminosity.IO;
 
 public class Element
 {
-    public bool             skinned;
+    public bool             skinned, face;
     public Mesh             mesh, bakedmesh;
     public List<Vector3>    vertices;
     public List<Vector3>    planevertex;
@@ -197,7 +197,7 @@ public class player_weapon : MonoBehaviour
     }
 
     private void fillGap(Element e, Element e1, Plane plane, bool face, List<Vector3> vertexOnPlane){
-        List<Vector3> newVertexOnPlane = vertexOnPlane.Where(x => e.vertices.Contains(x)).ToList();;
+        List<Vector3> newVertexOnPlane = vertexOnPlane.Where(x => e.vertices.Contains(x)).ToList();
 
         Vector3 beg = newVertexOnPlane[0];
         for (int i = 0; i < newVertexOnPlane.Count; i += 2)
@@ -235,8 +235,7 @@ public class player_weapon : MonoBehaviour
         return boss[x] = find_boss(ref boss, boss[x]);
     }
 
-    private int disjointSet_split(ref Element e, ref List<Element> objs){
-        //Debug.Log(e.vertices.Count);
+    private int disjointSet_split(Element e, List<Element> objs, List<Vector3> verticesOnPlane, bool face){
         List<int> boss = new List<int>(new int[e.vertices.Count]);
         Dictionary<int, Element> group = new Dictionary<int, Element>();
         Dictionary<Vector3, int> samePosPoint = new Dictionary<Vector3, int>();
@@ -261,7 +260,10 @@ public class player_weapon : MonoBehaviour
         
         for(int i = 0; i < e.vertices.Count; ++i)
             if(!group.ContainsKey(boss[i])) group.Add(boss[i], new Element());
+        
         if(group.Count == 1){
+            e.planevertex = verticesOnPlane.Where(x => e.vertices.Contains(x)).ToList();
+            e.face = face;
             objs.Add(e);
         }else{
             Element obj = new Element();
@@ -281,8 +283,11 @@ public class player_weapon : MonoBehaviour
                 g.uvs      = uvs.ToArray();
                 add_mesh(group[key], g, false);
             }
-            foreach(KeyValuePair<int, Element> it in group)
+            foreach(KeyValuePair<int, Element> it in group){
+                it.Value.planevertex = verticesOnPlane.Where(x => it.Value.vertices.Contains(x)).ToList();
+                it.Value.face = face;
                 objs.Add(it.Value);
+            }
         }
         return group.Count;
     }
@@ -498,21 +503,16 @@ public class player_weapon : MonoBehaviour
         List<Element> objs = new List<Element>();
         int positiveNum = 0, negativeNum = 0;
 
-        positiveNum = disjointSet_split(ref positive, ref objs);
-        negativeNum = disjointSet_split(ref negative, ref objs);
+        positiveNum = disjointSet_split(positive, objs, vertexOnPlane, true);
+        negativeNum = disjointSet_split(negative, objs, vertexOnPlane, false);
 
         Debug.Log("positive and negative :" + positiveNum + " " + negativeNum);
 
-        for(int i = 0; i < objs.Count; ++i){
-            if(positiveNum >= negativeNum) {
-                if(i != objs.Count - 1) fillGap(objs[i], objs[objs.Count - 1], plane, true,vertexOnPlane);
-                if(i == 0) createObject(a, objs[i], transNormal, false);
-            }
-            else{
-                if(i != 0) fillGap(objs[i], objs[0], plane, false,vertexOnPlane);
-                if(i == objs.Count - 1) createObject(a, objs[0], transNormal, false);
-            }
-            if(i != 0) createObject(a, objs[i], transNormal, true);
+        objs.Sort((a, b) => -a.planevertex.Count.CompareTo(b.planevertex.Count));
+        for(int i = objs.Count - 1; i > 0; i--){
+            fillGap(objs[i], objs[0], plane, objs[i].face, vertexOnPlane);
+            createObject(a, objs[i], transNormal, true);
         }
+        createObject(a, objs[0], transNormal, false);
     }
 }
