@@ -9,23 +9,33 @@ using Luminosity.IO;
 public class Element
 {
     public bool             skinned;
-    public Mesh             mesh;
+    public Mesh             mesh, bakedmesh;
     public List<Vector3>    vertices;
+    public List<Vector3>    planevertex;
     public List<Vector3>    normals;
     public List<Vector2>    uvs;
     public List<BoneWeight> bws;
-    public List<Matrix4x4>  bps;
     public List<int>        triangles;
+
     public Element(){
         skinned     = false;
         mesh        = new Mesh();
+        bakedmesh   = new Mesh();
         vertices    = new List<Vector3>();
+        planevertex = new List<Vector3>();
         normals     = new List<Vector3>();
         uvs         = new List<Vector2>();
         bws         = new List<BoneWeight>();
-        bps         = new List<Matrix4x4>();
         triangles   = new List<int>();
     }
+}
+
+public class Group
+{
+    public Vector3[]        vertices;
+    public Vector3[]        normals;
+    public Vector2[]        uvs;
+    public BoneWeight[]     bws;
 }
 
 public class player_weapon : MonoBehaviour
@@ -141,60 +151,55 @@ public class player_weapon : MonoBehaviour
         return Vector3.Cross(side1, side2);
     }
 
-    private void add_meshSide(bool side, ref Element pos, ref Element neg, Vector3[] vertex, Vector2[] uv, Vector3[] normal, bool shareVetices, bool addFirst){
-        if(side)    add_mesh(pos, vertex, uv, normal, shareVetices, addFirst);
-        else        add_mesh(neg, vertex, uv, normal, shareVetices, addFirst);
+    private void add_meshSide(bool side, Element pos, Element neg, Group g, bool shareVertices){
+        if(side)    add_mesh(pos, g, shareVertices);
+        else        add_mesh(neg, g, shareVertices);
     }
 
-    private void add_mesh(Element e, Vector3[] vertex, Vector2[] uv, Vector3[] normal, bool shareVetices, bool addFirst){
-        List<Vector3> vertices = e.vertices, normals = e.normals;
-        List<Vector2> uvs = e.uvs;
-        List<int>     triangles = e.triangles;
-        if(addFirst)
-            for(int i = 0; i < triangles.Count; ++i)
-                triangles[i] += 3;
+    private void add_mesh(Element e, Group g, bool shareVertices){
+        List<Vector3>   vertices    = e.vertices, normals = e.normals;
+        List<Vector2>   uvs         = e.uvs;
+        List<int>       triangles   = e.triangles;
+        Vector3[]       vertex      = g.vertices;
+        Vector2[]       uv          = g.uvs;
+        Vector3[]       normal      = g.normals;
 
         for(int i = 0; i < 3; ++i){
             int ind = vertices.IndexOf(vertex[i]);
 
-            if(ind >= 0 && shareVetices)
+            if(ind >= 0 && shareVertices)
                 triangles.Add(ind);
             else{
-                int j = 0;
-                
                 if(normal[i] == Vector3.zero) normal[i] = computeNormal(vertex[i], vertex[(1 + i)%3], vertex[(2 + i)%3]);
-                if(addFirst) j = 1;
-                
-                add_all(ref vertices, ref uvs, ref triangles, ref normals, vertex[i], uv[i], normal[i], j);
+                if(e.skinned) add_all(e, vertex[i], uv[i], normal[i], g.bws[i]);
+                else add_all(e, vertex[i], uv[i], normal[i]);
             }
         }
     }
- 
-    private Vector3 GetHalfwayPoint(List<Vector3> vertexOnPlane, out float dis){
-        if(vertexOnPlane.Count > 0) {
-            Vector3 firstPoint = vertexOnPlane[0], furthestPoint = Vector3.zero;
-            dis = 0;
+    private void add_mesh(Element e, Group g){
+        List<Vector3>   vertices    = e.vertices, normals = e.normals;
+        List<Vector2>   uvs         = e.uvs;
+        List<int>       triangles   = e.triangles;
+        Vector3[]       vertex      = g.vertices;
+        Vector2[]       uv          = g.uvs;
+        Vector3[]       normal      = g.normals;
 
-            foreach(Vector3 it in vertexOnPlane){
-                float nowDis = Vector3.Distance(firstPoint, it);
-                if(nowDis > dis){
-                    dis = nowDis;
-                    furthestPoint = it;
-                }
+        for(int i = 0; i < 3; ++i){
+            int ind = vertices.IndexOf(vertex[i]);
+
+            if(ind >= 0)
+                triangles.Add(ind);
+            else{
+                if(normal[i] == Vector3.zero) normal[i] = computeNormal(vertex[i], vertex[(1 + i)%3], vertex[(2 + i)%3]);
+                add_all(e, vertex[i], uv[i], normal[i]);
             }
-
-            return Vector3.Lerp(firstPoint, furthestPoint, 0.5f);
-        }else{
-            dis = 0;
-            return Vector3.zero;
         }
     }
 
     private void fillGap(Element e, Element e1, Plane plane, bool face, List<Vector3> vertexOnPlane){
         List<Vector3> newVertexOnPlane = vertexOnPlane.Where(x => e.vertices.Contains(x)).ToList();;
 
-        Vector3 beg = GetHalfwayPoint(newVertexOnPlane, out float distance);;
-
+        Vector3 beg = newVertexOnPlane[0];
         for (int i = 0; i < newVertexOnPlane.Count; i += 2)
         {
             Vector3 firstVertex, secondVertex;
@@ -209,12 +214,17 @@ public class player_weapon : MonoBehaviour
             Vector3[] vertex1   = {beg, firstVertex, secondVertex}, vertex2   = {beg, secondVertex, firstVertex};
             Vector3[] normal1   = {-normal, -normal, -normal}, normal2   = {normal, normal, normal};
             Vector2[] uv        = {Vector2.zero, Vector2.zero, Vector2.zero};
+            Group g1 = new Group(), g2 = new Group();
+            g1.uvs = uv; g2.uvs = uv;
+            g1.vertices = vertex1; g1.normals = normal2;
+            g2.vertices = vertex2; g2.normals = normal1;
+
             if(face && direction > 0 || !face && direction < 0){
-                add_mesh(e, vertex1, uv, normal2, false, false);
-                add_mesh(e1, vertex2, uv, normal1, false, false);
+                add_mesh(e, g1);
+                add_mesh(e1, g2);
             }else{
-                add_mesh(e, vertex2, uv, normal1, false, false);
-                add_mesh(e1, vertex1, uv, normal2, false, false);  
+                add_mesh(e, g2);
+                add_mesh(e1, g1);  
             }         
         }
     }
@@ -260,14 +270,16 @@ public class player_weapon : MonoBehaviour
                 List<Vector2> uvs = new List<Vector2>();
                 List<Vector3> vertices = new List<Vector3>();
                 List<Vector3> normals = new List<Vector3>();
-                List<BoneWeight> bws =  new List<BoneWeight>();
-                List<Matrix4x4>  bps =  new List<Matrix4x4>();
                 for(int i = 0; i < 3; ++i){
                     vertices.Add(e.vertices[e.triangles[j + i]]);
                     uvs.Add(e.uvs[e.triangles[j + i]]);
                     normals.Add(e.normals[e.triangles[j + i]]);
                 }
-                add_mesh(group[key], vertices.ToArray(), uvs.ToArray(), normals.ToArray(), false, false);
+                Group g = new Group();
+                g.vertices = vertices.ToArray();
+                g.normals  = normals.ToArray();
+                g.uvs      = uvs.ToArray();
+                add_mesh(group[key], g, false);
             }
             foreach(KeyValuePair<int, Element> it in group)
                 objs.Add(it.Value);
@@ -275,20 +287,29 @@ public class player_weapon : MonoBehaviour
         return group.Count;
     }
 
-    private void add_all(ref List<Vector3> vertices, ref List<Vector2> uvs, ref List<int> triangles, ref List<Vector3> normals, Vector3 vertex, Vector2 uv, Vector3 normal, int index){
-        
-        if(index == 0){
-            vertices.Add(vertex);
-            uvs.Add(uv);
-            normals.Add(normal);
-            triangles.Add(vertices.IndexOf(vertex));
-        }else{
-            int i = (int)index;
-            vertices.Insert(i, vertex);
-            uvs.Insert(i, uv);
-            normals.Insert(i, normal);
-            triangles.Insert(i, i);
-        }
+    private void add_all(Element e, Vector3 vertex, Vector2 uv, Vector3 normal){
+        List<Vector3> vertices = e.vertices;
+        List<Vector3> normals = e.normals;
+        List<Vector2> uvs = e.uvs;
+        List<int>     triangles = e.triangles;
+
+        vertices.Add(vertex);
+        uvs.Add(uv);
+        normals.Add(normal);
+        triangles.Add(vertices.IndexOf(vertex));
+    }
+    private void add_all(Element e, Vector3 vertex, Vector2 uv, Vector3 normal, BoneWeight bw){
+        List<Vector3> vertices = e.vertices;
+        List<Vector3> normals = e.normals;
+        List<Vector2> uvs = e.uvs;
+        List<int>     triangles = e.triangles;
+        List<BoneWeight> bws = e.bws;
+
+        vertices.Add(vertex);
+        uvs.Add(uv);
+        normals.Add(normal);
+        bws.Add(bw);
+        triangles.Add(vertices.IndexOf(vertex));
     }
 
     private void set_all(Element e){
@@ -350,8 +371,6 @@ public class player_weapon : MonoBehaviour
                 GameObject parent = origin.GetComponentInParent<SkinnedMeshRenderer>().gameObject;
                 SkinnedMeshRenderer old = parent.GetComponent<SkinnedMeshRenderer>();
 
-                mesh.bindposes = old.sharedMesh.bindposes;
-                mesh.boneWeights = old.sharedMesh.boneWeights;
                 old.sharedMesh = mesh;
             }
             else{
@@ -382,28 +401,40 @@ public class player_weapon : MonoBehaviour
     }
 
     public void slice(GameObject a, Plane plane, Vector3 transNormal){
-        Mesh mesh;
+        Mesh mesh, sharedMesh;
+        Element positive = new Element(), negative = new Element();
+        bool skin = false;
 
-        if(a.GetComponent<MeshFilter>() != null) mesh = a.GetComponent<MeshFilter>().mesh;
+        if(a.GetComponent<MeshFilter>() != null) {
+            mesh = a.GetComponent<MeshFilter>().mesh;
+            sharedMesh = mesh;
+        }
         else{
-            Mesh sharedMesh = a.GetComponentInParent<SkinnedMeshRenderer>().sharedMesh;
+            sharedMesh = a.GetComponentInParent<SkinnedMeshRenderer>().sharedMesh;
             sharedMesh.UploadMeshData(false);
             mesh = new Mesh();
+            mesh.bindposes = sharedMesh.bindposes;
             a.GetComponentInParent<SkinnedMeshRenderer>().BakeMesh(mesh);
+            skin = true;
+            positive.skinned = true;
         }
 
-        Element         positive        = new Element(), negative = new Element();
         int[]           meshTriangles   = mesh.triangles;
         Vector3[]       vertices        = mesh.vertices;
         Vector3[]       normals         = mesh.normals;
         Vector2[]       UVs             = mesh.uv;
+        BoneWeight[]    BWs;
 
+        if(skin) BWs = sharedMesh.boneWeights;
+        else BWs = new BoneWeight[0];
+        //Debug.Log("bone weight " + BWs.Length + " " + vertices.Length);
         List<Vector3>   vertexOnPlane = new List<Vector3>();
         for(int i = 0; i < meshTriangles.Length; i += 3){
             //在這邊面是由三角形組成, 三角形又是由三個點組成的,所以說
             Vector3[]       vertice   = new Vector3[3];
             Vector3[]       normal    = new Vector3[3];
             Vector2[]       uv        = new Vector2[3];
+            BoneWeight[]    bw        = new BoneWeight[3];
             bool[]          vSide     = new bool[3];
 
             for(int j = 0; j < 3; ++j){
@@ -411,11 +442,17 @@ public class player_weapon : MonoBehaviour
                 vertice[j]  = vertices[index];
                 normal[j]   = normals[index];
                 uv[j]       = UVs[index];
+                if(skin)    bw[j] = BWs[index];
                 vSide[j]    = plane.GetSide(vertice[j]);
             }
+            Group g = new Group();
+            g.vertices = vertice;
+            g.normals = normal;
+            g.uvs = uv;
+            if(skin) g.bws = bw;
 
             if(vSide[0] == vSide[1] && vSide[1] == vSide[2]){ //3 vertex at the same side
-                add_meshSide(vSide[0], ref positive, ref negative, vertice, uv, normal, true, false);
+                add_meshSide(vSide[0], positive, negative, g, true);
             }else{
                 Vector3[] intersectionPoint = new Vector3[2];
                 Vector2[] intersectionUV    = new Vector2[2];
@@ -433,10 +470,24 @@ public class player_weapon : MonoBehaviour
                         Vector3[] vert1   = {vertice[v0], vertice[v1], intersectionPoint[0]},   vert2   = {vertice[v0], intersectionPoint[0], intersectionPoint[1]},    vert3   = {intersectionPoint[0], vertice[v2], intersectionPoint[1]};
                         Vector3[] nor1    = {Vector3.zero, Vector3.zero, Vector3.zero},         nor2    = {Vector3.zero, Vector3.zero, Vector3.zero},                   nor3 = {Vector3.zero, Vector3.zero, Vector3.zero};
                         Vector2[] uv1     = {uv[v0], uv[v1], intersectionUV[0]},                uv2     = {uv[v0], intersectionUV[0], intersectionUV[1]},               uv3 = {intersectionUV[0], uv[v2], intersectionUV[1]};
+                        BoneWeight[] bw1, bw2, bw3;
+                        Group g1 = new Group(), g2 = new Group(), g3 = new Group();
 
-                        add_meshSide(vSide[v0],  ref positive, ref negative, vert1, uv1, nor1, false, false);
-                        add_meshSide(vSide[v1],  ref positive, ref negative, vert2, uv2, nor2, false, false);
-                        add_meshSide(vSide[v2],  ref positive, ref negative, vert3, uv3, nor3, false, false);
+                        if(skin){
+                            bw1 = new BoneWeight[3]{bw[v0], bw[v1], bw[v2]};
+                            bw2 = new BoneWeight[3]{bw[v0], bw[v2], bw[v1]};
+                            bw3 = new BoneWeight[3]{bw[v1], bw[v2], bw[v0]};
+                            g1.bws = bw1;
+                            g2.bws = bw2;
+                            g3.bws = bw3;
+                        }
+                        g1.vertices = vert1; g1.normals = nor1; g1.uvs = uv1;
+                        g2.vertices = vert2; g2.normals = nor2; g2.uvs = uv2;
+                        g3.vertices = vert3; g3.normals = nor3; g3.uvs = uv3;
+
+                        add_meshSide(vSide[v0],  positive, negative, g1, false);
+                        add_meshSide(vSide[v1],  positive, negative, g2, false);
+                        add_meshSide(vSide[v2],  positive, negative, g3, false);
                     }
                 }
                 vertexOnPlane.Add(intersectionPoint[0]);
