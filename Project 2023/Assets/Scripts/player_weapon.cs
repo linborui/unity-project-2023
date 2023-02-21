@@ -191,28 +191,26 @@ public class player_weapon : MonoBehaviour
         Vector2[]       uv          = g.uvs;
         Vector3[]       normal      = g.normals;
 
+        bool f = true;
+        List<int>       t           = new List<int>();
         for(int i = 0; i < 3; ++i){
             int ind = vertices.IndexOf(vertex[i]);
-
-            if(ind >= 0)
-                triangles.Add(ind);
-            else{
-                if(normal[i] == Vector3.zero) normal[i] = computeNormal(vertex[i], vertex[(1 + i)%3], vertex[(2 + i)%3]);
-                add_all(e, vertex[i], uv[i], normal[i]);
-            }
+            if(ind < 0){
+                f = false;
+                break;
+            }else t.Add(ind);
         }
+        if(f) triangles.AddRange(t);
     }
 
     private void fillGap(Element e, Element e1, Plane plane, bool face, List<Vector3> vertexOnPlane){
-        List<Vector3> newVertexOnPlane = vertexOnPlane.Where(x => e.vertices.Contains(x)).ToList();
-
-        Vector3 beg = newVertexOnPlane[0];
-        for (int i = 0; i < newVertexOnPlane.Count; i += 2)
+        Vector3 beg = vertexOnPlane[0];
+        for (int i = 0; i < vertexOnPlane.Count; i += 2)
         {
             Vector3 firstVertex, secondVertex;
 
-            firstVertex = newVertexOnPlane[i];
-            secondVertex = newVertexOnPlane[(i + 1) % newVertexOnPlane.Count];
+            firstVertex = vertexOnPlane[i];
+            secondVertex = vertexOnPlane[(i + 1) % vertexOnPlane.Count];
             int ind = e.vertices.IndexOf(firstVertex), ind2 = e.vertices.IndexOf(secondVertex);
             Vector3 normal = computeNormal(beg, secondVertex, firstVertex);
             normal.Normalize();
@@ -226,7 +224,7 @@ public class player_weapon : MonoBehaviour
             g1.vertices = vertex1; g1.normals = normal2;
             g2.vertices = vertex2; g2.normals = normal1;
 
-            if(face && direction > 0 || !face && direction < 0){
+            if(direction < 0){
                 add_mesh(e, g1);
                 add_mesh(e1, g2);
             }else{
@@ -266,31 +264,38 @@ public class player_weapon : MonoBehaviour
             find_boss(ref boss, j);
         
         for(int i = 0; i < e.vertices.Count; ++i)
-            if(!group.ContainsKey(boss[i])) group.Add(boss[i], new Element());
+            if(!group.ContainsKey(boss[i])) {
+                group.Add(boss[i], new Element());
+                group[boss[i]].skinned = e.skinned;
+            }
         
         if(group.Count == 1){
             e.planevertex = verticesOnPlane.Where(x => e.vertices.Contains(x)).ToList();
             e.face = face;
             objs.Add(e);
         }else{
-            Element obj = new Element();
             for(int j = 0 ; j < e.triangles.Count; j += 3){
                 int key = boss[e.triangles[j]];
-                List<Vector2> uvs = new List<Vector2>();
-                List<Vector3> vertices = new List<Vector3>();
-                List<Vector3> normals = new List<Vector3>();
+                List<Vector2> uvs       = new List<Vector2>();
+                List<Vector3> vertices  = new List<Vector3>();
+                List<Vector3> normals   = new List<Vector3>();
+                List<BoneWeight> bws    = new List<BoneWeight>();
                 for(int i = 0; i < 3; ++i){
-                    vertices.Add(e.vertices[e.triangles[j + i]]);
-                    uvs.Add(e.uvs[e.triangles[j + i]]);
-                    normals.Add(e.normals[e.triangles[j + i]]);
+                    int index = e.triangles[j + i];
+                    vertices.Add(e.vertices[index]);
+                    uvs.Add(e.uvs[index]);
+                    normals.Add(e.normals[index]);
+                    if(e.skinned) bws.Add(e.bws[index]);
                 }
                 Group g = new Group();
                 g.vertices = vertices.ToArray();
                 g.normals  = normals.ToArray();
                 g.uvs      = uvs.ToArray();
-                add_mesh(group[key], g, false);
+                g.bws      = bws.ToArray();
+                add_mesh(group[key], g, true);
             }
             foreach(KeyValuePair<int, Element> it in group){
+                it.Value.skinned = e.skinned;
                 it.Value.planevertex = verticesOnPlane.Where(x => it.Value.vertices.Contains(x)).ToList();
                 it.Value.face = face;
                 objs.Add(it.Value);
@@ -354,15 +359,17 @@ public class player_weapon : MonoBehaviour
             obj.GetComponent<MeshFilter>().mesh = mesh;
             obj.GetComponent<MeshRenderer>().sharedMaterials = origin_met;
             
-            MeshCollider collider = obj.AddComponent<MeshCollider>();
-            collider.sharedMesh = mesh;
-            try{
-                collider.convex = true;
-            }catch(Exception e){
-                Debug.LogError(e.Message);
+            MeshCollider collider;
+            
+            if(mesh.triangles.Length < 12){
                 Destroy(obj);
                 return;
+            }else{
+                collider = obj.AddComponent<MeshCollider>();
+                collider.sharedMesh = mesh;
+                collider.convex = true;
             }
+
             var rig = obj.AddComponent<Rigidbody>();
             rig.useGravity = true;
             
@@ -373,8 +380,6 @@ public class player_weapon : MonoBehaviour
 
             rigBody = obj.GetComponent<Rigidbody>();
         }else{
-            bool isObj = false;
-            
             if(origin.GetComponentInParent<SkinnedMeshRenderer>()) element.skinned = true;
 
             set_all(element);
@@ -388,22 +393,11 @@ public class player_weapon : MonoBehaviour
             }
             else{
                 origin.GetComponent<MeshFilter>().mesh = mesh;
-                isObj = true;
-            }
-            //hide the box collider from origin object
-            //if(origin.GetComponent<BoxCollider>() != null) origin.GetComponent<BoxCollider>().enabled = false; 
-            if(isObj && origin.GetComponent<MeshCollider>() == null) {
-                origin.AddComponent<MeshCollider>();
                 MeshCollider collider = origin.GetComponent<MeshCollider>();
                 collider.sharedMesh = mesh;
-                try{
-                    collider.convex = true;
-                }catch(Exception e){
-                    Debug.LogError(e.Message);
-                    Destroy(origin);
-                    return;
-                }
+                collider.convex = true;
             }
+
             //set cooldown for origin
             origin.GetComponentInParent<sliceable>().Sleep();
 
@@ -469,7 +463,7 @@ public class player_weapon : MonoBehaviour
             if(skin) g.bws = bw;
 
             if(vSide[0] == vSide[1] && vSide[1] == vSide[2]){ //3 vertex at the same side
-                add_meshSide(vSide[0], positive, negative, g, false);
+                add_meshSide(vSide[0], positive, negative, g, true);
             }else{
                 Vector3[] intersectionPoint = new Vector3[4];
                 Vector2[] intersectionUV    = new Vector2[2];
@@ -485,22 +479,15 @@ public class player_weapon : MonoBehaviour
                         d2 /= MathF.Abs((vertice[v2] - vertice[v0]).magnitude);
                         intersectionUV[0] = Vector2.Lerp(uv[v1], uv[v2], d1);
                         intersectionUV[1] = Vector2.Lerp(uv[v2], uv[v0], d2);
+                        BoneWeight[] bw1, bw2, bw3;
+                        Group g1 = new Group(), g2 = new Group(), g3 = new Group();
+
                         if(skin){
-                            Debug.Log(d1 / (vertice[v1] - vertice[v2]).magnitude);
                             intersectionPoint[2] = Vector3.Lerp(vertice1[v1], vertice1[v2], d1);
                             intersectionPoint[3] = Vector3.Lerp(vertice1[v2], vertice1[v0], d2);
                             intersectionPoint[0] = intersectionPoint[2];
                             intersectionPoint[1] = intersectionPoint[3];
                             vertice = vertice1;
-                        }
-
-                        Vector3[] vert1   = {vertice[v0], vertice[v1], intersectionPoint[0]},   vert2   = {vertice[v0], intersectionPoint[0], intersectionPoint[1]},    vert3   = {intersectionPoint[0], vertice[v2], intersectionPoint[1]};
-                        Vector3[] nor1    = {Vector3.zero, Vector3.zero, Vector3.zero},         nor2    = {Vector3.zero, Vector3.zero, Vector3.zero},                   nor3 = {Vector3.zero, Vector3.zero, Vector3.zero};
-                        Vector2[] uv1     = {uv[v0], uv[v1], intersectionUV[0]},                uv2     = {uv[v0], intersectionUV[0], intersectionUV[1]},               uv3 = {intersectionUV[0], uv[v2], intersectionUV[1]};
-                        BoneWeight[] bw1, bw2, bw3;
-                        Group g1 = new Group(), g2 = new Group(), g3 = new Group();
-
-                        if(skin){
                             bw1 = new BoneWeight[3]{bw[v0], bw[v1], bw[v2]};
                             bw2 = new BoneWeight[3]{bw[v0], bw[v2], bw[v1]};
                             bw3 = new BoneWeight[3]{bw[v1], bw[v2], bw[v0]};
@@ -508,6 +495,10 @@ public class player_weapon : MonoBehaviour
                             g2.bws = bw2;
                             g3.bws = bw3;
                         }
+
+                        Vector3[] vert1   = {vertice[v0], vertice[v1], intersectionPoint[0]},   vert2   = {vertice[v0], intersectionPoint[0], intersectionPoint[1]},    vert3   = {intersectionPoint[0], vertice[v2], intersectionPoint[1]};
+                        Vector3[] nor1    = {Vector3.zero, Vector3.zero, Vector3.zero},         nor2    = {Vector3.zero, Vector3.zero, Vector3.zero},                   nor3 = {Vector3.zero, Vector3.zero, Vector3.zero};
+                        Vector2[] uv1     = {uv[v0], uv[v1], intersectionUV[0]},                uv2     = {uv[v0], intersectionUV[0], intersectionUV[1]},               uv3 = {intersectionUV[0], uv[v2], intersectionUV[1]};
                         g1.vertices = vert1; g1.normals = nor1; g1.uvs = uv1;
                         g2.vertices = vert2; g2.normals = nor2; g2.uvs = uv2;
                         g3.vertices = vert3; g3.normals = nor3; g3.uvs = uv3;
