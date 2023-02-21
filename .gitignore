@@ -8,7 +8,14 @@ Project 2023/[Oo]bj/*
 Project 2023/[Bb]uild/*
 Project 2023/[Bb]uilds/*
 Project 2023/[Ll]ogs/*
+Project 2023/[Uu]ser[Ss]ettings/*
+
+# MemoryCaptures can get excessive in size.
+# They also could contain extremely sensitive data
 Project 2023/[Mm]emoryCaptures/*
+
+# Recordings can get excessive in size
+Project 2023/[Rr]ecordings/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !Project 2023/[Aa]ssets/**/*.meta
@@ -57,3 +64,4 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
