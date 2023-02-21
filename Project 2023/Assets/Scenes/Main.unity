@@ -6378,10 +6378,13 @@ MonoBehaviour:
   moveSpeed: 30
   airSpeedMult: 0.05
   runSpeedMult: 2
+  sameButtonRunDash: 1
+  buttonPressTime: 0.5
   jumpForce: 6
   groundDrag: 10
   playerHeight: 1.9
   crouchSpeedMult: 0.5
+  backIgnoreWallDegree: 30
   dashSpeed: 300
   dashTime: 0.3
   dashCD: 0.5
