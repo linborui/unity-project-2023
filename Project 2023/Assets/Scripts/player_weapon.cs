@@ -72,7 +72,14 @@ public class player_weapon : MonoBehaviour
         otherCutPoint = new Vector3(otherCutPoint.x, otherCutPoint.y, otherCutPoint.z);
         //otherCutPoint = new Vector3(otherCutPoint.x / size.x, otherCutPoint.y / size.y, otherCutPoint.z / size.z);
         
-        Plane slicePlane = new Plane(Quaternion.Inverse(Parent.transform.rotation) * sweapNormal, otherCutPoint);
+        Plane slicePlane;
+        if(other.GetComponentInParent<SkinnedMeshRenderer>()){
+            Transform Child = other.GetComponentInParent<SkinnedMeshRenderer>().rootBone;
+            slicePlane = new Plane(Quaternion.Inverse(Quaternion.Euler(0, Child.transform.localEulerAngles.y, 0)) * sweapNormal, otherCutPoint);
+        }else{
+            slicePlane = new Plane(Quaternion.Inverse(Parent.transform.rotation) * sweapNormal, otherCutPoint);
+        }
+
         var direction = Vector3.Dot(Vector3.up, transformedNormal);
         //Flip the plane so that we always know which side the positive mesh is on
         if (direction < 0)
@@ -462,7 +469,7 @@ public class player_weapon : MonoBehaviour
             if(skin) g.bws = bw;
 
             if(vSide[0] == vSide[1] && vSide[1] == vSide[2]){ //3 vertex at the same side
-                add_meshSide(vSide[0], positive, negative, g, true);
+                add_meshSide(vSide[0], positive, negative, g, false);
             }else{
                 Vector3[] intersectionPoint = new Vector3[4];
                 Vector2[] intersectionUV    = new Vector2[2];
