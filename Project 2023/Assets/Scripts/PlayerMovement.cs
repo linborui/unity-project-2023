@@ -17,6 +17,11 @@ public class PlayerMovement : MonoBehaviour
     public static bool moving;
     public static bool running;
 
+    public bool sameButtonRunDash;
+    public float buttonPressTime;
+    float runPressTime;
+    float dashPressTime;
+
     public float jumpForce;
     int jumpCount;
     public static bool jumping;
@@ -31,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput;
 
     Vector3 gravityForce;
+    Vector3 inputDirection;
     Vector3 moveDirection;
     Vector3 moveForce;
     Quaternion rotation;
@@ -43,8 +49,10 @@ public class PlayerMovement : MonoBehaviour
     float crouchStartTime;
 
     public static bool onWall;
+    public float backIgnoreWallDegree;
     int wallSide;
-    bool detectWall;
+    GameObject detectWall;
+    GameObject ignoreWall;
 
     public static bool dashing;
     public float dashSpeed;
@@ -52,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
     public float dashCD;
     bool canDash;
     float dashStartTime;
-    Quaternion dashRotation;
+    Vector3 dashDirection;
 
     new Rigidbody rigidbody;
     Animator animator;
@@ -68,7 +76,8 @@ public class PlayerMovement : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         colliderHeight = capsuleCollider.height;
         jumpCount = 0;
-        detectWall = true;
+        detectWall = null;
+        ignoreWall = null;
         savePoint = transform.position;
     }
 
@@ -92,8 +101,7 @@ public class PlayerMovement : MonoBehaviour
         rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
         if (dashing && Time.time < dashStartTime + dashTime)
         {
-            moveForce = dashRotation.normalized * Vector3.forward;
-            moveForce *= dashSpeed;
+            moveForce = dashDirection * dashSpeed;
         }
         else
         {
@@ -107,9 +115,10 @@ public class PlayerMovement : MonoBehaviour
                     vel = rotation * Vector3.forward * 5f;
                 rigidbody.velocity = new Vector3(0f, rigidbody.velocity.y, 0f) + vel;
             }
-            moveDirection = Vector3.forward * verticalInput + Vector3.right * horizontalInput;
-            moveDirection = rotation * moveDirection;
-            moveForce = moveDirection.normalized * moveSpeed;
+            inputDirection = Vector3.forward * verticalInput + Vector3.right * horizontalInput;
+            moveDirection = rotation * inputDirection;
+            moveDirection = moveDirection.normalized;
+            moveForce = moveDirection * moveSpeed;
             if (running)
                 moveForce *= runSpeedMult;
             if (crouching)
@@ -149,13 +158,70 @@ public class PlayerMovement : MonoBehaviour
             moving = true;
         }
 
-        if (InputManager.GetButtonDown("Run") && onGround && moving && !crouching)
+        if (sameButtonRunDash)
         {
-            running = !running;
-            if (sliding)
+            if (InputManager.GetButtonDown("Run"))
             {
-                SlideReset();
-                Crouch();
+                dashPressTime = Time.time;
+                if (onGround && moving && !crouching)
+                    runPressTime = Time.time;
+            }
+            if (InputManager.GetButton("Run"))
+            {
+                if (onGround && moving && !crouching && runPressTime > 0 && Time.time >= runPressTime + buttonPressTime)
+                {
+                    running = !running;
+                    if (sliding)
+                    {
+                        SlideReset();
+                        Crouch();
+                    }
+                    runPressTime = -1f;
+                    dashPressTime = -1f;
+                }
+            }
+            if (InputManager.GetButtonUp("Dash") && dashPressTime > 0 && Time.time < dashPressTime + buttonPressTime)
+            {
+                if (Time.time > dashStartTime + dashCD && !topBlock && canDash)
+                {
+                    if (crouching)
+                    {
+                        CrouchReset();
+                    }
+                    if (sliding)
+                    {
+                        SlideReset();
+                    }
+                    Dash();
+                }
+            }
+        }
+        else
+        {
+            if (InputManager.GetButtonDown("Run") && onGround && moving && !crouching)
+            {
+                running = !running;
+                if (sliding)
+                {
+                    SlideReset();
+                    Crouch();
+                }
+            }
+
+            if (InputManager.GetButtonDown("Dash"))
+            {
+                if (Time.time > dashStartTime + dashCD && !topBlock && canDash)
+                {
+                    if (crouching)
+                    {
+                        CrouchReset();
+                    }
+                    if (sliding)
+                    {
+                        SlideReset();
+                    }
+                    Dash();
+                }
             }
         }
 
@@ -202,23 +268,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (onWall)
             {
-                detectWall = false;
-            }
-        }
-
-        if (InputManager.GetButtonDown("Dash"))
-        {
-            if (Time.time> dashStartTime + dashCD && !onWall && !topBlock && canDash)
-            {
-                if (crouching)
-                {
-                    CrouchReset();
-                }
-                if (sliding)
-                {
-                    SlideReset();
-                }
-                Dash();
+                ignoreWall = detectWall;
             }
         }
 
@@ -229,7 +279,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (onGround)
         {
-            detectWall = true;
+            ignoreWall = null;
             if (!dashing)
             {
                 canDash = true;
@@ -312,7 +362,7 @@ public class PlayerMovement : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(pos, Vector3.up, out hit, l, -1))
                 {
-                    if (hit.transform.gameObject != gameObject)
+                    if (!hit.transform.gameObject.Equals(gameObject))
                         return true;
                 }
             }
@@ -322,32 +372,41 @@ public class PlayerMovement : MonoBehaviour
 
     bool WallDetect()
     {
-        if (detectWall && !onGround)
+        if (!onGround)
         {
-            Vector3 pos;
+            RaycastHit hit;
+            Vector3 pos, igPos;
+            Quaternion igRot;
             float r, h;
             r = capsuleCollider.radius;
             h = colliderHeight / 2;
-            for (int i = -1; i < 2; i++)
+            foreach(int side in new int[]{ 1, -1})
             {
-                pos = transform.position + rotation * new Vector3(r - 0.1f, h + i * r, 0f);
-                if (Physics.Raycast(pos, transform.right, 0.2f, -1))
+                igRot = Quaternion.Euler(0f, backIgnoreWallDegree * side, 0f);
+                for (int i = -1; i < 2; i++)
                 {
-                    if (!onWall)
-                        rigidbody.velocity = Vector3.zero;
-                    wallSide = 1;
-                    return true;
-                }
-            }
-            for (int i = -1; i < 2; i++)
-            {
-                pos = transform.position + rotation * new Vector3(0.1f - r, h + i * r, 0f);
-                if (Physics.Raycast(pos, -transform.right, 0.2f, -1))
-                {
-                    if (!onWall)
-                        rigidbody.velocity = Vector3.zero;
-                    wallSide = -1;
-                    return true;
+                    pos = rotation * new Vector3((r - 0.1f) * side, h + i * r, 0f);
+                    igPos = igRot * pos;
+                    Debug.DrawRay(transform.position + pos, transform.right * side * 0.2f, Color.green, 0.5f);
+                    Debug.DrawRay(transform.position + igPos, igRot * transform.right * side * 0.2f, Color.red, 0.5f);
+                    if (Physics.Raycast(transform.position + igPos, igRot * transform.right * side, 0.2f, -1))
+                    {
+                        wallSide = 0;
+                        return false;
+                    }
+                    if (Physics.Raycast(transform.position + pos, transform.right * side, out hit, 0.2f, -1))
+                    {
+                        if (hit.transform.gameObject.Equals(ignoreWall))
+                        {
+                            wallSide = 0;
+                            return false;
+                        }
+                        if (!onWall)
+                            rigidbody.velocity = Vector3.zero;
+                        detectWall = hit.transform.gameObject;
+                        wallSide = side;
+                        return true;
+                    }
                 }
             }
         }
@@ -465,9 +524,21 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
+        Camera cam = Camera.main;
+        ignoreWall = detectWall;
         canDash = false;
         dashing = true;
-        dashRotation = rotation;
+        running = true;
+        Quaternion camDir = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f);
+        if (inputDirection != Vector3.zero)
+        {
+            dashDirection = camDir * inputDirection;
+        }
+        else
+        {
+            dashDirection = camDir * Vector3.forward;
+        }
+        dashDirection = dashDirection.normalized;
         dashStartTime = Time.time;
     }
 
@@ -479,6 +550,8 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = Quaternion.identity;
         running = false;
         onWall = false;
+        detectWall = null;
+        ignoreWall = null;
         if (jumping)
         {
             JumpReset();
