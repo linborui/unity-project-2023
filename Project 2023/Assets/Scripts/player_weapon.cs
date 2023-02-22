@@ -206,8 +206,8 @@ public class player_weapon : MonoBehaviour
             }
             foreach(KeyValuePair<int, Element> it in group){
                 it.Value.skinned = e.skinned;
-                it.Value.planevertex = verticesOnPlane.Where(x => it.Value.vertices.Contains(x)).ToList();
-                //it.Value.planevertex = verticesOnPlane.Intersect(it.Value.vertices).ToList();
+                //it.Value.planevertex = verticesOnPlane.Where(x => it.Value.vertices.Contains(x)).ToList();
+                it.Value.planevertex = verticesOnPlane.Intersect(it.Value.vertices).ToList();
                 it.Value.face = face;
                 objs.Add(it.Value);
             }
@@ -225,10 +225,9 @@ public class player_weapon : MonoBehaviour
         }
 
         List<Vector3> triangles = bowyer_Watson.get_triangles(vertices, plane);
-        for(int i = 0; i < triangles.Count; ++i)
-            triangles[i] = new Vector3(triangles[i].x, triangles[i].y, triangles[i].z);
         
-        Debug.Log("caculate mesh num = " + triangles.Count / 3);
+        //Debug.Log("caculate mesh num = " + triangles.Count / 3);
+        if(triangles.Count / 3 < 1) return;
 
         for (int i = 0; i < triangles.Count; i += 3)
         {
@@ -244,13 +243,13 @@ public class player_weapon : MonoBehaviour
             g1.vertices = vertex1; g1.normals = normal2;
             g2.vertices = vertex2; g2.normals = normal1;
             
-            if(direction > 0){
-                add_mesh(e, g1);
-                add_mesh(e1, g2);
+            if(direction > 0 && e.face || direction < 0 && !e.face){
+                add_mesh(e, g1, false);
+                add_mesh(e1, g2, false);
             }else{
-                add_mesh(e, g2);
-                add_mesh(e1, g1);  
-            }      
+                add_mesh(e, g2, false);
+                add_mesh(e1, g1, false);  
+            }
         }
     }
 
@@ -269,8 +268,8 @@ public class player_weapon : MonoBehaviour
 
         for(int i = 0; i < 3; ++i){
             int ind = vertices.IndexOf(vertex[i]);
-
-            if(ind >= 0)
+            
+            if(ind >= 0 )
                 triangles.Add(ind);
             else{
                 if(normal[i] == Vector3.zero) normal[i] = computeNormal(vertex[i], vertex[(1 + i)%3], vertex[(2 + i)%3]);
@@ -279,26 +278,6 @@ public class player_weapon : MonoBehaviour
             }
         }
     }
-    private void add_mesh(Element e, Group g){
-        List<Vector3>   vertices    = e.vertices, normals = e.normals;
-        List<Vector2>   uvs         = e.uvs;
-        List<int>       triangles   = e.triangles;
-        Vector3[]       vertex      = g.vertices;
-        Vector2[]       uv          = g.uvs;
-        Vector3[]       normal      = g.normals;
-
-        bool f = true;
-        List<int>       t           = new List<int>();
-        for(int i = 0; i < 3; ++i){
-            int ind = vertices.IndexOf(vertex[i]);
-            if(ind < 0){
-                f = false;
-                break;
-            }else t.Add(ind);
-        }
-        if(f) triangles.AddRange(t);
-    }
-
     private void add_all(Element e, Vector3 vertex, Vector2 uv, Vector3 normal){
         List<Vector3> vertices = e.vertices;
         List<Vector3> normals = e.normals;
@@ -498,9 +477,9 @@ public class player_weapon : MonoBehaviour
                         g2.vertices = vert2; g2.normals = nor2; g2.uvs = uv2;
                         g3.vertices = vert3; g3.normals = nor3; g3.uvs = uv3;
 
-                        add_meshSide(vSide[v0],  positive, negative, g1, false);
-                        add_meshSide(vSide[v1],  positive, negative, g2, false);
-                        add_meshSide(vSide[v2],  positive, negative, g3, false);
+                        add_meshSide(vSide[v0],  positive, negative, g1, true);
+                        add_meshSide(vSide[v1],  positive, negative, g2, true);
+                        add_meshSide(vSide[v2],  positive, negative, g3, true);
                     }
                 }
                 vertexOnPlane.Add(intersectionPoint[0]);

@@ -73,7 +73,7 @@ public class Bowyer_watson : MonoBehaviour
             vertex = Quaternion.Inverse(Quaternion.LookRotation(plane.normal)) * vertex;
             Vertex V = new Vertex(vertex, it.Key);
             factor = Mathf.Max(V.val.y, Mathf.Max(factor, V.val.x));
-            Debug.Log(V.val);
+
             vertices_2d.Add(V);
         }
 
@@ -132,7 +132,7 @@ public class Bowyer_watson : MonoBehaviour
             for(int i = 0; i < 3; ++i)
                 if(it.vertices[i].ind == "-1") f = true;
             if(f) continue;
-            Debug.Log(it.vertices[0].val + " " + it.vertices[1].val + " " + it.vertices[2].val);
+            //Debug.Log(it.vertices[0].val + " " + it.vertices[1].val + " " + it.vertices[2].val);
             //Debug.Log(vertices[it.vertices[0].ind] + " " + vertices[it.vertices[1].ind] + " " + vertices[it.vertices[2].ind]);
             ans.Add(vertices[it.vertices[0].ind]);
             ans.Add(vertices[it.vertices[1].ind]);
