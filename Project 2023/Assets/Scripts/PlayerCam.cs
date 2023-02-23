@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Luminosity.IO;
 using System;
-
+using UnityEngine.Rendering;
 public class PlayerCam : MonoBehaviour
 {
+    public Matrix4x4 portalMatrix; //Portal
     public int state;
 
     public float xSensitivity;
@@ -23,8 +24,8 @@ public class PlayerCam : MonoBehaviour
     public GameObject body;
     Transform tf;
 
-    float xRotation;
-    float yRotation;
+    public float xRotation; //pitch set public for transformer to handle portal 葉惟欣 
+    public float yRotation; //yaw set public for transformer to handle portal 葉惟欣 給portal access
 
     void Start()
     {
@@ -42,6 +43,48 @@ public class PlayerCam : MonoBehaviour
         }
         currHeight = cameraHeight;
         currDistance = cameraDistance;
+    }
+
+    Portal[] portals;
+    PairPortal[] pairPortals;
+
+    void Awake()
+    {
+        portals = FindObjectsOfType<Portal>();
+        pairPortals = FindObjectsOfType<PairPortal>();
+        RenderPipelineManager.beginCameraRendering += RenderPortal;
+    }
+
+    private void OnDestroy()
+    {
+        RenderPipelineManager.beginCameraRendering -= RenderPortal;
+    }
+
+    void RenderPortal(ScriptableRenderContext context, Camera camera)
+    {
+        pairPortals = FindObjectsOfType<PairPortal>();
+
+        for (int i = 0; i < portals.Length; i++) {
+            portals[i].PrePortalRender (context);
+        }
+        for (int i = 0; i < portals.Length; i++) {
+            portals[i].Render (context);
+        }
+
+        for (int i = 0; i < portals.Length; i++) {
+            portals[i].PostPortalRender (context);
+        }
+        for (int i = 0; i < pairPortals.Length; i++) {
+            pairPortals[i].PrePortalRender (context);
+        }
+        for (int i = 0; i < pairPortals.Length; i++) {
+            pairPortals[i].Render (context);
+        }
+
+        for (int i = 0; i < pairPortals.Length; i++) {
+            pairPortals[i].PostPortalRender (context);
+        }
+
     }
 
     void Update()
@@ -73,13 +116,13 @@ public class PlayerCam : MonoBehaviour
             float mouseY = InputManager.GetAxisRaw("Mouse Y") * Time.deltaTime * ySensitivity;
             float xMax = PlayerMovement.sliding ? 15f : 75f;
 
-            xRotation -= mouseY;
+            xRotation -= mouseY; //(pitch)
             xRotation = Mathf.Clamp(xRotation, -60f, xMax);
-            yRotation += mouseX;
+            yRotation += mouseX; //(yaw)
 
-            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f); //相機的rotation
             if (!PlayerMovement.onWall)
-                tf.rotation = Quaternion.Euler(tf.rotation.eulerAngles.x, yRotation, tf.rotation.eulerAngles.z);
+                tf.rotation = Quaternion.Euler(tf.rotation.eulerAngles.x, yRotation, tf.rotation.eulerAngles.z); //人物的rotation
         }
     }
 
@@ -115,7 +158,7 @@ public class PlayerCam : MonoBehaviour
             }
         };
 
-        if (state == 0)
+        if (state == 0) //第一人稱
         {
             float distance = cameraDistance;
             float height = cameraHeight;
@@ -131,7 +174,7 @@ public class PlayerCam : MonoBehaviour
             UpdateCurrLoc(distance, height);
             transform.localPosition = tf.localPosition - transform.forward * currDistance + Vector3.up * currHeight;
         }
-        else if (state == 1)
+        else if (state == 1) //第三人稱
         {
             float distance = cameraDistance;
             cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
