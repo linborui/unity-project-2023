@@ -8,7 +8,7 @@ using Luminosity.IO;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : PortalTraveller
 {
     public float gravity;
     public float moveSpeed;
@@ -79,6 +79,10 @@ public class PlayerMovement : MonoBehaviour
         detectWall = null;
         ignoreWall = null;
         savePoint = transform.position;
+
+        //判斷現在傳送該物體是否需要改變相機，如果是玩家傳送就要改變main相機的位置，
+        //非玩家傳送則不需要改變相機
+        isPlayer = true;
     }
 
     void Update()
@@ -577,4 +581,34 @@ public class PlayerMovement : MonoBehaviour
             Restart();
         }
     }
+     /***PORTAL***********************************************************************************/
+    public override void Teleport (Transform fromPortal, Transform toPortal, Vector3 pos, Quaternion rot) {
+        //改變位置 因為是玩家所以要改變相機位置與角度
+        transform.position = pos;                        //改變傳送者的位置(無論現在傳送者是玩家或非玩家)
+        //CASE : 玩家
+        if(isPlayer){
+            //因為玩家的視角切換是根據相機去切換的 所以要改變相機的角度
+            Camera cam = Camera.main;
+            Matrix4x4 camM  = cam.GetComponent<PlayerCam>().portalMatrix;
+            float yRotation = cam.GetComponent<PlayerCam>().yRotation;
+            cam.transform.position = camM.GetColumn (3); //改變相機位置
+            Vector3 eulerRot = camM.rotation.eulerAngles;
+            float delta = Mathf.DeltaAngle(yRotation, eulerRot.y);
+            cam.GetComponent<PlayerCam>().yRotation += delta;
+            cam.transform.eulerAngles = Vector3.up * cam.GetComponent<PlayerCam>().yRotation;
+        }
+        //CASE : 非玩家 (之後再加)
+        else{
+            /*
+            Vector3 eulerRot = rot.eulerAngles; //轉換成歐拉角
+            float delta = Mathf.DeltaAngle (yaw, eulerRot.y); //計算旋轉後跟yaw的角度差
+            yaw += delta;
+            smoothYaw += delta;
+            transform.eulerAngles = Vector3.up * yaw;
+            velocity = toPortal.TransformVector (fromPortal.InverseTransformVector (velocity));
+            Physics.SyncTransforms (); //同步所有child
+            */
+        }
+    }
+    /***PORTAL***********************************************************************************/
 }
