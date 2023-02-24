@@ -6,6 +6,7 @@ public class sliceable : MonoBehaviour
 {
     public Vector3 scale = new Vector3(1f, 1f, 1f);
     public bool act = true;
+    public int life_time = 3;
     
     public IEnumerator sleep(){
         act = false;

@@ -10,23 +10,25 @@ public class Element
 {
     public bool             skinned, face;
     public Mesh             mesh, bakedmesh;
+    public List<int>        triangles;
     public List<Vector3>    vertices;
-    public List<Vector3>    planevertex;
     public List<Vector3>    normals;
     public List<Vector2>    uvs;
     public List<BoneWeight> bws;
-    public List<int>        triangles;
+    public Dictionary<int, Dictionary<int, bool>> edges;
+    public Dictionary<int, Vector3>    planevertex;
 
     public Element(){
         skinned     = false;
         mesh        = new Mesh();
         bakedmesh   = new Mesh();
+        triangles   = new List<int>();
         vertices    = new List<Vector3>();
-        planevertex = new List<Vector3>();
         normals     = new List<Vector3>();
         uvs         = new List<Vector2>();
         bws         = new List<BoneWeight>();
-        triangles   = new List<int>();
+        edges       = new Dictionary<int, Dictionary<int, bool>>();
+        planevertex = new Dictionary<int, Vector3>();
     }
 }
 
@@ -42,7 +44,7 @@ public class player_weapon : MonoBehaviour
 {
     public GameObject particle;
     public GameObject Base, Tip;
-    private Bowyer_watson bowyer_Watson;
+    private Delauny_Triangulation DT;
     private Vector3 _base, _tip;
     private Vector3 pos;
     private Vector3 moveVel;
@@ -52,7 +54,7 @@ public class player_weapon : MonoBehaviour
     private Vector3 sweapNormal;
     public void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponentInParent<sliceable>() == null || !other.GetComponentInParent<sliceable>().act) return;
+        if(other.GetComponentInParent<sliceable>() == null || other.GetComponentInParent<sliceable>().life_time < 1 || !other.GetComponentInParent<sliceable>().act) return;
         if(!InputManager.GetButton("Slash")) return;
 
         _tip = Tip.transform.position;
@@ -60,7 +62,7 @@ public class player_weapon : MonoBehaviour
     }
     public void OnTriggerExit(Collider other)
     {
-        if(other.GetComponentInParent<sliceable>() == null || !other.GetComponentInParent<sliceable>().act) return; 
+        if(other.GetComponentInParent<sliceable>() == null || other.GetComponentInParent<sliceable>().life_time < 1 || !other.GetComponentInParent<sliceable>().act) return; 
         if(!InputManager.GetButton("Slash")) return;
 
         GameObject Parent = other.GetComponentInParent<sliceable>().gameObject;
@@ -144,13 +146,18 @@ public class player_weapon : MonoBehaviour
         return Vector3.Cross(side1, side2);
     }
 
+    private int hash(Vector3 a){
+        int x = (int)(1000f * a.x),y = (int)(1000f * a.y),z = (int)(1000f * a.z);
+        return ((x << 20) ^ (y << 10) ^ z);
+    }
+
     //can't use disjoint set to count number of group that are unconnect
     private int find_boss(ref List<int> boss, int x){
         if(boss[x] == x) return x;
         return boss[x] = find_boss(ref boss, boss[x]);
     }
 
-    private int disjointSet_split(Element e, List<Element> objs, List<Vector3> verticesOnPlane, bool face){
+    private int disjointSet_split(Element e, List<Element> objs, Dictionary<int, Dictionary<int, bool>> edges, bool face){
         List<int> boss = new List<int>(new int[e.vertices.Count]);
         Dictionary<int, Element> group = new Dictionary<int, Element>();
         Dictionary<Vector3, int> samePosPoint = new Dictionary<Vector3, int>();
@@ -180,23 +187,33 @@ public class player_weapon : MonoBehaviour
             }
         
         if(group.Count == 1){
-            e.planevertex = verticesOnPlane.Where(x => e.vertices.Contains(x)).ToList();
+            for(int i = 0; i < e.vertices.Count; ++i){
+                Vector3 vertex = e.vertices[i];
+                int key = hash(vertex);
+                if(edges.ContainsKey(key) && !e.planevertex.ContainsKey(key)) e.planevertex.Add(key, vertex);
+            }
+            e.edges = edges;
             e.face = face;
             objs.Add(e);
         }else{
-            for(int j = 0 ; j < e.triangles.Count; j += 3){
-                int key = boss[e.triangles[j]];
+            for(int i = 0 ; i < e.triangles.Count; i += 3){
+                int key = boss[e.triangles[i]];
                 List<Vector2> uvs       = new List<Vector2>();
                 List<Vector3> vertices  = new List<Vector3>();
                 List<Vector3> normals   = new List<Vector3>();
                 List<BoneWeight> bws    = new List<BoneWeight>();
-                for(int i = 0; i < 3; ++i){
-                    int index = e.triangles[j + i];
-                    vertices.Add(e.vertices[index]);
+                for(int j = 0; j < 3; ++j){
+                    int index = e.triangles[i + j];
+                    Vector3 vertex = e.vertices[index];
+                    int planeKey = hash(vertex);
+
+                    vertices.Add(vertex);
                     uvs.Add(e.uvs[index]);
                     normals.Add(e.normals[index]);
                     if(e.skinned) bws.Add(e.bws[index]);
+                    if(edges.ContainsKey(planeKey) && !group[key].planevertex.ContainsKey(planeKey)) group[key].planevertex.Add(planeKey, vertex);
                 }
+
                 Group g = new Group();
                 g.vertices = vertices.ToArray();
                 g.normals  = normals.ToArray();
@@ -205,9 +222,9 @@ public class player_weapon : MonoBehaviour
                 add_mesh(group[key], g, true);
             }
             foreach(KeyValuePair<int, Element> it in group){
+                foreach(KeyValuePair<int, Vector3> itt in it.Value.planevertex)
+                    it.Value.edges.Add(itt.Key, edges[itt.Key]);
                 it.Value.skinned = e.skinned;
-                //it.Value.planevertex = verticesOnPlane.Where(x => it.Value.vertices.Contains(x)).ToList();
-                it.Value.planevertex = verticesOnPlane.Intersect(it.Value.vertices).ToList();
                 it.Value.face = face;
                 objs.Add(it.Value);
             }
@@ -216,18 +233,12 @@ public class player_weapon : MonoBehaviour
     }
 
     private void fillGap(Element e, Element e1, Plane plane){
-        List<Vector3> vertexOnPlane = e.planevertex;
-        Dictionary<string, Vector3> vertices = new Dictionary<string, Vector3>();
-        
-        for(int i = 0; i < vertexOnPlane.Count; ++i){
-            string key = vertexOnPlane[i].x.ToString("F2") + vertexOnPlane[i].y.ToString("F2") + vertexOnPlane[i].z.ToString("F2");
-            if(!vertices.ContainsKey(key)) vertices.Add(key, vertexOnPlane[i]);
-        }
-
-        List<Vector3> triangles = bowyer_Watson.get_triangles(vertices, plane);
+        if(e.planevertex.Count < 3)
+            return;
+        //List<Vector3> triangles = DT.bowyer_watson(e.planevertex, plane);
+        List<Vector3> triangles = DT.sweep_line(e.planevertex, e.edges, plane);
         
         //Debug.Log("caculate mesh num = " + triangles.Count / 3);
-        if(triangles.Count / 3 < 1) return;
 
         for (int i = 0; i < triangles.Count; i += 3)
         {
@@ -238,8 +249,16 @@ public class player_weapon : MonoBehaviour
             Vector3[] vertex1   = {triangles[i], triangles[i + 1], triangles[i + 2]}, vertex2   = {triangles[i], triangles[i + 2], triangles[i + 1]};
             Vector3[] normal1   = {-normal, -normal, -normal}, normal2   = {normal, normal, normal};
             Vector2[] uv        = {Vector2.zero, Vector2.zero, Vector2.zero};
+            BoneWeight[] bw     = new BoneWeight[3];
+            if(e.skinned) {
+                int ind1 = e.vertices.IndexOf(triangles[i]), ind2 = e.vertices.IndexOf(triangles[i  + 1]), ind3 = e.vertices.IndexOf(triangles[i + 2]);
+                bw[0] = e.bws[ind1];
+                bw[1] = e.bws[ind2];
+                bw[2] = e.bws[ind3];
+            }
             Group g1 = new Group(), g2 = new Group();
             g1.uvs = uv; g2.uvs = uv;
+            g1.bws = bw; g2.bws = bw;
             g1.vertices = vertex1; g1.normals = normal2;
             g2.vertices = vertex2; g2.normals = normal1;
             
@@ -269,7 +288,7 @@ public class player_weapon : MonoBehaviour
         for(int i = 0; i < 3; ++i){
             int ind = vertices.IndexOf(vertex[i]);
             
-            if(ind >= 0 )
+            if(ind >= 0)
                 triangles.Add(ind);
             else{
                 if(normal[i] == Vector3.zero) normal[i] = computeNormal(vertex[i], vertex[(1 + i)%3], vertex[(2 + i)%3]);
@@ -332,6 +351,7 @@ public class player_weapon : MonoBehaviour
 
             obj.GetComponent<MeshFilter>().mesh = mesh;
             obj.GetComponent<MeshRenderer>().sharedMaterials = origin_met;
+            obj.GetComponent<sliceable>().life_time = origin.GetComponentInParent<sliceable>().life_time - 1;
             
             MeshCollider collider;
             
@@ -411,6 +431,8 @@ public class player_weapon : MonoBehaviour
         else BWs = new BoneWeight[0];
         //Debug.Log("bone weight " + BWs.Length + " " + vertices.Length);
         List<Vector3>   vertexOnPlane = new List<Vector3>();
+        Dictionary<int, Dictionary<int, bool>> edges = new Dictionary<int, Dictionary<int, bool>>();
+
         for(int i = 0; i < meshTriangles.Length; i += 3){
             //在這邊面是由三角形組成, 三角形又是由三個點組成的,所以說
             Vector3[]       vertice   = new Vector3[3];
@@ -482,15 +504,21 @@ public class player_weapon : MonoBehaviour
                         add_meshSide(vSide[v2],  positive, negative, g3, true);
                     }
                 }
-                vertexOnPlane.Add(intersectionPoint[0]);
-                vertexOnPlane.Add(intersectionPoint[1]);
+                int key,key1;
+                key = hash(intersectionPoint[0]);
+                key1 = hash(intersectionPoint[1]);
+                if(!edges.ContainsKey(key)) edges.Add(key, new Dictionary<int, bool>());
+                if(!edges.ContainsKey(key1)) edges.Add(key1, new Dictionary<int, bool>());
+                if(!edges[key].ContainsKey(key1) && key != key1) edges[key].Add(key1, false);
+                if(!edges[key1].ContainsKey(key) && key != key1) edges[key1].Add(key, false);
             }
         }
         List<Element> objs = new List<Element>();
+        
         int positiveNum = 0, negativeNum = 0;
 
-        positiveNum = disjointSet_split(positive, objs, vertexOnPlane, true);
-        negativeNum = disjointSet_split(negative, objs, vertexOnPlane, false);
+        positiveNum = disjointSet_split(positive, objs, edges, true);
+        negativeNum = disjointSet_split(negative, objs, edges, false);
 
         //Debug.Log("positive and negative :" + positiveNum + " " + negativeNum);
 
@@ -514,7 +542,7 @@ public class player_weapon : MonoBehaviour
     void Start()
     {
         particle.SetActive(false);
-        bowyer_Watson = transform.gameObject.AddComponent<Bowyer_watson>();
+        DT = transform.gameObject.AddComponent<Delauny_Triangulation>();
     }
 
     // Update is called once per frame

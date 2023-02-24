@@ -48,7 +48,7 @@ public class ObjectControl : MonoBehaviour
                 controledObject.GetComponent<Rigidbody>().useGravity = false;
                 controledObject.GetComponent<Collider>().enabled = false;
                 controledObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                Debug.Log("Size: " + ColliderSize.ToString());
+                //Debug.Log("Size: " + ColliderSize.ToString());
                 objectState = 3;
                 controlTime = Time.time;
             }
@@ -57,7 +57,7 @@ public class ObjectControl : MonoBehaviour
                 ThrowObject();
                 controlTime = Time.time;
             }
-            Debug.Log("State: " + objectState);
+            //Debug.Log("State: " + objectState);
         }
     }
 
