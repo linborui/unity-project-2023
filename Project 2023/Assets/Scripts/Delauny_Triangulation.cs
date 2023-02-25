@@ -87,8 +87,8 @@ public class Delauny_Triangulation : MonoBehaviour
         return ((x << 15) ^ (y << 10) ^ (z << 5) ^ w);
     }
 
-    public void dfs(Dictionary<uint, bool> edges){
-
+    public void dfs(Dictionary<uint, Pair> active, Dictionary<uint, bool> edges){
+        
     }
 
     public List<Vector3> sweep_line(Dictionary<uint, Vector3> vertices, Dictionary<uint, Dictionary<uint, bool>> edges, Plane plane){
