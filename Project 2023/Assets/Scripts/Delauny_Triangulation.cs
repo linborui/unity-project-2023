@@ -92,7 +92,7 @@ public class Delauny_Triangulation : MonoBehaviour
         List<Vertex> vertices_2d = new List<Vertex>();
         List<Triangle> triangles = new List<Triangle>(), ans_triangles = new List<Triangle>();
         Dictionary<int, Pair> active = new Dictionary<int, Pair>(); 
-        bool delauny = true;
+
         foreach(KeyValuePair<int, Vector3> it in vertices){
             Vector3 point = it.Value;
             Vector2 point2d;
@@ -120,74 +120,55 @@ public class Delauny_Triangulation : MonoBehaviour
         for(int i = 0; i < vertices_2d.Count; ++i){
             active[vertices_2d[i].ind].x = true;
             //find the connected point
-            while(true){
-                Vertex a = vertices_2d[i], b = null, c = null;
-                foreach(KeyValuePair<int, bool> ind in edges[a.ind]){
-                    if(!active.ContainsKey(ind.Key)) continue;
-                    if(active[ind.Key].x && ind.Key != a.ind) b = new Vertex(active[ind.Key].y, ind.Key);
-                }
-                if(b == null) break;
-                foreach(KeyValuePair<int, bool> ind in edges[b.ind]){
-                    if(!active.ContainsKey(ind.Key)) continue;
-                    if(active[ind.Key].x && ind.Key != a.ind && ind.Key != b.ind) c = new Vertex(active[ind.Key].y, ind.Key);
-                }
-                if(c == null) break;
-                //Debug.Log(" a: " + a.val + " b: " + b.val + " c: " + c.val);
-                edges[a.ind].Remove(b.ind);
-                edges[b.ind].Remove(a.ind);
-                edges[b.ind].Remove(c.ind);
-                edges[c.ind].Remove(b.ind);
-                if(!edges[a.ind].ContainsKey(c.ind)) edges[a.ind].Add(c.ind, false);
-                if(!edges[c.ind].ContainsKey(a.ind)) edges[c.ind].Add(a.ind, false);
-                triangles.Add(new Triangle(a, b, c));
-                active[b.ind].x = false;
+            Vertex a = vertices_2d[i], b = null, c = null;
+            foreach(KeyValuePair<int, bool> ind in edges[a.ind]){
+                if(!active.ContainsKey(ind.Key)) continue;
+                if(active[ind.Key].x && ind.Key != a.ind) b = new Vertex(active[ind.Key].y, ind.Key);
             }
-
-            if(!delauny) {
-                foreach(Triangle t in triangles)
-                    ans_triangles.Add(t);
-                triangles.Clear();
-                continue;
+            if(b == null) continue;
+            foreach(KeyValuePair<int, bool> ind in edges[b.ind]){
+                if(!active.ContainsKey(ind.Key)) continue;
+                if(active[ind.Key].x && ind.Key != a.ind && ind.Key != b.ind) c = new Vertex(active[ind.Key].y, ind.Key);
             }
-            Dictionary<string, Vertex[]> exist_edges = new Dictionary<string, Vertex[]>();
-            List<Triangle> del_triangles = new List<Triangle>();
-            //trans to delauny triangle
-            foreach(Triangle t in triangles){
-                //detect if the vertice in the triangle, then that triangle is a part of break triangles.
-                if(t.circle.vertexInCircle(vertices_2d[i].val)){
-                    for(int j = 0; j < 3; ++j){
-                        int k = (j + 1) % 3;
-                        Vertex[] edge = new Vertex[2];
-                        edge[0] = t.vertices[j];
-                        edge[1] = t.vertices[k];
-                        
-                        if(edge[0].ind == vertices_2d[i].ind || edge[1].ind == vertices_2d[i].ind) continue;
-                        if(edge[0].ind.CompareTo(edge[1].ind) > 0 ? true : false){
-                            Vertex temp = edge[0];
-                            edge[0] = edge[1];
-                            edge[1] = temp;
-                        }
-                        string key = edge[0].val.x.ToString("F3") + edge[0].val.y.ToString("F3") + edge[1].val.x.ToString("F3") + edge[1].val.y.ToString("F3");
-                        if(exist_edges.ContainsKey(key)) exist_edges.Remove(key);
-                        else exist_edges.Add(key, edge);
-                    }
-                    del_triangles.Add(t);
-                }
-                else{
-                    ans_triangles.Add(t);
-                    del_triangles.Add(t);
-                }
-            }
-            foreach(Triangle t in del_triangles)
-                triangles.Remove(t);
-
-            foreach(KeyValuePair<string, Vertex[]> it in exist_edges){
-                Triangle t = new Triangle(it.Value[0].val, it.Value[1].val, vertices_2d[i].val, it.Value[0].ind, it.Value[1].ind, vertices_2d[i].ind);
-
-                if(i < vertices_2d.Count - 1) triangles.Add(t);
-                else ans_triangles.Add(t);
-            }
+            if(c == null) continue;
+            //Debug.Log(" a: " + a.val + " b: " + b.val + " c: " + c.val);
+            edges[a.ind].Remove(b.ind);
+            edges[b.ind].Remove(a.ind);
+            edges[b.ind].Remove(c.ind);
+            edges[c.ind].Remove(b.ind);
+            if(!edges[a.ind].ContainsKey(c.ind)) edges[a.ind].Add(c.ind, false);
+            if(!edges[c.ind].ContainsKey(a.ind)) edges[c.ind].Add(a.ind, false);
+            triangles.Add(new Triangle(a, b, c));
+            active[b.ind].x = false;
         }
+
+        for(int i = vertices_2d.Count-1 ; i >= 0; --i){
+            active[vertices_2d[i].ind].x = true;
+            //find the connected point
+            Vertex a = vertices_2d[i], b = null, c = null;
+            foreach(KeyValuePair<int, bool> ind in edges[a.ind]){
+                if(!active.ContainsKey(ind.Key)) continue;
+                if(active[ind.Key].x && ind.Key != a.ind) b = new Vertex(active[ind.Key].y, ind.Key);
+            }
+            if(b == null) continue;
+            foreach(KeyValuePair<int, bool> ind in edges[b.ind]){
+                if(!active.ContainsKey(ind.Key)) continue;
+                if(active[ind.Key].x && ind.Key != a.ind && ind.Key != b.ind) c = new Vertex(active[ind.Key].y, ind.Key);
+            }
+            if(c == null) continue;
+            //Debug.Log(" a: " + a.val + " b: " + b.val + " c: " + c.val);
+            edges[a.ind].Remove(b.ind);
+            edges[b.ind].Remove(a.ind);
+            edges[b.ind].Remove(c.ind);
+            edges[c.ind].Remove(b.ind);
+            if(!edges[a.ind].ContainsKey(c.ind)) edges[a.ind].Add(c.ind, false);
+            if(!edges[c.ind].ContainsKey(a.ind)) edges[c.ind].Add(a.ind, false);
+            triangles.Add(new Triangle(a, b, c));
+            active[b.ind].x = false;
+        }
+
+        foreach(Triangle it in triangles)
+            ans_triangles.Add(it);
 
         foreach(Triangle it in ans_triangles){
             ans.Add(vertices[it.vertices[0].ind]);

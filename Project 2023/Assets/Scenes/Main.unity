@@ -320,6 +320,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal
       objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074190, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: linkedPortal
@@ -6771,11 +6776,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074190, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: linkedPortal
       value: 
       objectReference: {fileID: 1757336800}
+    - target: {fileID: 77229936481833957, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 77229936770754774, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: m_Mesh
@@ -6791,8 +6806,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -2124705421725058983, guid: 4a4de8b5cb99cb943b5d1992d34d263d,
-        type: 3}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1f956151cf27d4e8103e187be8a465, type: 3}
 --- !u!114 &1757336800 stripped
@@ -8021,6 +8035,11 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3871794830252520620, guid: 037fc4d8b90617440bfe4a2cb36c4af2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7105491944364723728, guid: 037fc4d8b90617440bfe4a2cb36c4af2,
         type: 3}
       propertyPath: m_Enabled
       value: 1

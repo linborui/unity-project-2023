@@ -147,8 +147,8 @@ public class player_weapon : MonoBehaviour
     }
 
     private int hash(Vector3 a){
-        int x = (int)(1000f * a.x),y = (int)(1000f * a.y),z = (int)(1000f * a.z);
-        return ((x << 20) ^ (y << 10) ^ z);
+        int x = (int)(a.x*1000),y = (int)(a.y*1000),z = (int)(a.z*1000);
+        return ((x << 10) ^ (y << 5) ^ z);
     }
 
     //can't use disjoint set to count number of group that are unconnect

@@ -28,7 +28,6 @@ public class CreatePortal : MonoBehaviour
         }
     }
 
-    [System.Obsolete]
     void SpawnPortal () {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitfirst;
