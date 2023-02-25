@@ -15,8 +15,8 @@ public class Element
     public List<Vector3>    normals;
     public List<Vector2>    uvs;
     public List<BoneWeight> bws;
-    public Dictionary<int, Dictionary<int, bool>> edges;
-    public Dictionary<int, Vector3>    planevertex;
+    public Dictionary<uint, Dictionary<uint, bool>> edges;
+    public Dictionary<uint, Vector3>    planevertex;
 
     public Element(){
         skinned     = false;
@@ -27,8 +27,8 @@ public class Element
         normals     = new List<Vector3>();
         uvs         = new List<Vector2>();
         bws         = new List<BoneWeight>();
-        edges       = new Dictionary<int, Dictionary<int, bool>>();
-        planevertex = new Dictionary<int, Vector3>();
+        edges       = new Dictionary<uint, Dictionary<uint, bool>>();
+        planevertex = new Dictionary<uint, Vector3>();
     }
 }
 
@@ -146,9 +146,16 @@ public class player_weapon : MonoBehaviour
         return Vector3.Cross(side1, side2);
     }
 
-    private int hash(Vector3 a){
-        int x = (int)(a.x*1000),y = (int)(a.y*1000),z = (int)(a.z*1000);
-        return ((x << 10) ^ (y << 5) ^ z);
+    private uint Lshift(uint a, int n){
+        int nn = 32 - n;
+        return (a << n) | (a >> nn);
+    }
+
+    private uint hash(Vector3 a){
+        uint x = unchecked((uint)(a.x*1000));
+        uint y = unchecked((uint)(a.y*1000));
+        uint z = unchecked((uint)(a.z*1000));
+        return Lshift(x, 20) ^ Lshift(y, 10) ^ Lshift(z, 0);
     }
 
     //can't use disjoint set to count number of group that are unconnect
@@ -157,7 +164,7 @@ public class player_weapon : MonoBehaviour
         return boss[x] = find_boss(ref boss, boss[x]);
     }
 
-    private int disjointSet_split(Element e, List<Element> objs, Dictionary<int, Dictionary<int, bool>> edges, bool face){
+    private int disjointSet_split(Element e, List<Element> objs, Dictionary<uint, Dictionary<uint, bool>> edges, bool face){
         List<int> boss = new List<int>(new int[e.vertices.Count]);
         Dictionary<int, Element> group = new Dictionary<int, Element>();
         Dictionary<Vector3, int> samePosPoint = new Dictionary<Vector3, int>();
@@ -189,7 +196,7 @@ public class player_weapon : MonoBehaviour
         if(group.Count == 1){
             for(int i = 0; i < e.vertices.Count; ++i){
                 Vector3 vertex = e.vertices[i];
-                int key = hash(vertex);
+                uint key = hash(vertex);
                 if(edges.ContainsKey(key) && !e.planevertex.ContainsKey(key)) e.planevertex.Add(key, vertex);
             }
             e.edges = edges;
@@ -205,7 +212,7 @@ public class player_weapon : MonoBehaviour
                 for(int j = 0; j < 3; ++j){
                     int index = e.triangles[i + j];
                     Vector3 vertex = e.vertices[index];
-                    int planeKey = hash(vertex);
+                    uint planeKey = hash(vertex);
 
                     vertices.Add(vertex);
                     uvs.Add(e.uvs[index]);
@@ -222,7 +229,7 @@ public class player_weapon : MonoBehaviour
                 add_mesh(group[key], g, true);
             }
             foreach(KeyValuePair<int, Element> it in group){
-                foreach(KeyValuePair<int, Vector3> itt in it.Value.planevertex)
+                foreach(KeyValuePair<uint, Vector3> itt in it.Value.planevertex)
                     it.Value.edges.Add(itt.Key, edges[itt.Key]);
                 it.Value.skinned = e.skinned;
                 it.Value.face = face;
@@ -431,7 +438,7 @@ public class player_weapon : MonoBehaviour
         else BWs = new BoneWeight[0];
         //Debug.Log("bone weight " + BWs.Length + " " + vertices.Length);
         List<Vector3>   vertexOnPlane = new List<Vector3>();
-        Dictionary<int, Dictionary<int, bool>> edges = new Dictionary<int, Dictionary<int, bool>>();
+        Dictionary<uint, Dictionary<uint, bool>> edges = new Dictionary<uint, Dictionary<uint, bool>>();
 
         for(int i = 0; i < meshTriangles.Length; i += 3){
             //在這邊面是由三角形組成, 三角形又是由三個點組成的,所以說
@@ -504,11 +511,11 @@ public class player_weapon : MonoBehaviour
                         add_meshSide(vSide[v2],  positive, negative, g3, true);
                     }
                 }
-                int key,key1;
+                uint key,key1;
                 key = hash(intersectionPoint[0]);
                 key1 = hash(intersectionPoint[1]);
-                if(!edges.ContainsKey(key)) edges.Add(key, new Dictionary<int, bool>());
-                if(!edges.ContainsKey(key1)) edges.Add(key1, new Dictionary<int, bool>());
+                if(!edges.ContainsKey(key)) edges.Add(key, new Dictionary<uint, bool>());
+                if(!edges.ContainsKey(key1)) edges.Add(key1, new Dictionary<uint, bool>());
                 if(!edges[key].ContainsKey(key1) && key != key1) edges[key].Add(key1, false);
                 if(!edges[key1].ContainsKey(key) && key != key1) edges[key1].Add(key, false);
             }
