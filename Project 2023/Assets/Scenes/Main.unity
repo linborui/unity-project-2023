@@ -329,7 +329,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -2124705421725058983, guid: 741443ada3ebd2847ab523368eec4df4,
+      objectReference: {fileID: -2124705421725058983, guid: 4a4de8b5cb99cb943b5d1992d34d263d,
         type: 3}
     - target: {fileID: 1644928314346681431, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
@@ -573,6 +573,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 114941461}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &115377698 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
+    type: 3}
+  m_PrefabInstance: {fileID: 56085604}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b9885b89b6d4fbe92f77801ecc3671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &123523598
 GameObject:
   m_ObjectHideFlags: 0
@@ -6703,6 +6715,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 77229936062074188, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074188, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074188, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074188, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.5
       objectReference: {fileID: 0}
@@ -6756,7 +6783,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: linkedPortal
+      value: 
+      objectReference: {fileID: 115377698}
     - target: {fileID: 77229936770754774, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2124705421725058983, guid: 4a4de8b5cb99cb943b5d1992d34d263d,
+        type: 3}
+    - target: {fileID: 1644928314346681431, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a745f6b832343d04c83e49d466f7789e, type: 2}
+    - target: {fileID: 3546306392061984925, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: m_Mesh
       value: 
