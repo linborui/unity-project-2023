@@ -15,8 +15,6 @@ public class Element
     public List<Vector3>    normals;
     public List<Vector2>    uvs;
     public List<BoneWeight> bws;
-    public Dictionary<uint, Dictionary<uint, bool>> edges;
-    public Dictionary<uint, Vector3>    planevertex;
 
     public Element(){
         skinned     = false;
@@ -27,8 +25,6 @@ public class Element
         normals     = new List<Vector3>();
         uvs         = new List<Vector2>();
         bws         = new List<BoneWeight>();
-        edges       = new Dictionary<uint, Dictionary<uint, bool>>();
-        planevertex = new Dictionary<uint, Vector3>();
     }
 }
 
@@ -113,12 +109,10 @@ public class player_weapon : MonoBehaviour
             //Debug.Log(desDeg.eulerAngles);
             if(transform.localRotation != desDeg){
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 25f * Time.deltaTime);
-                //Debug.Log("rotating");
                 particle.SetActive(true);
             }else{
                 swapeDone = false;
                 sweaping = false;
-                //Debug.Log("rotate off");
                 particle.SetActive(false);
             }
         }
@@ -164,7 +158,7 @@ public class player_weapon : MonoBehaviour
         return boss[x] = find_boss(ref boss, boss[x]);
     }
 
-    private int disjointSet_split(Element e, List<Element> objs, Dictionary<uint, Dictionary<uint, bool>> edges, bool face){
+    private int disjointSet_split(Element e, List<Element> objs){
         List<int> boss = new List<int>(new int[e.vertices.Count]);
         Dictionary<int, Element> group = new Dictionary<int, Element>();
         Dictionary<Vector3, int> samePosPoint = new Dictionary<Vector3, int>();
@@ -197,10 +191,7 @@ public class player_weapon : MonoBehaviour
             for(int i = 0; i < e.vertices.Count; ++i){
                 Vector3 vertex = e.vertices[i];
                 uint key = hash(vertex);
-                if(edges.ContainsKey(key) && !e.planevertex.ContainsKey(key)) e.planevertex.Add(key, vertex);
             }
-            e.edges = edges;
-            e.face = face;
             objs.Add(e);
         }else{
             for(int i = 0 ; i < e.triangles.Count; i += 3){
@@ -218,7 +209,6 @@ public class player_weapon : MonoBehaviour
                     uvs.Add(e.uvs[index]);
                     normals.Add(e.normals[index]);
                     if(e.skinned) bws.Add(e.bws[index]);
-                    if(edges.ContainsKey(planeKey) && !group[key].planevertex.ContainsKey(planeKey)) group[key].planevertex.Add(planeKey, vertex);
                 }
 
                 Group g = new Group();
@@ -228,22 +218,17 @@ public class player_weapon : MonoBehaviour
                 g.bws      = bws.ToArray();
                 add_mesh(group[key], g, true);
             }
-            foreach(KeyValuePair<int, Element> it in group){
-                foreach(KeyValuePair<uint, Vector3> itt in it.Value.planevertex)
-                    it.Value.edges.Add(itt.Key, edges[itt.Key]);
-                it.Value.skinned = e.skinned;
-                it.Value.face = face;
+            foreach(KeyValuePair<int, Element> it in group)
                 objs.Add(it.Value);
-            }
         }
         return group.Count;
     }
 
-    private void fillGap(Element e, Element e1, Plane plane){
-        if(e.planevertex.Count < 3)
+    private void fillGap(Element e, Element e1, Dictionary<uint, Vector3> planevertex, Dictionary<uint, Dictionary<uint, bool>> edges, Plane plane){
+        if(planevertex.Count < 3)
             return;
         //List<Vector3> triangles = DT.bowyer_watson(e.planevertex, plane);
-        List<Vector3> triangles = DT.sweep_line(e.planevertex, e.edges, plane);
+        List<Vector3> triangles = DT.sweep_line(planevertex, edges, plane);
         
         //Debug.Log("caculate mesh num = " + triangles.Count / 3);
 
@@ -269,7 +254,7 @@ public class player_weapon : MonoBehaviour
             g1.vertices = vertex1; g1.normals = normal2;
             g2.vertices = vertex2; g2.normals = normal1;
             
-            if(direction > 0 && e.face || direction < 0 && !e.face){
+            if(e.face && direction >= 0 || !e.face && direction < 0){
                 add_mesh(e, g1, false);
                 add_mesh(e1, g2, false);
             }else{
@@ -436,8 +421,8 @@ public class player_weapon : MonoBehaviour
 
         if(skin) BWs = sharedMesh.boneWeights;
         else BWs = new BoneWeight[0];
-        //Debug.Log("bone weight " + BWs.Length + " " + vertices.Length);
-        List<Vector3>   vertexOnPlane = new List<Vector3>();
+
+        Dictionary<uint, Vector3> vertexOnPlane = new Dictionary<uint, Vector3>();
         Dictionary<uint, Dictionary<uint, bool>> edges = new Dictionary<uint, Dictionary<uint, bool>>();
 
         for(int i = 0; i < meshTriangles.Length; i += 3){
@@ -511,9 +496,10 @@ public class player_weapon : MonoBehaviour
                         add_meshSide(vSide[v2],  positive, negative, g3, true);
                     }
                 }
-                uint key,key1;
-                key = hash(intersectionPoint[0]);
-                key1 = hash(intersectionPoint[1]);
+                uint key = hash(intersectionPoint[0]),key1 = hash(intersectionPoint[1]);
+
+                if(!vertexOnPlane.ContainsKey(key)) vertexOnPlane.Add(key, intersectionPoint[0]);
+                if(!vertexOnPlane.ContainsKey(key1)) vertexOnPlane.Add(key1, intersectionPoint[1]);
                 if(!edges.ContainsKey(key)) edges.Add(key, new Dictionary<uint, bool>());
                 if(!edges.ContainsKey(key1)) edges.Add(key1, new Dictionary<uint, bool>());
                 if(!edges[key].ContainsKey(key1) && key != key1) edges[key].Add(key1, false);
@@ -521,28 +507,23 @@ public class player_weapon : MonoBehaviour
             }
         }
         List<Element> objs = new List<Element>();
-        
-        int positiveNum = 0, negativeNum = 0;
 
-        positiveNum = disjointSet_split(positive, objs, edges, true);
-        negativeNum = disjointSet_split(negative, objs, edges, false);
+        positive.face = true;
+        negative.face = false;
+        fillGap(positive, negative, vertexOnPlane, edges, plane);
 
-        //Debug.Log("positive and negative :" + positiveNum + " " + negativeNum);
+        disjointSet_split(positive, objs);
+        disjointSet_split(negative, objs);
 
         objs.Sort((a, b) => {
-            int aPVN = a.planevertex.Count, aVN = a.vertices.Count;
-            int bPVN = b.planevertex.Count, bVN = b.vertices.Count;
-            if(aPVN > bPVN)         return -1;
-            else if(aPVN < bPVN)    return 1;
-            else{
-                if(aVN > bVN) return -1;
-                else return 1;
-            }
+            int aVN = a.vertices.Count;
+            int bVN = b.vertices.Count;
+            if(aVN > bVN) return -1;
+            else return 1;
         });
-        for(int i = objs.Count - 1; i > 0; --i){
-            fillGap(objs[i], objs[0], plane);
+
+        for(int i = objs.Count - 1; i > 0; --i)
             createObject(a, objs[i], transNormal, true);
-        }
         createObject(a, objs[0], transNormal, false);
     }
     // Start is called before the first frame update

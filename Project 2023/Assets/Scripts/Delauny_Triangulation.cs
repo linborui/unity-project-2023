@@ -87,8 +87,15 @@ public class Delauny_Triangulation : MonoBehaviour
         return ((x << 15) ^ (y << 10) ^ (z << 5) ^ w);
     }
 
-    public void dfs(Dictionary<uint, Pair> active, Dictionary<uint, bool> edges){
-        
+    public Dictionary<uint, bool> visited = new Dictionary<uint, bool>();
+    public void dfs(uint now, Dictionary<uint, Pair> active, Dictionary<uint, Dictionary<uint, bool>> edges){
+        //Debug.Log(active[now].y);
+        visited[now] = true;
+
+        foreach(KeyValuePair<uint, bool> next in edges[now]){
+            if(visited[next.Key]) continue;
+            dfs(next.Key, active, edges);
+        }
     }
 
     public List<Vector3> sweep_line(Dictionary<uint, Vector3> vertices, Dictionary<uint, Dictionary<uint, bool>> edges, Plane plane){
@@ -96,6 +103,7 @@ public class Delauny_Triangulation : MonoBehaviour
         List<Vertex> vertices_2d = new List<Vertex>();
         List<Triangle> triangles = new List<Triangle>(), ans_triangles = new List<Triangle>();
         Dictionary<uint, Pair> active = new Dictionary<uint, Pair>(); 
+        uint startPoint = 0;
 
         foreach(KeyValuePair<uint, Vector3> it in vertices){
             Vector3 point = it.Value;
@@ -106,21 +114,23 @@ public class Delauny_Triangulation : MonoBehaviour
             point2d = new Vector2(point.x, point.y);
             vertex = new Vertex(point2d, it.Key);
             
-            if(active.ContainsKey(index)) Debug.Log("same");
             vertices_2d.Add(vertex);
             active.Add(index, new Pair(false, point2d));
+            visited.Add(index, false);
+            startPoint = index;
         }
 
+        dfs(startPoint, active, edges);
+
         vertices_2d.Sort((a, b) => {
-            if(a.val.y > b.val.y) return 1;
-            else if(a.val.y < b.val.y) return -1;
+            if(a.val.x > b.val.x) return 1;
+            else if(a.val.x < b.val.x) return -1;
             else{
-                if(a.val.x < b.val.x) return 1;
+                if(a.val.y < b.val.y) return 1;
                 else return -1;
             }
         });
         
-        //Debug.Log("vertices number ,edge number: " + vertices_2d.Count + " " + edges.Count);
         for(int i = 0; i < vertices_2d.Count; ++i){
             active[vertices_2d[i].ind].x = true;
             while(true){
@@ -136,7 +146,13 @@ public class Delauny_Triangulation : MonoBehaviour
                     if(active[ind.Key].x && ind.Key != a.ind && ind.Key != b.ind) c = new Vertex(active[ind.Key].y, ind.Key);
                 }
                 if(c == null) break;
-                //Debug.Log(" a: " + a.val + " b: " + b.val + " c: " + c.val);
+                Vector2 v;
+                float sin, degree;
+                v = a.val - c.val;
+                degree = Mathf.Atan2(v.x, v.y);
+                sin = Mathf.Sin(degree);         
+                //Debug.Log("degree : " + degree + " sin: " + sin);
+                if(sin <= 0) break;
                 edges[a.ind].Remove(b.ind);
                 edges[b.ind].Remove(a.ind);
                 edges[b.ind].Remove(c.ind);
