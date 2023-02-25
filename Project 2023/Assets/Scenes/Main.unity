@@ -320,16 +320,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal
       objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074190, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: screen
-      value: 
-      objectReference: {fileID: 1507003209}
     - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: linkedPortal
@@ -350,7 +340,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -2124705421725058983, guid: 4a4de8b5cb99cb943b5d1992d34d263d,
+      objectReference: {fileID: -2124705421725058983, guid: 741443ada3ebd2847ab523368eec4df4,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1f956151cf27d4e8103e187be8a465, type: 3}
@@ -583,6 +573,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 114941461}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &115377698 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
+    type: 3}
+  m_PrefabInstance: {fileID: 56085604}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b9885b89b6d4fbe92f77801ecc3671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &123523598
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,12 +984,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &213543855 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 1644928314346681431, guid: ee1f956151cf27d4e8103e187be8a465,
-    type: 3}
-  m_PrefabInstance: {fileID: 1757336799}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &233355495
 GameObject:
   m_ObjectHideFlags: 0
@@ -5598,12 +5594,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502837807}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1507003209 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 1644928314346681431, guid: ee1f956151cf27d4e8103e187be8a465,
-    type: 3}
-  m_PrefabInstance: {fileID: 56085604}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1519554351
 GameObject:
   m_ObjectHideFlags: 0
@@ -6075,18 +6065,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1563422194}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1566279728 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
-    type: 3}
-  m_PrefabInstance: {fileID: 56085604}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57b9885b89b6d4fbe92f77801ecc3671, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1633414258
 GameObject:
   m_ObjectHideFlags: 0
@@ -6805,30 +6783,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074190, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: screen
-      value: 
-      objectReference: {fileID: 213543855}
     - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: linkedPortal
       value: 
-<<<<<<< HEAD
-      objectReference: {fileID: 1757336800}
-    - target: {fileID: 77229936481833957, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-=======
-      objectReference: {fileID: 1566279728}
->>>>>>> 58255d2963e5c8099e38b1dae8161d4779b18413
+      objectReference: {fileID: 115377698}
     - target: {fileID: 77229936770754774, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: m_Mesh
@@ -6844,7 +6803,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -2124705421725058983, guid: 741443ada3ebd2847ab523368eec4df4,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1f956151cf27d4e8103e187be8a465, type: 3}
 --- !u!114 &1757336800 stripped
@@ -8073,11 +8033,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3871794830252520620, guid: 037fc4d8b90617440bfe4a2cb36c4af2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7105491944364723728, guid: 037fc4d8b90617440bfe4a2cb36c4af2,
         type: 3}
       propertyPath: m_Enabled
       value: 1
