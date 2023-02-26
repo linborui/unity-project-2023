@@ -7,8 +7,8 @@ public class Delauny_Triangulation : MonoBehaviour
     public class Vertex
     {
         public Vector2 val;
-        public uint ind;
-        public Vertex(Vector2 a,uint index){
+        public string ind;
+        public Vertex(Vector2 a,string index){
             val = a;
             ind = index;
         }
@@ -71,7 +71,7 @@ public class Delauny_Triangulation : MonoBehaviour
             vertices[2] = c;
             circle.caculate(a.val, b.val, c.val);
         }
-        public Triangle(Vector2 a, Vector2 b, Vector2 c, uint ind1, uint ind2, uint ind3){
+        public Triangle(Vector2 a, Vector2 b, Vector2 c, string ind1, string ind2, string ind3){
             vertices = new Vertex[3];
             circle   = new Circle();
 
@@ -87,62 +87,79 @@ public class Delauny_Triangulation : MonoBehaviour
         return ((x << 15) ^ (y << 10) ^ (z << 5) ^ w);
     }
 
-    public void dfs(Dictionary<uint, Pair> active, Dictionary<uint, bool> edges){
-        
+    public Dictionary<string, bool> visited = new Dictionary<string, bool>();
+    public void dfs(string now, Dictionary<string, Pair> active, Dictionary<string, Dictionary<string, bool>> edges){
+        //Debug.Log(active[now].y);
+        visited[now] = true;
+
+        foreach(KeyValuePair<string, bool> next in edges[now]){
+            if(visited[next.Key]) continue;
+            dfs(next.Key, active, edges);
+        }
     }
 
-    public List<Vector3> sweep_line(Dictionary<uint, Vector3> vertices, Dictionary<uint, Dictionary<uint, bool>> edges, Plane plane){
+    public List<Vector3> sweep_line(Dictionary<string, Vector3> vertices, Dictionary<string, HashSet<string>> edges, Plane plane){
         List<Vector3> ans = new List<Vector3>();
         List<Vertex> vertices_2d = new List<Vertex>();
         List<Triangle> triangles = new List<Triangle>(), ans_triangles = new List<Triangle>();
-        Dictionary<uint, Pair> active = new Dictionary<uint, Pair>(); 
+        Dictionary<string, Pair> active = new Dictionary<string, Pair>(); 
+        //string startPoint;
 
-        foreach(KeyValuePair<uint, Vector3> it in vertices){
+        foreach(KeyValuePair<string, Vector3> it in vertices){
             Vector3 point = it.Value;
             Vector2 point2d;
             Vertex vertex;
-            uint index = it.Key;
+            string index = it.Key;
             point = Quaternion.Inverse(Quaternion.LookRotation(plane.normal)) * point;
             point2d = new Vector2(point.x, point.y);
             vertex = new Vertex(point2d, it.Key);
             
-            if(active.ContainsKey(index)) Debug.Log("same");
             vertices_2d.Add(vertex);
             active.Add(index, new Pair(false, point2d));
+            //visited.Add(index, false);
+            //startPoint = index;
         }
 
+        //dfs(startPoint, active, edges);
+
         vertices_2d.Sort((a, b) => {
-            if(a.val.y > b.val.y) return 1;
-            else if(a.val.y < b.val.y) return -1;
+            if(a.val.x < b.val.x) return -1;
+            else if(a.val.x > b.val.x) return 1;
             else{
-                if(a.val.x < b.val.x) return 1;
-                else return -1;
+                if(a.val.y < b.val.y) return -1;
+                else return 1;
             }
         });
         
-        //Debug.Log("vertices number ,edge number: " + vertices_2d.Count + " " + edges.Count);
         for(int i = 0; i < vertices_2d.Count; ++i){
             active[vertices_2d[i].ind].x = true;
             while(true){
                 //find the connected point
                 Vertex a = vertices_2d[i], b = null, c = null;
-                foreach(KeyValuePair<uint, bool> ind in edges[a.ind]){
-                    if(!active.ContainsKey(ind.Key)) continue;
-                    if(active[ind.Key].x && ind.Key != a.ind) b = new Vertex(active[ind.Key].y, ind.Key);
-                }
+                foreach(string ind in edges[a.ind])
+                    if(active[ind].x && ind != a.ind) b = new Vertex(active[ind].y, ind);
                 if(b == null) break;
-                foreach(KeyValuePair<uint, bool> ind in edges[b.ind]){
-                    if(!active.ContainsKey(ind.Key)) continue;
-                    if(active[ind.Key].x && ind.Key != a.ind && ind.Key != b.ind) c = new Vertex(active[ind.Key].y, ind.Key);
-                }
+                foreach(string ind in edges[b.ind])
+                    if(active[ind].x && ind != a.ind && ind != b.ind) c = new Vertex(active[ind].y, ind);
                 if(c == null) break;
-                //Debug.Log(" a: " + a.val + " b: " + b.val + " c: " + c.val);
+
+                bool split = false;
+                float degree;
+                Vector2 v;
+                v = a.val - c.val;
+                
+                if(b.val.x >= c.val.x) split = true;
+
+                degree = Mathf.Atan2(v.x, v.y);
+                if(split) degree = -degree;
+                if(degree >= Mathf.PI) break;
+
                 edges[a.ind].Remove(b.ind);
                 edges[b.ind].Remove(a.ind);
                 edges[b.ind].Remove(c.ind);
                 edges[c.ind].Remove(b.ind);
-                if(!edges[a.ind].ContainsKey(c.ind)) edges[a.ind].Add(c.ind, false);
-                if(!edges[c.ind].ContainsKey(a.ind)) edges[c.ind].Add(a.ind, false);
+                if(!edges[a.ind].Contains(c.ind)) edges[a.ind].Add(c.ind);
+                if(!edges[c.ind].Contains(a.ind)) edges[c.ind].Add(a.ind);
                 triangles.Add(new Triangle(a, b, c));
                 active[b.ind].x = false;
             }
@@ -162,7 +179,7 @@ public class Delauny_Triangulation : MonoBehaviour
 
         return ans;
     }
-    public List<Vector3> bowyer_watson(Dictionary<uint, Vector3> vertices, Plane plane){
+    public List<Vector3> bowyer_watson(Dictionary<string, Vector3> vertices, Plane plane){
         float factor = 1f;
         List<Vector3> ans = new List<Vector3>();
         List<Vertex> vertices_2d = new List<Vertex>();
@@ -170,7 +187,7 @@ public class Delauny_Triangulation : MonoBehaviour
 
         //Debug.Log("vertices num " + vertices.Count);
         //transform vertices from 3 Dimesion to 2 Dimesion, because they are point on the same plane.
-        foreach(KeyValuePair<uint, Vector3> it in vertices){
+        foreach(KeyValuePair<string, Vector3> it in vertices){
             Vector3 vertex = it.Value;
             vertex = Quaternion.Inverse(Quaternion.LookRotation(plane.normal)) * vertex;
             Vertex V = new Vertex(vertex, it.Key);
@@ -181,7 +198,7 @@ public class Delauny_Triangulation : MonoBehaviour
 
         //generate a superTriangle that can overlap all the vertices on plane
         Vector2 a = new Vector2(100 * factor, 0),b = new Vector2(-100 * factor, 100),c = new Vector2(-100 * factor, -100  * factor);
-        Triangle superTriangle = new Triangle(a, b, c, 0, 0, 0);
+        Triangle superTriangle = new Triangle(a, b, c, "-", "-", "-");
         triangles.Add(superTriangle);
 
         //Important, that will speed up the bowyer_watson algo. then bowyer_watson will imporve from O(n^2) to O(nlog(n)), but worst case still be O(n^2)
@@ -234,7 +251,7 @@ public class Delauny_Triangulation : MonoBehaviour
             bool f = false;
             //deleting triangles related to supertriangle
             for(int i = 0; i < 3; ++i)
-                if(it.vertices[i].ind == 0) f = true;
+                if(it.vertices[i].ind == "-") f = true;
             if(f) continue;
             //Debug.Log(it.vertices[0].val + " " + it.vertices[1].val + " " + it.vertices[2].val);
             //Debug.Log(vertices[it.vertices[0].ind] + " " + vertices[it.vertices[1].ind] + " " + vertices[it.vertices[2].ind]);

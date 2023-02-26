@@ -15,8 +15,6 @@ public class Element
     public List<Vector3>    normals;
     public List<Vector2>    uvs;
     public List<BoneWeight> bws;
-    public Dictionary<uint, Dictionary<uint, bool>> edges;
-    public Dictionary<uint, Vector3>    planevertex;
 
     public Element(){
         skinned     = false;
@@ -27,8 +25,6 @@ public class Element
         normals     = new List<Vector3>();
         uvs         = new List<Vector2>();
         bws         = new List<BoneWeight>();
-        edges       = new Dictionary<uint, Dictionary<uint, bool>>();
-        planevertex = new Dictionary<uint, Vector3>();
     }
 }
 
@@ -113,12 +109,10 @@ public class player_weapon : MonoBehaviour
             //Debug.Log(desDeg.eulerAngles);
             if(transform.localRotation != desDeg){
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 25f * Time.deltaTime);
-                //Debug.Log("rotating");
                 particle.SetActive(true);
             }else{
                 swapeDone = false;
                 sweaping = false;
-                //Debug.Log("rotate off");
                 particle.SetActive(false);
             }
         }
@@ -146,7 +140,7 @@ public class player_weapon : MonoBehaviour
         return Vector3.Cross(side1, side2);
     }
 
-    private uint Lshift(uint a, int n){
+    /*private uint Lshift(uint a, int n){
         int nn = 32 - n;
         return (a << n) | (a >> nn);
     }
@@ -156,6 +150,10 @@ public class player_weapon : MonoBehaviour
         uint y = unchecked((uint)(a.y*1000));
         uint z = unchecked((uint)(a.z*1000));
         return Lshift(x, 20) ^ Lshift(y, 10) ^ Lshift(z, 0);
+    }*/
+    private string hash(Vector3 a){
+        string s = a.x.ToString("F3")+" "+ a.y.ToString("F3") + " " + a.z.ToString("F3");
+        return s;
     }
 
     //can't use disjoint set to count number of group that are unconnect
@@ -164,7 +162,7 @@ public class player_weapon : MonoBehaviour
         return boss[x] = find_boss(ref boss, boss[x]);
     }
 
-    private int disjointSet_split(Element e, List<Element> objs, Dictionary<uint, Dictionary<uint, bool>> edges, bool face){
+    private int disjointSet_split(Element e, List<Element> objs){
         List<int> boss = new List<int>(new int[e.vertices.Count]);
         Dictionary<int, Element> group = new Dictionary<int, Element>();
         Dictionary<Vector3, int> samePosPoint = new Dictionary<Vector3, int>();
@@ -196,11 +194,8 @@ public class player_weapon : MonoBehaviour
         if(group.Count == 1){
             for(int i = 0; i < e.vertices.Count; ++i){
                 Vector3 vertex = e.vertices[i];
-                uint key = hash(vertex);
-                if(edges.ContainsKey(key) && !e.planevertex.ContainsKey(key)) e.planevertex.Add(key, vertex);
+                string key = hash(vertex);
             }
-            e.edges = edges;
-            e.face = face;
             objs.Add(e);
         }else{
             for(int i = 0 ; i < e.triangles.Count; i += 3){
@@ -212,13 +207,12 @@ public class player_weapon : MonoBehaviour
                 for(int j = 0; j < 3; ++j){
                     int index = e.triangles[i + j];
                     Vector3 vertex = e.vertices[index];
-                    uint planeKey = hash(vertex);
+                    string planeKey = hash(vertex);
 
                     vertices.Add(vertex);
                     uvs.Add(e.uvs[index]);
                     normals.Add(e.normals[index]);
                     if(e.skinned) bws.Add(e.bws[index]);
-                    if(edges.ContainsKey(planeKey) && !group[key].planevertex.ContainsKey(planeKey)) group[key].planevertex.Add(planeKey, vertex);
                 }
 
                 Group g = new Group();
@@ -228,22 +222,17 @@ public class player_weapon : MonoBehaviour
                 g.bws      = bws.ToArray();
                 add_mesh(group[key], g, true);
             }
-            foreach(KeyValuePair<int, Element> it in group){
-                foreach(KeyValuePair<uint, Vector3> itt in it.Value.planevertex)
-                    it.Value.edges.Add(itt.Key, edges[itt.Key]);
-                it.Value.skinned = e.skinned;
-                it.Value.face = face;
+            foreach(KeyValuePair<int, Element> it in group)
                 objs.Add(it.Value);
-            }
         }
         return group.Count;
     }
 
-    private void fillGap(Element e, Element e1, Plane plane){
-        if(e.planevertex.Count < 3)
+    private void fillGap(Element e, Element e1, Dictionary<string, Vector3> planevertex, Dictionary<string, HashSet<string>> edges, Plane plane){
+        if(planevertex.Count < 3)
             return;
         //List<Vector3> triangles = DT.bowyer_watson(e.planevertex, plane);
-        List<Vector3> triangles = DT.sweep_line(e.planevertex, e.edges, plane);
+        List<Vector3> triangles = DT.sweep_line(planevertex, edges, plane);
         
         //Debug.Log("caculate mesh num = " + triangles.Count / 3);
 
@@ -268,8 +257,7 @@ public class player_weapon : MonoBehaviour
             g1.bws = bw; g2.bws = bw;
             g1.vertices = vertex1; g1.normals = normal2;
             g2.vertices = vertex2; g2.normals = normal1;
-            
-            if(direction > 0 && e.face || direction < 0 && !e.face){
+            if(e.face && direction >= 0 || !e.face && direction < 0){
                 add_mesh(e, g1, false);
                 add_mesh(e1, g2, false);
             }else{
@@ -343,7 +331,6 @@ public class player_weapon : MonoBehaviour
         Vector3 size = origin.GetComponentInParent<sliceable>().scale;
         Mesh mesh;
         if(set){
-            for(int j = 0; size.x != 1f && j < element.vertices.Count; ++j) element.vertices[j] *= size.x;
             set_all(element);
             mesh = element.mesh;
             GameObject obj = new GameObject();
@@ -436,9 +423,10 @@ public class player_weapon : MonoBehaviour
 
         if(skin) BWs = sharedMesh.boneWeights;
         else BWs = new BoneWeight[0];
-        //Debug.Log("bone weight " + BWs.Length + " " + vertices.Length);
-        List<Vector3>   vertexOnPlane = new List<Vector3>();
-        Dictionary<uint, Dictionary<uint, bool>> edges = new Dictionary<uint, Dictionary<uint, bool>>();
+
+        Dictionary<string, Vector3> vertexOnPlane = new Dictionary<string, Vector3>();
+        Dictionary<string, Vector3> bakedMeshToMesh = new Dictionary<string, Vector3>();
+        Dictionary<string, HashSet<string>> edges = new Dictionary<string, HashSet<string>>();
 
         for(int i = 0; i < meshTriangles.Length; i += 3){
             //在這邊面是由三角形組成, 三角形又是由三個點組成的,所以說
@@ -460,17 +448,21 @@ public class player_weapon : MonoBehaviour
             }
             Group g = new Group();
             if(!skin) g.vertices = vertice;
-            else      g.vertices = vertice1;
+            else {
+                for(int j = 0; j < 3; ++j)
+                   if(!bakedMeshToMesh.ContainsKey(hash(vertice[j]))) bakedMeshToMesh.Add(hash(vertice[j]), vertice1[j]);
+                g.vertices = vertice;
+                g.bws = bw;
+            }
             g.normals = normal;
             g.uvs = uv;
-            if(skin) g.bws = bw;
 
             if(vSide[0] == vSide[1] && vSide[1] == vSide[2]){ //3 vertex at the same side
                 add_meshSide(vSide[0], positive, negative, g, true);
             }else{
                 Vector3[] intersectionPoint = new Vector3[4];
                 Vector2[] intersectionUV    = new Vector2[2];
-
+                string key = "",key1 = "";
                 for(int j = 0; j < 3; ++j){
                     int v0 = (0 - j < 0 ? 3 - j : 0), v1 = (1 - j < 0 ? 2 : 1 - j), v2 = 2 - j;
                             
@@ -478,6 +470,8 @@ public class player_weapon : MonoBehaviour
                         float d1,d2;
                         intersectionPoint[0] = getIntersectionVertexOnPlane(plane, vertice[v1], vertice[v2], out d1);
                         intersectionPoint[1] = getIntersectionVertexOnPlane(plane, vertice[v2], vertice[v0], out d2);
+                        key = hash(intersectionPoint[0]);
+                        key1 = hash(intersectionPoint[1]);
                         d1 = MathF.Abs(d1 / (vertice[v1] - vertice[v2]).magnitude);
                         d2 = MathF.Abs(d2 / (vertice[v2] - vertice[v0]).magnitude);
                         intersectionUV[0] = Vector2.Lerp(uv[v1], uv[v2], d1);
@@ -488,9 +482,9 @@ public class player_weapon : MonoBehaviour
                         if(skin){
                             intersectionPoint[2] = Vector3.Lerp(vertice1[v1], vertice1[v2], d1);
                             intersectionPoint[3] = Vector3.Lerp(vertice1[v2], vertice1[v0], d2);
-                            intersectionPoint[0] = intersectionPoint[2];
-                            intersectionPoint[1] = intersectionPoint[3];
-                            vertice = vertice1;
+                            if(!bakedMeshToMesh.ContainsKey(key)) bakedMeshToMesh.Add(key, intersectionPoint[2]);
+                            if(!bakedMeshToMesh.ContainsKey(key1)) bakedMeshToMesh.Add(key1, intersectionPoint[3]);
+                            
                             bw1 = new BoneWeight[3]{bw[v0], bw[v1], bw[v2]};
                             bw2 = new BoneWeight[3]{bw[v0], bw[v2], bw[v1]};
                             bw3 = new BoneWeight[3]{bw[v1], bw[v2], bw[v0]};
@@ -511,38 +505,37 @@ public class player_weapon : MonoBehaviour
                         add_meshSide(vSide[v2],  positive, negative, g3, true);
                     }
                 }
-                uint key,key1;
-                key = hash(intersectionPoint[0]);
-                key1 = hash(intersectionPoint[1]);
-                if(!edges.ContainsKey(key)) edges.Add(key, new Dictionary<uint, bool>());
-                if(!edges.ContainsKey(key1)) edges.Add(key1, new Dictionary<uint, bool>());
-                if(!edges[key].ContainsKey(key1) && key != key1) edges[key].Add(key1, false);
-                if(!edges[key1].ContainsKey(key) && key != key1) edges[key1].Add(key, false);
+                if(!vertexOnPlane.ContainsKey(key)) vertexOnPlane.Add(key, intersectionPoint[0]);
+                if(!vertexOnPlane.ContainsKey(key1)) vertexOnPlane.Add(key1, intersectionPoint[1]);
+                if(!edges.ContainsKey(key)) edges.Add(key, new HashSet<string>());
+                if(!edges.ContainsKey(key1)) edges.Add(key1, new HashSet<string>());
+                if(!edges[key].Contains(key1) && key != key1) edges[key].Add(key1);
+                if(!edges[key1].Contains(key) && key != key1) edges[key1].Add(key);
             }
         }
         List<Element> objs = new List<Element>();
-        
-        int positiveNum = 0, negativeNum = 0;
 
-        positiveNum = disjointSet_split(positive, objs, edges, true);
-        negativeNum = disjointSet_split(negative, objs, edges, false);
+        positive.face = true;
+        negative.face = false;
+        fillGap(positive, negative, vertexOnPlane, edges, plane);
 
-        //Debug.Log("positive and negative :" + positiveNum + " " + negativeNum);
+        int groupNumber = 0;
+        groupNumber = Mathf.Max(disjointSet_split(positive, objs), groupNumber);
+        groupNumber = Mathf.Max(disjointSet_split(negative, objs),groupNumber);
+
+        Debug.Log("group_num: " + groupNumber);
 
         objs.Sort((a, b) => {
-            int aPVN = a.planevertex.Count, aVN = a.vertices.Count;
-            int bPVN = b.planevertex.Count, bVN = b.vertices.Count;
-            if(aPVN > bPVN)         return -1;
-            else if(aPVN < bPVN)    return 1;
-            else{
-                if(aVN > bVN) return -1;
-                else return 1;
-            }
+            int aVN = a.vertices.Count;
+            int bVN = b.vertices.Count;
+            if(aVN > bVN) return -1;
+            else return 1;
         });
-        for(int i = objs.Count - 1; i > 0; --i){
-            fillGap(objs[i], objs[0], plane);
+
+        for(int i = objs.Count - 1; i > 0; --i)
             createObject(a, objs[i], transNormal, true);
-        }
+        for(int i = 0; skin && i < objs[0].vertices.Count; ++i)
+            objs[0].vertices[i] = bakedMeshToMesh[hash(objs[0].vertices[i])];
         createObject(a, objs[0], transNormal, false);
     }
     // Start is called before the first frame update
