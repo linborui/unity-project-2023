@@ -320,6 +320,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal
       objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074190, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: linkedPortal
@@ -6782,6 +6787,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CirclePortal (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 77229936062074190, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}

@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 475368675180957496}
   - component: {fileID: 3546306392061984925}
   - component: {fileID: 1644928314346681431}
-  - component: {fileID: 77229936770754774}
+  - component: {fileID: 9022534075040225903}
   m_Layer: 0
   m_Name: portal
   m_TagString: Untagged
@@ -205,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 996150826146862466}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 77229936062074188}
@@ -239,7 +239,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 862d756f3c67d421c9ce251cd604fbf3, type: 2}
+  - {fileID: 2100000, guid: a745f6b832343d04c83e49d466f7789e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -261,7 +261,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &77229936770754774
+--- !u!64 &9022534075040225903
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -274,4 +274,4 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -2124705421725058983, guid: 83cd4c19e74e4d045a04b9e5e59217f8, type: 3}
+  m_Mesh: {fileID: -2124705421725058983, guid: 741443ada3ebd2847ab523368eec4df4, type: 3}

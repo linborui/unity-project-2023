@@ -23,6 +23,7 @@ public class Portal : MonoBehaviour {
     List<PortalTraveller> trackedTravellers;
     MeshFilter screenMeshFilter;
 
+
     void Awake () {
         playerCam = Camera.main;
         portalCam = GetComponentInChildren<Camera> ();
@@ -30,6 +31,7 @@ public class Portal : MonoBehaviour {
         trackedTravellers = new List<PortalTraveller> ();
         screenMeshFilter = screen.GetComponent<MeshFilter> ();
         screen.material.SetInt ("displayMask", 1);
+        //portal = false;
     }
 
     // OnTriggerEnter 是在 Physics(先) LateUpdate 是在GameLogic(後)
@@ -43,23 +45,20 @@ public class Portal : MonoBehaviour {
             PortalTraveller traveller = trackedTravellers[i]; 
             Transform travellerT = traveller.transform;
             //矩陣相乘 對應的門 自己門的位置 傳送者的位置
-            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
+            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix ;//* travellerT.localToWorldMatrix;
             //這裡是為了專門給玩家傳送，因為相機跟玩家並不同步，需要額外處理
-            var camM = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
-            Camera cam = Camera.main;
-            cam.GetComponent<PlayerCam>().portalMatrix = camM; //將算好的矩陣傳給相機
-
-
-            //自己與玩家的距離
+            
             Vector3 offsetFromPortal = travellerT.position - transform.position;
 
-            //看是在哪一側 內積>90度 會是負數，如此以來才會是傳送經過到另一側，這樣sign才會改變
+            //看是在哪一側
             int portalSide = System.Math.Sign (Vector3.Dot (offsetFromPortal, transform.forward));
             int lastPortalSide = System.Math.Sign (Vector3.Dot (traveller.previousOffsetFromPortal, transform.forward));
+
             if (portalSide != lastPortalSide) { //如果sign不同時才會傳送
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
-                traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
+                traveller.Teleport (transform, linkedPortal.transform, m,travellerT);
+                //traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 //必須手動做另外一個門的進到傳送門的動作，因為下個門的OnTriggerEnter/Exit 是在下個frame的Physics。
                 //而這裡是在當前的FixedUpdate，為了避免差一個frame
@@ -68,6 +67,7 @@ public class Portal : MonoBehaviour {
                 i--;
             } 
             else {
+                traveller.graphicsClone.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
                 traveller.previousOffsetFromPortal = offsetFromPortal;
             }
         }
@@ -214,12 +214,14 @@ public class Portal : MonoBehaviour {
         float halfHeight = playerCam.nearClipPlane * Mathf.Tan (playerCam.fieldOfView * 0.5f * Mathf.Deg2Rad);
         float halfWidth = halfHeight * playerCam.aspect;
         float dstToNearClipPlaneCorner = new Vector3 (halfWidth, halfHeight, playerCam.nearClipPlane).magnitude;
-        float screenThickness = dstToNearClipPlaneCorner;
+        float screenThickness = dstToNearClipPlaneCorner ;
 
         Transform screenT = screen.transform; //mesh renderer transform
         bool camFacingSameDirAsPortal = Vector3.Dot (transform.forward, transform.position - viewPoint) > 0;
         screenT.localScale = new Vector3 (screenT.localScale.x, screenT.localScale.y, screenThickness);
-        screenT.localPosition = Vector3.forward * screenThickness * ((camFacingSameDirAsPortal) ? 0.5f : -0.5f);
+        screenT.localPosition = Vector3.forward * screenThickness * ((camFacingSameDirAsPortal) ? 0.5f : -0.5f) * 2f ;
+
+        Debug.Log("screenThickness: " + screenThickness);
         return screenThickness;
     }
 
@@ -302,6 +304,8 @@ public class Portal : MonoBehaviour {
     void OnTriggerExit (Collider other) {
         var traveller = other.GetComponent<PortalTraveller> ();
         if (traveller && trackedTravellers.Contains (traveller)) {
+            //portal = false;
+            Debug.Log("OnTriggerExit: "+transform.gameObject.name+" "+other.gameObject.name);
             traveller.ExitPortalThreshold ();
             trackedTravellers.Remove (traveller);
         }

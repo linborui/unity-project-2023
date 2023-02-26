@@ -62,13 +62,13 @@ public class PairPortal : MonoBehaviour
             PortalTraveller traveller = trackedTravellers[i]; 
             Transform travellerT = traveller.transform;
             //矩陣相乘 對應的門 自己門的位置 傳送者的位置
-            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
+            //var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
             //這裡是為了專門給玩家傳送，因為相機跟玩家並不同步，需要額外處理
-            var camM = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
-            Camera cam = Camera.main;
-            cam.GetComponent<PlayerCam>().portalMatrix = camM; //將算好的矩陣傳給相機
+            //var camM = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
+            //Camera cam = Camera.main;
+            //cam.GetComponent<PlayerCam>().portalMatrix = camM; //將算好的矩陣傳給相機
 
-
+            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix ;
             //自己與玩家的距離
             Vector3 offsetFromPortal = travellerT.position - transform.position;
 
@@ -78,7 +78,8 @@ public class PairPortal : MonoBehaviour
             if (portalSide != lastPortalSide) { //如果sign不同時才會傳送
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
-                traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
+                traveller.Teleport (transform, linkedPortal.transform, m,travellerT);
+                //traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 //必須手動做另外一個門的進到傳送門的動作，因為下個門的OnTriggerEnter/Exit 是在下個frame的Physics。
                 //而這裡是在當前的FixedUpdate，為了避免差一個frame

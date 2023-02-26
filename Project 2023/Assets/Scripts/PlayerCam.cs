@@ -33,13 +33,14 @@ public class PlayerCam : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
+        Debug.Log(cameraHeight);
         if (state == 0)
         {
             cameraDistance = 2.0f;
         }
         else if (state == 1)
         {
-            cameraDistance = 0.3f;
+            cameraDistance = 0;//0.3f;
         }
         currHeight = cameraHeight;
         currDistance = cameraDistance;
@@ -130,35 +131,43 @@ public class PlayerCam : MonoBehaviour
     {
         Action<float, float> UpdateCurrLoc = (distance, height) =>
         {
-            float dis = distanceSpeed * Time.deltaTime;
-            float hei = heightSpeed * Time.deltaTime;
-            if (currDistance < distance)
-            {
-                currDistance += dis;
-                if (currDistance > distance)
-                    currDistance = distance;
+            /*
+            if(PlayerMovement.isTransport){
+                currDistance = distance;
+                currHeight = height;
+                PlayerMovement.isTransport = false;
             }
-            else if (currDistance > distance)
-            {
-                currDistance -= dis;
+            else{*/
+                float dis = distanceSpeed * Time.deltaTime;
+                float hei = heightSpeed * Time.deltaTime;
                 if (currDistance < distance)
-                    currDistance = distance;
-            }
-            if (currHeight < height)
-            {
-                currHeight += hei;
-                if (currHeight > height)
-                    currHeight = height;
-            }
-            else if (currHeight > height)
-            {
-                currHeight -= hei;
+                {
+                    currDistance += dis;
+                    if (currDistance > distance)
+                        currDistance = distance;
+                }
+                else if (currDistance > distance)
+                {
+                    currDistance -= dis;
+                    if (currDistance < distance)
+                        currDistance = distance;
+                }
                 if (currHeight < height)
-                    currHeight = height;
-            }
+                {
+                    currHeight += hei;
+                    if (currHeight > height)
+                        currHeight = height;
+                }
+                else if (currHeight > height)
+                {
+                    currHeight -= hei;
+                    if (currHeight < height)
+                        currHeight = height;
+                }
+            
         };
 
-        if (state == 0) //第一人稱
+        if (state == 0) //第三人稱
         {
             float distance = cameraDistance;
             float height = cameraHeight;
@@ -174,16 +183,20 @@ public class PlayerCam : MonoBehaviour
             UpdateCurrLoc(distance, height);
             transform.localPosition = tf.localPosition - transform.forward * currDistance + Vector3.up * currHeight;
         }
-        else if (state == 1) //第三人稱
+        else if (state == 1) //第一人稱
         {
-            float distance = cameraDistance;
-            cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
-            if (PlayerMovement.sliding)
-            {
-                distance *= 2f;
+            if(!PlayerMovement.isTransport){
+                float distance = cameraDistance;
+                cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
+                Debug.Log(cameraHeight);
+            
+                if (PlayerMovement.sliding)
+                {
+                    distance *= 2f;
+                }
+                UpdateCurrLoc(distance, cameraHeight);
+                transform.localPosition = tf.localPosition + tf.forward * currDistance + tf.up * currHeight;
             }
-            UpdateCurrLoc(distance, cameraHeight);
-            transform.localPosition = tf.localPosition + tf.forward * currDistance + tf.up * currHeight;
         }
     }
 
