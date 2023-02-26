@@ -331,7 +331,6 @@ public class player_weapon : MonoBehaviour
         Vector3 size = origin.GetComponentInParent<sliceable>().scale;
         Mesh mesh;
         if(set){
-            for(int j = 0; size.x != 1f && j < element.vertices.Count; ++j) element.vertices[j] *= size.x;
             set_all(element);
             mesh = element.mesh;
             GameObject obj = new GameObject();
@@ -426,6 +425,7 @@ public class player_weapon : MonoBehaviour
         else BWs = new BoneWeight[0];
 
         Dictionary<string, Vector3> vertexOnPlane = new Dictionary<string, Vector3>();
+        Dictionary<string, Vector3> bakedMeshToMesh = new Dictionary<string, Vector3>();
         Dictionary<string, HashSet<string>> edges = new Dictionary<string, HashSet<string>>();
 
         for(int i = 0; i < meshTriangles.Length; i += 3){
@@ -448,17 +448,21 @@ public class player_weapon : MonoBehaviour
             }
             Group g = new Group();
             if(!skin) g.vertices = vertice;
-            else      g.vertices = vertice1;
+            else {
+                for(int j = 0; j < 3; ++j)
+                   if(!bakedMeshToMesh.ContainsKey(hash(vertice[j]))) bakedMeshToMesh.Add(hash(vertice[j]), vertice1[j]);
+                g.vertices = vertice;
+                g.bws = bw;
+            }
             g.normals = normal;
             g.uvs = uv;
-            if(skin) g.bws = bw;
 
             if(vSide[0] == vSide[1] && vSide[1] == vSide[2]){ //3 vertex at the same side
                 add_meshSide(vSide[0], positive, negative, g, true);
             }else{
                 Vector3[] intersectionPoint = new Vector3[4];
                 Vector2[] intersectionUV    = new Vector2[2];
-
+                string key = "",key1 = "";
                 for(int j = 0; j < 3; ++j){
                     int v0 = (0 - j < 0 ? 3 - j : 0), v1 = (1 - j < 0 ? 2 : 1 - j), v2 = 2 - j;
                             
@@ -466,6 +470,8 @@ public class player_weapon : MonoBehaviour
                         float d1,d2;
                         intersectionPoint[0] = getIntersectionVertexOnPlane(plane, vertice[v1], vertice[v2], out d1);
                         intersectionPoint[1] = getIntersectionVertexOnPlane(plane, vertice[v2], vertice[v0], out d2);
+                        key = hash(intersectionPoint[0]);
+                        key1 = hash(intersectionPoint[1]);
                         d1 = MathF.Abs(d1 / (vertice[v1] - vertice[v2]).magnitude);
                         d2 = MathF.Abs(d2 / (vertice[v2] - vertice[v0]).magnitude);
                         intersectionUV[0] = Vector2.Lerp(uv[v1], uv[v2], d1);
@@ -476,9 +482,9 @@ public class player_weapon : MonoBehaviour
                         if(skin){
                             intersectionPoint[2] = Vector3.Lerp(vertice1[v1], vertice1[v2], d1);
                             intersectionPoint[3] = Vector3.Lerp(vertice1[v2], vertice1[v0], d2);
-                            intersectionPoint[0] = intersectionPoint[2];
-                            intersectionPoint[1] = intersectionPoint[3];
-                            vertice = vertice1;
+                            if(!bakedMeshToMesh.ContainsKey(key)) bakedMeshToMesh.Add(key, intersectionPoint[2]);
+                            if(!bakedMeshToMesh.ContainsKey(key1)) bakedMeshToMesh.Add(key1, intersectionPoint[3]);
+                            
                             bw1 = new BoneWeight[3]{bw[v0], bw[v1], bw[v2]};
                             bw2 = new BoneWeight[3]{bw[v0], bw[v2], bw[v1]};
                             bw3 = new BoneWeight[3]{bw[v1], bw[v2], bw[v0]};
@@ -499,8 +505,6 @@ public class player_weapon : MonoBehaviour
                         add_meshSide(vSide[v2],  positive, negative, g3, true);
                     }
                 }
-                string key = hash(intersectionPoint[0]),key1 = hash(intersectionPoint[1]);
-
                 if(!vertexOnPlane.ContainsKey(key)) vertexOnPlane.Add(key, intersectionPoint[0]);
                 if(!vertexOnPlane.ContainsKey(key1)) vertexOnPlane.Add(key1, intersectionPoint[1]);
                 if(!edges.ContainsKey(key)) edges.Add(key, new HashSet<string>());
@@ -530,6 +534,8 @@ public class player_weapon : MonoBehaviour
 
         for(int i = objs.Count - 1; i > 0; --i)
             createObject(a, objs[i], transNormal, true);
+        for(int i = 0; skin && i < objs[0].vertices.Count; ++i)
+            objs[0].vertices[i] = bakedMeshToMesh[hash(objs[0].vertices[i])];
         createObject(a, objs[0], transNormal, false);
     }
     // Start is called before the first frame update
