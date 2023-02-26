@@ -5,6 +5,7 @@ using Luminosity.IO;
 public class CreatePortal : MonoBehaviour
 {
     // Start is called before the first frame update
+    //Add on the camera 
     Vector3 _hitPoint;
     public GameObject prefab;
     public Material Orangematerial;

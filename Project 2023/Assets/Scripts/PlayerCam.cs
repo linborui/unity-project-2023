@@ -6,7 +6,6 @@ using System;
 using UnityEngine.Rendering;
 public class PlayerCam : MonoBehaviour
 {
-    public Matrix4x4 portalMatrix; //Portal
     public int state;
 
     public float xSensitivity;
@@ -131,40 +130,33 @@ public class PlayerCam : MonoBehaviour
     {
         Action<float, float> UpdateCurrLoc = (distance, height) =>
         {
-            /*
-            if(PlayerMovement.isTransport){
-                currDistance = distance;
-                currHeight = height;
-                PlayerMovement.isTransport = false;
-            }
-            else{*/
-                float dis = distanceSpeed * Time.deltaTime;
-                float hei = heightSpeed * Time.deltaTime;
-                if (currDistance < distance)
-                {
-                    currDistance += dis;
-                    if (currDistance > distance)
-                        currDistance = distance;
-                }
-                else if (currDistance > distance)
-                {
-                    currDistance -= dis;
-                    if (currDistance < distance)
-                        currDistance = distance;
-                }
-                if (currHeight < height)
-                {
-                    currHeight += hei;
-                    if (currHeight > height)
-                        currHeight = height;
-                }
-                else if (currHeight > height)
-                {
-                    currHeight -= hei;
-                    if (currHeight < height)
-                        currHeight = height;
-                }
             
+            float dis = distanceSpeed * Time.deltaTime;
+            float hei = heightSpeed * Time.deltaTime;
+            if (currDistance < distance)
+            {
+                currDistance += dis;
+                if (currDistance > distance)
+                    currDistance = distance;
+            }
+            else if (currDistance > distance)
+            {
+                currDistance -= dis;
+                if (currDistance < distance)
+                    currDistance = distance;
+            }
+            if (currHeight < height)
+            {
+                currHeight += hei;
+                if (currHeight > height)
+                    currHeight = height;
+            }
+            else if (currHeight > height)
+            {
+                currHeight -= hei;
+                if (currHeight < height)
+                    currHeight = height;
+            }
         };
 
         if (state == 0) //第三人稱
@@ -185,7 +177,8 @@ public class PlayerCam : MonoBehaviour
         }
         else if (state == 1) //第一人稱
         {
-            if(!PlayerMovement.isTransport){
+            //只有在未傳送狀態下才會在這裡移動相機(Update)，其他都在PlayerMoverment.cs transport傳送(雖然那裏是LateUpdate)
+            if(!PlayerMovement.isTransport){ 
                 float distance = cameraDistance;
                 cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
                 Debug.Log(cameraHeight);

@@ -45,9 +45,9 @@ public class Portal : MonoBehaviour {
             PortalTraveller traveller = trackedTravellers[i]; 
             Transform travellerT = traveller.transform;
             //矩陣相乘 對應的門 自己門的位置 傳送者的位置
+            //矩陣運算只做一次
             var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix ;//* travellerT.localToWorldMatrix;
             //這裡是為了專門給玩家傳送，因為相機跟玩家並不同步，需要額外處理
-            
             Vector3 offsetFromPortal = travellerT.position - transform.position;
 
             //看是在哪一側
@@ -57,8 +57,10 @@ public class Portal : MonoBehaviour {
             if (portalSide != lastPortalSide) { //如果sign不同時才會傳送
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
-                traveller.Teleport (transform, linkedPortal.transform, m,travellerT);
+                //原本的寫法
                 //traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
+                //新的寫法，因為body 跟 camera 分開，為了減少計算量，所以傳過去的是矩陣，讓傳送者自己去計算
+                traveller.Teleport (transform, linkedPortal.transform, m,travellerT);
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 //必須手動做另外一個門的進到傳送門的動作，因為下個門的OnTriggerEnter/Exit 是在下個frame的Physics。
                 //而這裡是在當前的FixedUpdate，為了避免差一個frame
@@ -219,7 +221,8 @@ public class Portal : MonoBehaviour {
         Transform screenT = screen.transform; //mesh renderer transform
         bool camFacingSameDirAsPortal = Vector3.Dot (transform.forward, transform.position - viewPoint) > 0;
         screenT.localScale = new Vector3 (screenT.localScale.x, screenT.localScale.y, screenThickness);
-        screenT.localPosition = Vector3.forward * screenThickness * ((camFacingSameDirAsPortal) ? 0.5f : -0.5f) * 2f ;
+        // I double the offset of position to transport smootly , But I don't know why ****************************************
+        screenT.localPosition = Vector3.forward * screenThickness * ((camFacingSameDirAsPortal) ? 0.5f : -0.5f) * 2f ; 
 
         Debug.Log("screenThickness: " + screenThickness);
         return screenThickness;

@@ -12,11 +12,12 @@ public class PortalTraveller : MonoBehaviour {
     public Material[] cloneMaterials { get; set; }
 
     public bool isPlayer;
-    /*
+    /* old code
     public virtual void Teleport (Transform fromPortal, Transform toPortal, Vector3 pos, Quaternion rot) {
         transform.position = pos;
         transform.rotation = rot;
     }*/
+    // for camera need to adjust its position and rotaion because camera and body are separated object 沒有父子關係
     public virtual void Teleport (Transform fromPortal, Transform toPortal, Matrix4x4 m, Transform travellerT) {
         Matrix4x4 mat = m * travellerT.localToWorldMatrix;
         
