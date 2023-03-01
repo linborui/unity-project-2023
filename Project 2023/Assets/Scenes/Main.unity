@@ -310,6 +310,11 @@ PrefabInstance:
       propertyPath: linkedPortal
       value: 
       objectReference: {fileID: 1757336800}
+    - target: {fileID: 77229936481833963, guid: ee1f956151cf27d4e8103e187be8a465,
+        type: 3}
+      propertyPath: m_CameraType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 475368675180957496, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: m_LocalScale.z
@@ -1428,6 +1433,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8417707026541122879, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b3b351aa22b7bb4d8ed51b18648f815, type: 3}
@@ -3772,23 +3782,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d13b44ee3e4a024b98226371a4e68a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portalMatrix:
-    e00: 0
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 0
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 0
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 0
   state: 1
   xSensitivity: 20
   ySensitivity: 20
