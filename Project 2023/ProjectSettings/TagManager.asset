@@ -8,6 +8,8 @@ TagManager:
   - Save
   - Dead
   - Moveable
+  - Portal
+  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - Upon
   - 
   - 
   - 
