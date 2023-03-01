@@ -310,26 +310,6 @@ PrefabInstance:
       propertyPath: linkedPortal
       value: 
       objectReference: {fileID: 1757336800}
-    - target: {fileID: 77229936481833963, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_CameraType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 475368675180957496, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.028
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703824904065967506, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 0.00000000178814
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703824904065967506, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1f956151cf27d4e8103e187be8a465, type: 3}
 --- !u!1 &85453417 stripped
@@ -6746,24 +6726,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
-      propertyPath: portal
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
       propertyPath: linkedPortal
       value: 
       objectReference: {fileID: 115377698}
-    - target: {fileID: 475368675180957496, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.028
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703824904065967506, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 0.00000000178814
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1f956151cf27d4e8103e187be8a465, type: 3}
 --- !u!114 &1757336800 stripped

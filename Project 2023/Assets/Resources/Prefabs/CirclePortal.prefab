@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 3546306392061984925}
   - component: {fileID: 1644928314346681431}
   - component: {fileID: 9022534075040225903}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -229,10 +229,10 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
