@@ -62,7 +62,7 @@ public class PlayerCam : MonoBehaviour
 
     void RenderPortal(ScriptableRenderContext context, Camera camera)
     {
-        pairPortals = FindObjectsOfType<PairPortal>();
+        //pairPortals = FindObjectsOfType<PairPortal>();
 
         for (int i = 0; i < portals.Length; i++) {
             portals[i].PrePortalRender (context);
@@ -74,6 +74,7 @@ public class PlayerCam : MonoBehaviour
         for (int i = 0; i < portals.Length; i++) {
             portals[i].PostPortalRender (context);
         }
+        /*
         for (int i = 0; i < pairPortals.Length; i++) {
             pairPortals[i].PrePortalRender (context);
         }
@@ -84,7 +85,7 @@ public class PlayerCam : MonoBehaviour
         for (int i = 0; i < pairPortals.Length; i++) {
             pairPortals[i].PostPortalRender (context);
         }
-
+        */
     }
 
     void Update()
@@ -110,7 +111,7 @@ public class PlayerCam : MonoBehaviour
 
     void MouseControl()
     {
-        if (!InputManager.GetButton("Slash"))
+        if (!InputManager.GetButton("Slash")&&!PlayerMovement.isTransport)
         {
             float mouseX = InputManager.GetAxisRaw("Mouse X") * Time.deltaTime * xSensitivity;
             float mouseY = InputManager.GetAxisRaw("Mouse Y") * Time.deltaTime * ySensitivity;
@@ -123,6 +124,9 @@ public class PlayerCam : MonoBehaviour
             transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f); //相機的rotation
             if (!PlayerMovement.onWall)
                 tf.rotation = Quaternion.Euler(tf.rotation.eulerAngles.x, yRotation, tf.rotation.eulerAngles.z); //人物的rotation
+        }
+        else{
+            Physics.SyncTransforms ();
         }
     }
 
@@ -189,6 +193,9 @@ public class PlayerCam : MonoBehaviour
                 }
                 UpdateCurrLoc(distance, cameraHeight);
                 transform.localPosition = tf.localPosition + tf.forward * currDistance + tf.up * currHeight;
+            }
+            else{
+                Physics.SyncTransforms ();
             }
         }
     }

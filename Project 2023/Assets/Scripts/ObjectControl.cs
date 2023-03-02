@@ -15,7 +15,7 @@ public class ObjectControl : MonoBehaviour
     public float throwAngle;
     public int numPoints;
 
-    GameObject controledObject;
+    static public GameObject controledObject;
     int objectState; // 0-nothing  1-get object  2-can move  3-moving  4-on hand
     float controlTime;
 

@@ -68,7 +68,7 @@ public class PairPortal : MonoBehaviour
             //Camera cam = Camera.main;
             //cam.GetComponent<PlayerCam>().portalMatrix = camM; //將算好的矩陣傳給相機
 
-            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix ;
+            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
             //自己與玩家的距離
             Vector3 offsetFromPortal = travellerT.position - transform.position;
 
@@ -78,7 +78,9 @@ public class PairPortal : MonoBehaviour
             if (portalSide != lastPortalSide) { //如果sign不同時才會傳送
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
-                traveller.Teleport (transform, linkedPortal.transform, m,travellerT);
+                Camera cam = linkedPortal.GetComponentInChildren<Camera>();
+
+                traveller.Teleport (transform, linkedPortal.transform, m.GetColumn(3), m.rotation);
                 //traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 //必須手動做另外一個門的進到傳送門的動作，因為下個門的OnTriggerEnter/Exit 是在下個frame的Physics。
