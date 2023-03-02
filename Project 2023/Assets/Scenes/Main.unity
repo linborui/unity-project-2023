@@ -848,7 +848,8 @@ GameObject:
   - component: {fileID: 186160314}
   - component: {fileID: 186160315}
   - component: {fileID: 186160316}
-  m_Layer: 0
+  - component: {fileID: 186160317}
+  m_Layer: 10
   m_Name: Cube (1)
   m_TagString: Moveable
   m_Icon: {fileID: 0}
@@ -965,6 +966,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &186160317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186160309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c1ef66e35abaa45935a4d608435dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeBeforeAffected: 0
 --- !u!1 &233355495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,7 +1220,8 @@ GameObject:
   - component: {fileID: 247611849}
   - component: {fileID: 247611850}
   - component: {fileID: 247611851}
-  m_Layer: 0
+  - component: {fileID: 247611852}
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Moveable
   m_Icon: {fileID: 0}
@@ -1323,6 +1338,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &247611852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247611844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c1ef66e35abaa45935a4d608435dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeBeforeAffected: 0
 --- !u!1 &268362303
 GameObject:
   m_ObjectHideFlags: 0
@@ -1859,6 +1887,235 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444828154}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &487232722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 487232725}
+  - component: {fileID: 487232724}
+  - component: {fileID: 487232723}
+  m_Layer: 0
+  m_Name: TimeManager
+  m_TagString: TimeManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &487232723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 487232722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4cf283aa6d5cbc4ba58bf351758e9e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rendererData: {fileID: 11400000, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
+  featureName: Desaturate
+  transitionPeriod: 8
+  TimeIsStopped: 0
+--- !u!114 &487232724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 487232722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6e27ce7031154a49b988f83de94e418, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rendererData: {fileID: 11400000, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
+  featureName: TimeShift
+  transitionPeriod: 1
+  distortFactor: 0
+  distortCenter: {x: 0.5, y: 0.5}
+  NoiseTexture: {fileID: 2800000, guid: 7f200914f1b73714182072d0aa0872ff, type: 3}
+  mycamera: {fileID: 1080336821}
+  distortStrength: 0
+  passThroughTime: 0.8
+  scaleCurveFactor: 0.2
+  scaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.64595765
+      value: 0.91929054
+      inSlope: 1.5339099
+      outSlope: 1.5339099
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.17142612
+    - serializedVersion: 3
+      time: 0.8595336
+      value: 0.9399052
+      inSlope: -2.1966584
+      outSlope: -2.1966584
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.29455644
+    - serializedVersion: 3
+      time: 0.9009609
+      value: 0.780053
+      inSlope: 9.296796
+      outSlope: 9.296796
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.7471034
+      outWeight: 0.62262046
+    - serializedVersion: 3
+      time: 0.9187081
+      value: 0.5085864
+      inSlope: 0.9186985
+      outSlope: 0.9186985
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9300159
+      value: 0.21377832
+      inSlope: -20.236763
+      outSlope: -20.236763
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.11018296
+    - serializedVersion: 3
+      time: 0.93281263
+      value: -0.07621673
+      inSlope: -4.4043145
+      outSlope: -4.4043145
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.94987
+      value: -0.045949936
+      inSlope: -3.127125
+      outSlope: -3.127125
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.007598877
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  distortCurveFactor: 1
+  distortCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.19900377
+      value: 0.12801014
+      inSlope: 2.555666
+      outSlope: 2.555666
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.22899999
+      value: 0.10765031
+      inSlope: 1.9441365
+      outSlope: 1.9441365
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.069551006
+    - serializedVersion: 3
+      time: 0.33028635
+      value: 0.12508354
+      inSlope: 2.5863032
+      outSlope: 2.5863032
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.029842995
+    - serializedVersion: 3
+      time: 0.38014162
+      value: 0.11866899
+      inSlope: -1.2588129
+      outSlope: -1.2588129
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.124172255
+    - serializedVersion: 3
+      time: 0.93908983
+      value: 0.9443254
+      inSlope: 2.3655276
+      outSlope: 2.3655276
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0119629
+      value: -0.09180069
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  AddColor: {r: 0.7830189, g: 0.7673363, b: 0.63211364, a: 1}
+--- !u!4 &487232725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 487232722}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &538978732
 GameObject:
   m_ObjectHideFlags: 0
@@ -4992,6 +5249,42 @@ MonoBehaviour:
       m_description: 
       m_bindings:
       - m_positive: 112
+        m_negative: 0
+        m_deadZoneType: 0
+        m_deadZone: 0
+        m_gravity: 1
+        m_sensitivity: 1
+        m_scale: 1
+        m_snap: 0
+        m_invert: 0
+        m_type: 0
+        m_axis: 0
+        m_joystick: 0
+        m_gamepadButton: 0
+        m_gamepadAxis: 0
+        m_gamepadIndex: 0
+    - m_name: TimeStop
+      m_description: 
+      m_bindings:
+      - m_positive: 101
+        m_negative: 0
+        m_deadZoneType: 0
+        m_deadZone: 0
+        m_gravity: 1
+        m_sensitivity: 1
+        m_scale: 1
+        m_snap: 0
+        m_invert: 0
+        m_type: 0
+        m_axis: 0
+        m_joystick: 0
+        m_gamepadButton: 0
+        m_gamepadAxis: 0
+        m_gamepadIndex: 0
+    - m_name: TimeShift
+      m_description: 
+      m_bindings:
+      - m_positive: 113
         m_negative: 0
         m_deadZoneType: 0
         m_deadZone: 0

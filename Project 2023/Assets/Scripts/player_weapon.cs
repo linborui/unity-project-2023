@@ -334,7 +334,9 @@ public class player_weapon : MonoBehaviour
             set_all(element);
             mesh = element.mesh;
             GameObject obj = new GameObject();
-            
+
+            obj.layer = origin.layer;
+            obj.AddComponent<TimeBody>();
             obj.AddComponent<sliceable>();
             obj.AddComponent<MeshFilter>();
             obj.AddComponent<MeshRenderer>();

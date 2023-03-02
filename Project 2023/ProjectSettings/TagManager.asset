@@ -10,7 +10,11 @@ TagManager:
   - Moveable
   - Portal
   - Weapon
+<<<<<<< HEAD
   - Screen
+=======
+  - TimeManager
+>>>>>>> c37e2270f80ddd070d9fab9e5a746c8d554d8a31
   layers:
   - Default
   - TransparentFX
@@ -21,8 +25,8 @@ TagManager:
   - Ground
   - Upon
   - 
-  - 
-  - 
+  - Present
+  - Past
   - 
   - 
   - 
