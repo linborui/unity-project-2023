@@ -10,6 +10,7 @@ TagManager:
   - Moveable
   - Portal
   - Weapon
+  - TimeManager
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - Ground
   - Upon
   - 
-  - 
-  - 
+  - Present
+  - Past
   - 
   - 
   - 
