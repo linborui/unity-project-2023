@@ -43,17 +43,22 @@ public class TimeShiftingController : MonoBehaviour {
     public Color AddColor;
 
     private Color baseColor;
+    private int pastlayer;
+    private int presentlayer;
 
     int PastBool = 0;  //0:present, 1:presentToPast 2:past 3:pastToPresent
 
-    private void Start()
+    private void Awake()
     {
+        pastlayer = LayerMask.NameToLayer("Past");
+        presentlayer = LayerMask.NameToLayer("Present");
+        mycamera.cullingMask &= ~(1 << pastlayer);
+        Physics.IgnoreLayerCollision(0, pastlayer, false);
+
         feature = rendererData.rendererFeatures.Where((f) => f.name == featureName).FirstOrDefault();
         var blitFeature = feature as BlitMaterialFeature;
         mat = blitFeature.Material;
         mat.SetTexture("_NoiseTex", NoiseTexture);
-        mycamera.cullingMask &= ~(1 << 10);
-        Physics.IgnoreLayerCollision(0, 10, false);
         baseColor = new Color(1, 1, 1, 1);
     }
 
@@ -94,57 +99,26 @@ public class TimeShiftingController : MonoBehaviour {
             mat.SetColor("_AddColor", baseColor);
             if (currentTime >= (passThroughTime - 0.5f) && PastBool == 0)
             {
-                mycamera.cullingMask |= (1 << 10); mycamera.cullingMask &= ~(1 << 9);
-                Physics.IgnoreLayerCollision(0, 10, false); Physics.IgnoreLayerCollision(0, 9, true);
+                var cameras = FindObjectsOfType<Camera>();
+                for (int i = 0; i < cameras.Length; i++)
+                {
+                    cameras[i].cullingMask |= (1 << pastlayer);
+                    cameras[i].cullingMask &= ~(1 << presentlayer);
+                }
+                Physics.IgnoreLayerCollision(0, pastlayer, false); Physics.IgnoreLayerCollision(0, presentlayer, true);
                 PastBool = 1;
-            }  //加layer10, 減layer9
+            }  //加pastlayer, 減presentlayer
             else if (currentTime >= (passThroughTime - 0.5f) && PastBool == 2)
             {
-                mycamera.cullingMask &= ~(1 << 10); mycamera.cullingMask |= (1 << 9);
-                Physics.IgnoreLayerCollision(0, 10, true); Physics.IgnoreLayerCollision(0, 9, false);
+                var cameras = FindObjectsOfType<Camera>();
+                for (int i = 0; i < cameras.Length; i++)
+                {
+                    cameras[i].cullingMask &= ~(1 << pastlayer);
+                    cameras[i].cullingMask |= (1 << presentlayer);
+                }
+                Physics.IgnoreLayerCollision(0, pastlayer, true); Physics.IgnoreLayerCollision(0, presentlayer, false);
                 PastBool = 3;
-            }//減layer10, 加layer9
+            }//減pastlayer, 加presentlayer
         }
     }
-
-
-    /* private void StartTransition() {
-         startTime = Time.timeSinceLevelLoad;
-         transitioning = true;
-     }*/
-
-  /*  private void UpdateTransition() {
-            float saturation = Mathf.Clamp01((Time.timeSinceLevelLoad - startTime) / transitionPeriod);
-           // Debug.Log(saturation);
-            mat.SetFloat("_Saturation", saturation);
-    }
-
-    private void EndTransition() {
-            feature.SetActive(false);
-            rendererData.SetDirty();
-            transitioning = false;
-    }
-
-    private void ResetTransition() {
-            mat.SetFloat("_Saturation", 1);          
-            transitioning = false;
-    }
-
-    public void ContinueTime()
-    {
-        TimeIsStopped = false;
-
-        var objects = FindObjectsOfType<TimeBody>();  //Find Every object with the Timebody Component
-        for (var i = 0; i < objects.Length; i++)
-        {
-            objects[i].GetComponent<TimeBody>().ContinueTime(); //continue time in each of them
-        }
-
-    }
-
-    public void StopTime()
-    {
-        TimeIsStopped = true;
-    }*/
-
 }

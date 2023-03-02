@@ -32,9 +32,8 @@ public class TimeBody : MonoBehaviour
         if(TimeBeforeAffectedTimer <= 0f)
         {
             CanBeAffected = true; // Will be affected by timestop
-        //    Grabbing = false;
         }
-      //  if (this.gameObject.name == "startPoint") Debug.Log(Vector3.Distance(player.position, this.gameObject.transform.position));
+
         if (ObjectControl.controledObject == this.gameObject)
         {
             CanBeAffected = false;

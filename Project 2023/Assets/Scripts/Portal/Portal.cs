@@ -28,6 +28,7 @@ public class Portal : MonoBehaviour {
         playerCam = Camera.main;
         portalCam = GetComponentInChildren<Camera> ();
         portalCam.enabled = false;
+        portalCam.cullingMask = playerCam.cullingMask;
         trackedTravellers = new List<PortalTraveller> ();
         screenMeshFilter = screen.GetComponent<MeshFilter> ();
         screen.material.SetInt ("displayMask", 1);
