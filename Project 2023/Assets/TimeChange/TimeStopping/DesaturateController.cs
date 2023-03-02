@@ -12,6 +12,7 @@ public class DesaturateController : MonoBehaviour {
 
     private bool transitioning;
     private float startTime;
+    private float fullscreenintensity;
     ScriptableRendererFeature feature;
     Material mat;
     public bool TimeIsStopped;
@@ -22,6 +23,7 @@ public class DesaturateController : MonoBehaviour {
         var blitFeature = feature as BlitMaterialFeature;
         mat = blitFeature.Material;
         mat.SetFloat("_Saturation", 1);
+        mat.SetFloat("_FullScreenIntensity", 1);
     }
 
     private void Update() {
@@ -44,13 +46,17 @@ public class DesaturateController : MonoBehaviour {
     private void StartTransition() {
         startTime = Time.timeSinceLevelLoad;
         transitioning = true;
+        fullscreenintensity = 0.4f;
     }
     private void UpdateTransition() {
             float saturation = Mathf.Clamp01((Time.timeSinceLevelLoad - startTime) / transitionPeriod);
+            fullscreenintensity = Mathf.Lerp(fullscreenintensity,0.9f,0.002f);
             mat.SetFloat("_Saturation", saturation);
+            mat.SetFloat("_FullScreenIntensity",fullscreenintensity);
     }
     private void ResetTransition() {
-            mat.SetFloat("_Saturation", 1);          
+            mat.SetFloat("_Saturation", 1);
+            mat.SetFloat("_FullScreenIntensity", 1);
             transitioning = false;
     }
 
