@@ -62,7 +62,7 @@ public class PlayerCam : MonoBehaviour
 
     void RenderPortal(ScriptableRenderContext context, Camera camera)
     {
-        //pairPortals = FindObjectsOfType<PairPortal>();
+        pairPortals = FindObjectsOfType<PairPortal>();
 
         for (int i = 0; i < portals.Length; i++) {
             portals[i].PrePortalRender (context);
@@ -74,7 +74,7 @@ public class PlayerCam : MonoBehaviour
         for (int i = 0; i < portals.Length; i++) {
             portals[i].PostPortalRender (context);
         }
-        /*
+        
         for (int i = 0; i < pairPortals.Length; i++) {
             pairPortals[i].PrePortalRender (context);
         }
@@ -85,7 +85,7 @@ public class PlayerCam : MonoBehaviour
         for (int i = 0; i < pairPortals.Length; i++) {
             pairPortals[i].PostPortalRender (context);
         }
-        */
+        
     }
 
     void Update()

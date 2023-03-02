@@ -305,31 +305,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal
       objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: linkedPortal
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: recursionLimit
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936481833960, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: near clip plane
-      value: 0.03
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936481833960, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_projectionMatrixMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936481833963, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_RendererIndex
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7192204356321494343, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: linkedPortal
@@ -1382,6 +1357,18 @@ Transform:
   m_Father: {fileID: 884943344}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &301500681 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7192204356321494343, guid: ee1f956151cf27d4e8103e187be8a465,
+    type: 3}
+  m_PrefabInstance: {fileID: 56085604}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b9885b89b6d4fbe92f77801ecc3671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &354100103 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7904664507733217589, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
@@ -7031,21 +7018,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CirclePortal (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
+    - target: {fileID: 7192204356321494343, guid: ee1f956151cf27d4e8103e187be8a465,
         type: 3}
       propertyPath: linkedPortal
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936062074191, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: recursionLimit
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 77229936481833963, guid: ee1f956151cf27d4e8103e187be8a465,
-        type: 3}
-      propertyPath: m_RendererIndex
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 301500681}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1f956151cf27d4e8103e187be8a465, type: 3}
 --- !u!114 &1757336803 stripped

@@ -67,8 +67,6 @@ public class PairPortal : MonoBehaviour
             //var camM = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
             //Camera cam = Camera.main;
             //cam.GetComponent<PlayerCam>().portalMatrix = camM; //將算好的矩陣傳給相機
-
-            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
             //自己與玩家的距離
             Vector3 offsetFromPortal = travellerT.position - transform.position;
 
@@ -79,7 +77,13 @@ public class PairPortal : MonoBehaviour
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
                 Camera cam = linkedPortal.GetComponentInChildren<Camera>();
-
+                var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
+                 var c = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * Camera.main.transform.localToWorldMatrix; 
+                Debug.Log("傳過的東西"+traveller);
+                PlayerMovement.isTransport = true;
+                travellerT.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
+                Camera.main.transform.SetPositionAndRotation (c.GetColumn (3), c.rotation);
+                PlayerMovement.isTransport = false;
                 traveller.Teleport (transform, linkedPortal.transform, m.GetColumn(3), m.rotation);
                 //traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
@@ -90,6 +94,8 @@ public class PairPortal : MonoBehaviour
                 i--;
             } 
             else {
+                 Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
+                  traveller.graphicsClone.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
                 traveller.previousOffsetFromPortal = offsetFromPortal;
             }
         }
