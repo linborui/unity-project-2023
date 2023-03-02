@@ -35,7 +35,7 @@ public class Portal : MonoBehaviour {
     }
 
     // OnTriggerEnter 是在 Physics(先) LateUpdate 是在GameLogic(後)
-    void LateUpdate () {
+    void Update () {
         HandleTravellers ();
     }
 
@@ -46,7 +46,8 @@ public class Portal : MonoBehaviour {
             Transform travellerT = traveller.transform;
             //矩陣相乘 對應的門 自己門的位置 傳送者的位置
             //矩陣運算只做一次
-            var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix ;//* travellerT.localToWorldMatrix;
+           
+            //var camM = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * .localToWorldMatrix;
             //這裡是為了專門給玩家傳送，因為相機跟玩家並不同步，需要額外處理
             Vector3 offsetFromPortal = travellerT.position - transform.position;
 
@@ -60,7 +61,17 @@ public class Portal : MonoBehaviour {
                 //原本的寫法
                 //traveller.Teleport (transform, linkedPortal.transform, m.GetColumn (3), m.rotation);
                 //新的寫法，因為body 跟 camera 分開，為了減少計算量，所以傳過去的是矩陣，讓傳送者自己去計算
-                traveller.Teleport (transform, linkedPortal.transform, m,travellerT);
+                Camera linkedcamera = linkedPortal.GetComponentInChildren<Camera> ();
+            
+                 var m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
+                 var c = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * Camera.main.transform.localToWorldMatrix; 
+                Debug.Log("傳過的東西"+traveller);
+                PlayerMovement.isTransport = true;
+                travellerT.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
+                Camera.main.transform.SetPositionAndRotation (c.GetColumn (3), c.rotation);
+                PlayerMovement.isTransport = false;
+                Physics.SyncTransforms ();
+                traveller.Teleport (transform, linkedPortal.transform, m.GetColumn(3),m.rotation);
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 //必須手動做另外一個門的進到傳送門的動作，因為下個門的OnTriggerEnter/Exit 是在下個frame的Physics。
                 //而這裡是在當前的FixedUpdate，為了避免差一個frame
@@ -69,6 +80,7 @@ public class Portal : MonoBehaviour {
                 i--;
             } 
             else {
+                Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
                 traveller.graphicsClone.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
                 traveller.previousOffsetFromPortal = offsetFromPortal;
             }
@@ -80,22 +92,24 @@ public class Portal : MonoBehaviour {
         foreach (var traveller in trackedTravellers) {
             UpdateSliceParams (traveller);
         }
+        
     }
 
     // Manually render the camera attached to this portal
     // Called after PrePortalRender, and before PostPortalRender
     public void Render (ScriptableRenderContext context) {
         // Skip rendering the view from this portal if player is not looking at the linked portal
+        
         if (!CameraUtility.VisibleFromCamera (linkedPortal.screen, playerCam)) {
             return;
         }
-
+        screen.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
         CreateViewTexture ();
 
         var localToWorldMatrix = playerCam.transform.localToWorldMatrix;
         var renderPositions = new Vector3[recursionLimit];
         var renderRotations = new Quaternion[recursionLimit];
-
+    
         int startIndex = 0;
         portalCam.projectionMatrix = playerCam.projectionMatrix;
         for (int i = 0; i < recursionLimit; i++) {
@@ -111,7 +125,7 @@ public class Portal : MonoBehaviour {
             int renderOrderIndex = recursionLimit - i - 1;
             renderPositions[renderOrderIndex] = localToWorldMatrix.GetColumn (3);
             renderRotations[renderOrderIndex] = localToWorldMatrix.rotation;
-
+            
             portalCam.transform.SetPositionAndRotation (renderPositions[renderOrderIndex], renderRotations[renderOrderIndex]);
             startIndex = renderOrderIndex;
         }
@@ -133,6 +147,7 @@ public class Portal : MonoBehaviour {
 
         // Unhide objects hidden at start of render
         screen.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+         Physics.SyncTransforms ();
     }
 
     //處理截平面
@@ -221,10 +236,7 @@ public class Portal : MonoBehaviour {
         Transform screenT = screen.transform; //mesh renderer transform
         bool camFacingSameDirAsPortal = Vector3.Dot (transform.forward, transform.position - viewPoint) > 0;
         screenT.localScale = new Vector3 (screenT.localScale.x, screenT.localScale.y, screenThickness);
-        // I double the offset of position to transport smootly , But I don't know why ****************************************
-        screenT.localPosition = Vector3.forward * screenThickness * ((camFacingSameDirAsPortal) ? 0.5f : -0.5f) * 2f ; 
-
-        Debug.Log("screenThickness: " + screenThickness);
+        screenT.localPosition = Vector3.forward * screenThickness * ((camFacingSameDirAsPortal) ? 0.5f : -0.5f); 
         return screenThickness;
     }
 

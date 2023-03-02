@@ -67,7 +67,7 @@ public class PlayerMovement : PortalTraveller
     CapsuleCollider capsuleCollider;
 
     Vector3 savePoint;
-
+    Camera cam;
     public static bool isTransport;
     void Start()
     {
@@ -80,7 +80,7 @@ public class PlayerMovement : PortalTraveller
         detectWall = null;
         ignoreWall = null;
         savePoint = transform.position;
-
+        cam = Camera.main;
         //判斷現在傳送該物體是否需要改變相機，如果是玩家傳送就要改變main相機的位置，
         //非玩家傳送則不需要改變相機
         isPlayer = true;
@@ -631,22 +631,36 @@ public class PlayerMovement : PortalTraveller
     Step 2. collider變超小，加寬portal 移動的距離 詳見Portal.cs 
 
     */
-    public override void Teleport (Transform fromPortal, Transform toPortal, Matrix4x4 m, Transform travellerT) {
+    public override void Teleport (Transform fromPortal, Transform toPortal, Vector3 pos, Quaternion rot){// Transform travellerT,Camera linkedcamera) {
         //改變位置 因為是玩家所以要改變相機位置與角度
         isTransport = true;
         //transform.position = pos;                        //改變傳送者的位置(無論現在傳送者是玩家或非玩家)
+        
+            Vector3 eulerRot = rot.eulerAngles;
+            float delta = Mathf.DeltaAngle(cam.GetComponent<PlayerCam>().yRotation, eulerRot.y);
+            cam.GetComponent<PlayerCam>().yRotation += delta;
+            //cam.transform.eulerAngles = Vector3.up * cam.GetComponent<PlayerCam>().yRotation;
+                                      //先改變相機位置
         //CASE : 玩家
         if(isPlayer){
             //因為玩家的視角切換是根據相機去切換的 所以要改變相機的角度
+            //linkedcamera.enabled = true;
+            //linkedcamera.targetDisplay = 1;
+            //Camera.main.enabled = false;
+            //set portal's child camera
+            /*
             Camera cam = Camera.main;
             Matrix4x4 camM  = m * cam.transform.localToWorldMatrix;
             Vector3 eulerRot = camM.rotation.eulerAngles;
             float delta = Mathf.DeltaAngle(cam.GetComponent<PlayerCam>().yRotation, eulerRot.y);
             cam.GetComponent<PlayerCam>().yRotation += delta;
             cam.transform.eulerAngles = Vector3.up * cam.GetComponent<PlayerCam>().yRotation;
-            Debug.Log("玩家傳送" + transform.position);
             cam.transform.position = camM.GetColumn(3);                           //先改變相機位置
             transform.position = m * transform.localToWorldMatrix.GetColumn(3);   //再改變玩家位置
+            Physics.SyncTransforms ();*/
+            //Camera.main.enabled = true;
+            //set portal's child camera
+            //linkedcamera.enabled = false;
         }
         //CASE : 非玩家 (之後再加)
         else{
