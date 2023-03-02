@@ -3,18 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Ground
-  - Save
-  - Dead
-  - Moveable
-  - Portal
-  - Weapon
-<<<<<<< HEAD
-  - Screen
-=======
-  - TimeManager
->>>>>>> c37e2270f80ddd070d9fab9e5a746c8d554d8a31
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -22,11 +11,11 @@ TagManager:
   - 
   - Water
   - UI
-  - Ground
-  - Upon
   - 
-  - Present
-  - Past
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
