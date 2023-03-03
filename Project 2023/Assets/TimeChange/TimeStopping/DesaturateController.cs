@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using System.Collections;
 using System.Collections.Generic;
+using Luminosity.IO;
 
 public class DesaturateController : MonoBehaviour {
 
@@ -27,7 +28,7 @@ public class DesaturateController : MonoBehaviour {
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.E) && !transitioning) {
+        if(InputManager.GetButtonDown("TimeStop") && !transitioning) {
             StartTransition();
             StopTime();
         }

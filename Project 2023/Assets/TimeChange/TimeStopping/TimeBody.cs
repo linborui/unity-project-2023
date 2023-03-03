@@ -7,15 +7,15 @@ public class TimeBody : MonoBehaviour
    // public float range;
    // public Transform player;
     public float TimeBeforeAffected; //The time after the object spawns until it will be affected by the timestop(for projectiles etc)
-                                     // private TimeManager timemanager;
+    public Vector3 recordedVelocity;
+
     private DesaturateController desaturateController;
     private Rigidbody rb;
-    private Vector3 recordedVelocity;
-    private float recordedMagnitude;
+    public float recordedMagnitude;
+    public bool IsStopped;
 
     private float TimeBeforeAffectedTimer;
     private bool CanBeAffected;
-    private bool IsStopped;
   //  private bool Grabbing;
     // Start is called before the first frame update
     void Start()
@@ -46,6 +46,7 @@ public class TimeBody : MonoBehaviour
             {
                 recordedVelocity = rb.velocity.normalized; //records direction of movement
                 recordedMagnitude = rb.velocity.magnitude; // records magitude of movement
+     
                 rb.velocity = Vector3.zero; //makes the rigidbody stop moving
                 rb.isKinematic = true; //not affected by forces
                 IsStopped = true; // prevents this from looping

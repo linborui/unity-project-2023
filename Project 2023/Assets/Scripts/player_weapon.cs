@@ -337,6 +337,12 @@ public class player_weapon : MonoBehaviour
 
             obj.layer = origin.layer;
             obj.AddComponent<TimeBody>();
+            TimeBody childtime = obj.GetComponent<TimeBody>();
+            TimeBody parenttime = origin.GetComponent<TimeBody>();
+            childtime.recordedVelocity = parenttime.recordedVelocity;
+            childtime.recordedMagnitude = parenttime.recordedMagnitude;
+            childtime.IsStopped = parenttime.IsStopped;
+
             obj.AddComponent<sliceable>();
             obj.AddComponent<MeshFilter>();
             obj.AddComponent<MeshRenderer>();
@@ -369,6 +375,7 @@ public class player_weapon : MonoBehaviour
             obj.transform.tag = origin.tag;
 
             rigBody = obj.GetComponent<Rigidbody>();
+            rigBody.isKinematic = origin.GetComponent<Rigidbody>().isKinematic;
         }else{
             if(origin.GetComponentInParent<SkinnedMeshRenderer>()) element.skinned = true;
 

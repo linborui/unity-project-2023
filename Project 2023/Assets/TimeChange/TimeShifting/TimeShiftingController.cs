@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using System.Collections;
 using System.Collections.Generic;
+using Luminosity.IO;
 
 public class TimeShiftingController : MonoBehaviour {
     [SerializeField] private UniversalRendererData rendererData = null;
@@ -63,7 +64,7 @@ public class TimeShiftingController : MonoBehaviour {
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.Q)) {
+        if(InputManager.GetButtonDown("TimeShift")) {
             StartPassThroughEffect();
         }
     }
@@ -92,6 +93,7 @@ public class TimeShiftingController : MonoBehaviour {
             mat.SetFloat("_DistortStrength", distortStrength);
             yield return null;
             //結束時強制設置為0;
+
             distortFactor = 0.0f;
             distortStrength = 0.0f;
             mat.SetFloat("_DistortFactor", distortFactor);
