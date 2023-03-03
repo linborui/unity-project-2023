@@ -8,6 +8,7 @@ public class CreatePortal : MonoBehaviour
     //Add on the camera 
     Vector3 _hitPoint;
     public GameObject prefab;
+    public GameObject CubePrefab;
     public Material Orangematerial;
     public Material Bluematerial;
     public Material PortalMaterial;
@@ -26,6 +27,9 @@ public class CreatePortal : MonoBehaviour
     void Update () {
         if (InputManager.GetButtonDown("Portal")) {
             SpawnPortal ();
+        }
+        if(InputManager.GetButtonDown("Cube")){
+            SpawnCube();
         }
     }
 
@@ -100,4 +104,14 @@ public class CreatePortal : MonoBehaviour
             }
         }
     }
+    void SpawnCube () {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitfirst;
+        if (Physics.Raycast(ray, out hitfirst) )
+        {
+            GameObject p = Instantiate(CubePrefab, hitfirst.point, Quaternion.LookRotation(hitfirst.normal));
+            p.transform.position += 5 *p.transform.forward;
+        } 
+    }
+    
 }

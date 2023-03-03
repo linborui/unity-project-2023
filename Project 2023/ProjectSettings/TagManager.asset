@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Moveable
+  - Ground
+  - TimeManager
+  - Dead
+  - Save
+  - Portal
+  - Weapon
+  - Screen
   layers:
   - Default
   - TransparentFX
@@ -14,8 +22,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Present
+  - Past
   - 
   - 
   - 

@@ -26,8 +26,17 @@ public class PlayerCam : MonoBehaviour
     public float xRotation; //pitch set public for transformer to handle portal 葉惟欣 
     public float yRotation; //yaw set public for transformer to handle portal 葉惟欣 給portal access
 
+    /* for marching cube*/
+    int times;
+
+    Camera cam;
+    Vector3 _hitPoint;
+	Vector3 _hitPrevPoint;
+    public float BrushSize = 2f;
+    /* for marching cube*/
     void Start()
     {
+        cam = GetComponent<Camera>();
         tf = body.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -214,4 +223,40 @@ public class PlayerCam : MonoBehaviour
             crosshair.transform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0f);
         }
     }
+
+    private void LateUpdate() {
+		if (InputManager.GetButton("Grow")) {
+			Terraform(true);
+		}
+		else if (InputManager.GetButton("Eclipse")) {
+			Terraform(false);
+		}
+		times ++ ;
+	}
+
+	private void Terraform(bool add) {
+		RaycastHit hit;
+
+		if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, 1000)) {
+			Chunk hitChunk = hit.collider.gameObject.GetComponent<Chunk>();
+			if(hitChunk == null)
+				return;
+			_hitPoint = hit.point;
+			float mouseX = Input.mousePosition.x;
+			float mouseY = Input.mousePosition.y;
+			
+			if(_hitPrevPoint == Vector3.zero)
+				_hitPrevPoint = hit.point;
+			else{
+				_hitPoint = new Vector3( (_hitPoint.x + _hitPrevPoint.x)/2,( _hitPoint.y + _hitPrevPoint.y)/2, (_hitPoint.z + _hitPrevPoint.z)/2);
+				_hitPrevPoint = hit.point;
+			}
+			hitChunk.EditWeights(_hitPoint, BrushSize, add);
+		}
+	}
+	
+	private void OnDrawGizmos() {
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawWireSphere(_hitPoint, BrushSize);
+	}
 }
