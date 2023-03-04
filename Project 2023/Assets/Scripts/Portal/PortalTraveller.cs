@@ -13,19 +13,10 @@ public class PortalTraveller : MonoBehaviour {
 
     public bool isPlayer;
  
-    public virtual void Teleport (Transform fromPortal, Transform toPortal, Vector3 pos, Quaternion rot) {
-        transform.position = pos;
-        transform.rotation = rot;
+    public virtual void Teleport (Transform fromPortal, Transform toPortal){//, Vector3 pos, Quaternion rot) {
+        //transform.position = pos;
+        //transform.rotation = rot;
     }
-    // for camera need to adjust its position and rotaion because camera and body are separated object 沒有父子關係
-    /*
-    public virtual void Teleport (Transform fromPortal, Transform toPortal, Matrix4x4 m, Transform travellerT,Camera portal) {
-        Matrix4x4 mat = m * travellerT.localToWorldMatrix;
-        
-        transform.position = mat.GetColumn(3);
-        transform.rotation = mat.rotation ;
-
-    }*/
     // Called when first touches portal
     public virtual void EnterPortalThreshold () {
         
