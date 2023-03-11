@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using Luminosity.IO;
 
 public class TimeBody : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class TimeBody : MonoBehaviour
    // public Transform player;
     public float TimeBeforeAffected; //The time after the object spawns until it will be affected by the timestop(for projectiles etc)
     public Vector3 recordedVelocity;
+    public float flyingtime;
 
     private DesaturateController desaturateController;
     private Rigidbody rb;
@@ -16,6 +18,10 @@ public class TimeBody : MonoBehaviour
 
     private float TimeBeforeAffectedTimer;
     private bool CanBeAffected;
+    private bool grabbing;
+    private float timer;
+
+
   //  private bool Grabbing;
     // Start is called before the first frame update
     void Start()
@@ -23,6 +29,8 @@ public class TimeBody : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         desaturateController = GameObject.FindGameObjectWithTag("TimeManager").GetComponent<DesaturateController>();
         TimeBeforeAffectedTimer = TimeBeforeAffected;
+        grabbing = false;
+        timer = 0;
     }
 
     // Update is called once per frame
@@ -34,15 +42,42 @@ public class TimeBody : MonoBehaviour
             CanBeAffected = true; // Will be affected by timestop
         }
 
-        if (ObjectControl.controledObject == this.gameObject)
+
+        if (desaturateController.TimeIsStopped)
         {
-            CanBeAffected = false;
-            IsStopped = false;
+
+            if (ObjectControl.controledObject == this.gameObject)
+            {
+                CanBeAffected = false;
+                IsStopped = false;
+                grabbing = true;
+            }
+            else if (grabbing)
+            {
+                timer = 0.01f;
+                grabbing = false;
+                rb.isKinematic = false;
+            }
+
+            if (timer != 0.0f)
+            {
+                if (timer < flyingtime)
+                {
+                    float deltaTime = Time.deltaTime;
+                    timer += deltaTime;
+                }
+                else
+                {
+                    timer = 0;
+                }
+            }
         }
 
-        if(CanBeAffected && desaturateController.TimeIsStopped && !IsStopped)
+
+        if(CanBeAffected && desaturateController.TimeIsStopped && !IsStopped && timer == 0.0f )//
         {
-            if(rb.velocity.magnitude >= 0f) //If Object is moving
+
+            if (rb.velocity.magnitude >= 0f) //If Object is moving
             {
                 recordedVelocity = rb.velocity.normalized; //records direction of movement
                 recordedMagnitude = rb.velocity.magnitude; // records magitude of movement
@@ -54,6 +89,8 @@ public class TimeBody : MonoBehaviour
         }
     
     }
+
+
     public void ContinueTime()
     {
         rb.isKinematic = false;

@@ -101,6 +101,10 @@ public class TimeShiftingController : MonoBehaviour {
             mat.SetColor("_AddColor", baseColor);
             if (currentTime >= (passThroughTime - 0.5f) && PastBool == 0)
             {
+                if(ObjectControl.controledObject!=null && ObjectControl.controledObject.layer == presentlayer)  //bring the object during time shifting
+                {
+                    ObjectControl.controledObject.layer = pastlayer;
+                } 
                 var cameras = FindObjectsOfType<Camera>();
                 for (int i = 0; i < cameras.Length; i++)
                 {
@@ -112,6 +116,10 @@ public class TimeShiftingController : MonoBehaviour {
             }  //加pastlayer, 減presentlayer
             else if (currentTime >= (passThroughTime - 0.5f) && PastBool == 2)
             {
+                if (ObjectControl.controledObject != null && ObjectControl.controledObject.layer == pastlayer) //bring the object during time shifting
+                {
+                    ObjectControl.controledObject.layer = presentlayer;
+                }  
                 var cameras = FindObjectsOfType<Camera>();
                 for (int i = 0; i < cameras.Length; i++)
                 {
