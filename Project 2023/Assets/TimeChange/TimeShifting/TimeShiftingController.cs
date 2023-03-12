@@ -47,7 +47,7 @@ public class TimeShiftingController : MonoBehaviour {
     private int pastlayer;
     private int presentlayer;
 
-    int PastBool = 0;  //0:present, 1:presentToPast 2:past 3:pastToPresent
+    public int PastBool = 0;  //0:present, 1:presentToPast 2:past 3:pastToPresent
 
     private void Awake()
     {
