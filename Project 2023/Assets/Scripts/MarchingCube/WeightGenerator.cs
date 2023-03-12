@@ -2,18 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoiseGenerator : MonoBehaviour
+public class WeightGenerator : MonoBehaviour
 {
     ComputeBuffer _weightsBuffer;
     public ComputeShader NoiseShader;
-
-    [SerializeField] float noiseScale = 0.08f;
-    [SerializeField] float amplitude = 200;
-    [SerializeField] float frequency = 0.004f;
-    [SerializeField] int octaves = 6;
-    [SerializeField, Range(0f, 1f)] float groundPercent = 0.2f;
-
-
+    public float size;
     private void Awake() {
         CreateBuffers();
     }
@@ -27,15 +20,8 @@ public class NoiseGenerator : MonoBehaviour
             new float[GridMetrics.PointsPerChunk * GridMetrics.PointsPerChunk * GridMetrics.PointsPerChunk];
 
         NoiseShader.SetBuffer(0, "_Weights", _weightsBuffer);
-
+        NoiseShader.SetFloat("_Size",size);
         NoiseShader.SetInt("_ChunkSize", GridMetrics.PointsPerChunk);
-        NoiseShader.SetFloat("_NoiseScale", noiseScale);
-        NoiseShader.SetFloat("_Amplitude", amplitude);
-        NoiseShader.SetFloat("_Frequency", frequency);
-        NoiseShader.SetInt("_Octaves", octaves);
-        NoiseShader.SetFloat("_GroundPercent", groundPercent);
-
-
         NoiseShader.Dispatch(
             0, GridMetrics.PointsPerChunk / GridMetrics.NumThreads, GridMetrics.PointsPerChunk / GridMetrics.NumThreads, GridMetrics.PointsPerChunk / GridMetrics.NumThreads
         );

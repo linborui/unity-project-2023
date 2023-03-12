@@ -39,7 +39,7 @@ public class Portal : MonoBehaviour {
     void Update () {
         HandleTravellers ();
     }
-
+    //OK
     void HandleTravellers () {
         //同時有多個傳送者(都必須要繼承protalTraveller)在經過該傳送門
         for (int i = 0; i < trackedTravellers.Count; i++) {
@@ -82,7 +82,7 @@ public class Portal : MonoBehaviour {
     }
 
     // Manually render the camera attached to this portal
-    // Called after PrePortalRender, and before PostPortalRender
+    // Called after PrePortalRender, and before PostPortalRender 包含處理遞迴
     public void Render (ScriptableRenderContext context) {
         // Skip rendering the view from this portal if player is not looking at the linked portal
         
@@ -116,7 +116,7 @@ public class Portal : MonoBehaviour {
             startIndex = renderOrderIndex;
         }
 
-        // Hide screen so that camera can see through portal
+        // Hide screen so that camera can see through portal 有陰影但是東西不見不會顯示
         screen.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
         linkedPortal.screen.material.SetInt ("displayMask", 0);
 
@@ -211,7 +211,7 @@ public class Portal : MonoBehaviour {
             linkedPortal.screen.material.SetTexture ("_MainTex", viewTexture);
         }
     }
-
+    // OK
     // Sets the thickness of the portal screen so as not to clip with camera near plane when player goes through
     float ProtectScreenFromClipping (Vector3 viewPoint) {
         float halfHeight = playerCam.nearClipPlane * Mathf.Tan (playerCam.fieldOfView * 0.5f * Mathf.Deg2Rad);
@@ -261,6 +261,7 @@ public class Portal : MonoBehaviour {
             traveller.cloneMaterials[i].SetFloat ("sliceOffsetDst", cloneSliceOffsetDst);
         }
     }
+    
     // 在render 被呼叫
     // Use custom projection matrix (客製化的projection matrix) to align portal camera's near clip plane with the surface of the portal
     // Note that this affects precision of the depth buffer, which can cause issues with effects like screenspace AO
@@ -284,7 +285,7 @@ public class Portal : MonoBehaviour {
             portalCam.projectionMatrix = playerCam.projectionMatrix;
         }
     }
-
+    //Ok
     void OnTravellerEnterPortal (PortalTraveller traveller) {
         //將傳過物體的東西，增加到trackedTravllers裡面，(在handletraveller的時候做處理)並且在進入portal的時候，
         //將物體的位置，與portal的位置，做一個差值，並且儲存到previousOffsetFromPortal裡面。
@@ -295,6 +296,7 @@ public class Portal : MonoBehaviour {
         }
     }
     //兩個物體(玩家和portal都要trigger才觸發。在玩家身上加一個collider istrigger)
+    //OK
     void OnTriggerEnter (Collider other) {
         var traveller = other.GetComponent<PortalTraveller> ();   
         if (traveller) {

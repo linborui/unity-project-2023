@@ -8,16 +8,16 @@ public class Chunk : MonoBehaviour
 
     public MeshFilter MeshFilter;
     public MeshCollider MeshCollider;
-
+    public int Size;
     ComputeBuffer _trianglesBuffer;
     ComputeBuffer _trianglesCountBuffer;
     ComputeBuffer _weightsBuffer;
 
-    public NoiseGenerator NoiseGenerator;
+    public WeightGenerator NoiseGenerator;
     Mesh _mesh;
     bool up = false,down = false,left = false,right = false,forward = false,back = false;
     private void Awake() {
-        NoiseGenerator = FindObjectOfType<NoiseGenerator>();
+        NoiseGenerator = FindObjectOfType<WeightGenerator>();
         CreateBuffers();
     }
 
@@ -36,6 +36,7 @@ public class Chunk : MonoBehaviour
 
     void Start() {
         _weights = NoiseGenerator.GetNoise();
+        MarchingShader.SetInt("size", Size);
         _mesh = new Mesh();
         UpdateMesh();
     }
@@ -115,7 +116,7 @@ public class Chunk : MonoBehaviour
         mesh.RecalculateNormals();
         return mesh;
     }
-    
+    /*
     private void OnDrawGizmos() {
         if (_weights == null || _weights.Length == 0) {
             return;
@@ -132,7 +133,7 @@ public class Chunk : MonoBehaviour
             }
         }
     }
-    
+    */
     void CreateBuffers() {
         _trianglesBuffer = new ComputeBuffer(5 * (GridMetrics.PointsPerChunk * GridMetrics.PointsPerChunk * GridMetrics.PointsPerChunk), Triangle.SizeOf, ComputeBufferType.Append);
         _trianglesCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);

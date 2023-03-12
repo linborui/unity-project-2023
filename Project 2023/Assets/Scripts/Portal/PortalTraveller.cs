@@ -44,9 +44,12 @@ public class PortalTraveller : MonoBehaviour {
     //更新shader的參數
     public void SetSliceOffsetDst (float dst, bool clone) {
         for (int i = 0; i < originalMaterials.Length; i++) {
-            if (clone) {
+            if (clone) 
+            {
                 cloneMaterials[i].SetFloat ("sliceOffsetDst", dst);
-            } else {
+            } 
+            else 
+            {
                 originalMaterials[i].SetFloat ("sliceOffsetDst", dst);
             }
         }

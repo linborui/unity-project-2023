@@ -27,21 +27,23 @@ public class PlayerCam : MonoBehaviour
     public float yRotation; //yaw set public for transformer to handle portal 葉惟欣 給portal access
 
     /* for marching cube*/
-    int times;
+
 
     Camera cam;
     Vector3 _hitPoint;
 	Vector3 _hitPrevPoint;
     public float BrushSize = 2f;
+    public GameObject laser;
+    public Laser laserObject;
     /* for marching cube*/
     void Start()
     {
+        laser.SetActive(false);
         cam = GetComponent<Camera>();
         tf = body.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
-        Debug.Log(cameraHeight);
         if (state == 0)
         {
             cameraDistance = 2.0f;
@@ -194,8 +196,6 @@ public class PlayerCam : MonoBehaviour
             if(!PlayerMovement.isTransport){ 
                 float distance = cameraDistance;
                 cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
-                Debug.Log(cameraHeight);
-            
                 if (PlayerMovement.sliding)
                 {
                     distance *= 2f;
@@ -223,15 +223,19 @@ public class PlayerCam : MonoBehaviour
             crosshair.transform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0f);
         }
     }
-
+    //Control Marching Cubes
     private void LateUpdate() {
-		if (InputManager.GetButton("Grow")) {
+		if (InputManager.GetButton("Grow") ) {
+            laser.SetActive(true);
 			Terraform(true);
 		}
 		else if (InputManager.GetButton("Eclipse")) {
+            laser.SetActive(true);
 			Terraform(false);
 		}
-		times ++ ;
+        else{
+            laser.SetActive(false);
+        }
 	}
 
 	private void Terraform(bool add) {
@@ -242,9 +246,9 @@ public class PlayerCam : MonoBehaviour
 			if(hitChunk == null)
 				return;
 			_hitPoint = hit.point;
+            laserObject.UpdateTarget(hit.point,add);
 			float mouseX = Input.mousePosition.x;
 			float mouseY = Input.mousePosition.y;
-			
 			if(_hitPrevPoint == Vector3.zero)
 				_hitPrevPoint = hit.point;
 			else{
@@ -253,10 +257,5 @@ public class PlayerCam : MonoBehaviour
 			}
 			hitChunk.EditWeights(_hitPoint, BrushSize, add);
 		}
-	}
-	
-	private void OnDrawGizmos() {
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawWireSphere(_hitPoint, BrushSize);
 	}
 }
