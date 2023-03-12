@@ -122,10 +122,11 @@ public class PlayerCam : MonoBehaviour
 
     void MouseControl()
     {
-        if (!InputManager.GetButton("Slash")&&!PlayerMovement.isTransport)
+        if (!InputManager.GetButton("Slash") && !PlayerMovement.isTransport)
         {
-            float mouseX = InputManager.GetAxisRaw("Mouse X") * Time.deltaTime * xSensitivity;
-            float mouseY = InputManager.GetAxisRaw("Mouse Y") * Time.deltaTime * ySensitivity;
+            float deltaTime = (Time.deltaTime < 0.1f) ? Time.deltaTime : 0.1f;
+            float mouseX = InputManager.GetAxisRaw("Mouse X") * deltaTime * xSensitivity;
+            float mouseY = InputManager.GetAxisRaw("Mouse Y") * deltaTime * ySensitivity;
             float xMax = PlayerMovement.sliding ? 15f : 75f;
 
             xRotation -= mouseY; //(pitch)
@@ -196,6 +197,10 @@ public class PlayerCam : MonoBehaviour
             if(!PlayerMovement.isTransport){ 
                 float distance = cameraDistance;
                 cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
+<<<<<<< HEAD
+=======
+            
+>>>>>>> 3831f1fa15edb319917f2f214be2cc3963c2ae49
                 if (PlayerMovement.sliding)
                 {
                     distance *= 2f;
