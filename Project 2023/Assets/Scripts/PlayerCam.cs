@@ -31,7 +31,7 @@ public class PlayerCam : MonoBehaviour
 
     Camera cam;
     Vector3 _hitPoint;
-	Vector3 _hitPrevPoint;
+    Vector3 _hitPrevPoint;
     public float BrushSize = 2f;
     public GameObject laser;
     public Laser laserObject;
@@ -75,28 +75,34 @@ public class PlayerCam : MonoBehaviour
     {
         pairPortals = FindObjectsOfType<PairPortal>();
 
-        for (int i = 0; i < portals.Length; i++) {
-            portals[i].PrePortalRender (context);
+        for (int i = 0; i < portals.Length; i++)
+        {
+            portals[i].PrePortalRender(context);
         }
-        for (int i = 0; i < portals.Length; i++) {
-            portals[i].Render (context);
-        }
-
-        for (int i = 0; i < portals.Length; i++) {
-            portals[i].PostPortalRender (context);
-        }
-        
-        for (int i = 0; i < pairPortals.Length; i++) {
-            pairPortals[i].PrePortalRender (context);
-        }
-        for (int i = 0; i < pairPortals.Length; i++) {
-            pairPortals[i].Render (context);
+        for (int i = 0; i < portals.Length; i++)
+        {
+            portals[i].Render(context);
         }
 
-        for (int i = 0; i < pairPortals.Length; i++) {
-            pairPortals[i].PostPortalRender (context);
+        for (int i = 0; i < portals.Length; i++)
+        {
+            portals[i].PostPortalRender(context);
         }
-        
+
+        for (int i = 0; i < pairPortals.Length; i++)
+        {
+            pairPortals[i].PrePortalRender(context);
+        }
+        for (int i = 0; i < pairPortals.Length; i++)
+        {
+            pairPortals[i].Render(context);
+        }
+
+        for (int i = 0; i < pairPortals.Length; i++)
+        {
+            pairPortals[i].PostPortalRender(context);
+        }
+
     }
 
     void Update()
@@ -106,7 +112,7 @@ public class PlayerCam : MonoBehaviour
         MoveCam();
         MoveCrosshair();
     }
-    
+
     void MouseLockState()
     {
         if (!InputManager.GetButton("Slash"))
@@ -137,8 +143,9 @@ public class PlayerCam : MonoBehaviour
             if (!PlayerMovement.onWall)
                 tf.rotation = Quaternion.Euler(tf.rotation.eulerAngles.x, yRotation, tf.rotation.eulerAngles.z); //人物的rotation
         }
-        else{
-            Physics.SyncTransforms ();
+        else
+        {
+            Physics.SyncTransforms();
         }
     }
 
@@ -146,7 +153,7 @@ public class PlayerCam : MonoBehaviour
     {
         Action<float, float> UpdateCurrLoc = (distance, height) =>
         {
-            
+
             float dis = distanceSpeed * Time.deltaTime;
             float hei = heightSpeed * Time.deltaTime;
             if (currDistance < distance)
@@ -194,13 +201,11 @@ public class PlayerCam : MonoBehaviour
         else if (state == 1) //第一人稱
         {
             //只有在未傳送狀態下才會在這裡移動相機(Update)，其他都在PlayerMoverment.cs transport傳送(雖然那裏是LateUpdate)
-            if(!PlayerMovement.isTransport){ 
+            if (!PlayerMovement.isTransport)
+            {
                 float distance = cameraDistance;
                 cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
-<<<<<<< HEAD
-=======
-            
->>>>>>> 3831f1fa15edb319917f2f214be2cc3963c2ae49
+
                 if (PlayerMovement.sliding)
                 {
                     distance *= 2f;
@@ -208,8 +213,9 @@ public class PlayerCam : MonoBehaviour
                 UpdateCurrLoc(distance, cameraHeight);
                 transform.localPosition = tf.localPosition + tf.forward * currDistance + tf.up * currHeight;
             }
-            else{
-                Physics.SyncTransforms ();
+            else
+            {
+                Physics.SyncTransforms();
             }
         }
     }
@@ -229,38 +235,45 @@ public class PlayerCam : MonoBehaviour
         }
     }
     //Control Marching Cubes
-    private void LateUpdate() {
-		if (InputManager.GetButton("Grow") ) {
+    private void LateUpdate()
+    {
+        if (InputManager.GetButton("Grow"))
+        {
             laser.SetActive(true);
-			Terraform(true);
-		}
-		else if (InputManager.GetButton("Eclipse")) {
+            Terraform(true);
+        }
+        else if (InputManager.GetButton("Eclipse"))
+        {
             laser.SetActive(true);
-			Terraform(false);
-		}
-        else{
+            Terraform(false);
+        }
+        else
+        {
             laser.SetActive(false);
         }
-	}
+    }
 
-	private void Terraform(bool add) {
-		RaycastHit hit;
+    private void Terraform(bool add)
+    {
+        RaycastHit hit;
 
-		if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, 1000)) {
-			Chunk hitChunk = hit.collider.gameObject.GetComponent<Chunk>();
-			if(hitChunk == null)
-				return;
-			_hitPoint = hit.point;
-            laserObject.UpdateTarget(hit.point,add);
-			float mouseX = Input.mousePosition.x;
-			float mouseY = Input.mousePosition.y;
-			if(_hitPrevPoint == Vector3.zero)
-				_hitPrevPoint = hit.point;
-			else{
-				_hitPoint = new Vector3( (_hitPoint.x + _hitPrevPoint.x)/2,( _hitPoint.y + _hitPrevPoint.y)/2, (_hitPoint.z + _hitPrevPoint.z)/2);
-				_hitPrevPoint = hit.point;
-			}
-			hitChunk.EditWeights(_hitPoint, BrushSize, add);
-		}
-	}
+        if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, 1000))
+        {
+            Chunk hitChunk = hit.collider.gameObject.GetComponent<Chunk>();
+            if (hitChunk == null)
+                return;
+            _hitPoint = hit.point;
+            laserObject.UpdateTarget(hit.point, add);
+            float mouseX = Input.mousePosition.x;
+            float mouseY = Input.mousePosition.y;
+            if (_hitPrevPoint == Vector3.zero)
+                _hitPrevPoint = hit.point;
+            else
+            {
+                _hitPoint = new Vector3((_hitPoint.x + _hitPrevPoint.x) / 2, (_hitPoint.y + _hitPrevPoint.y) / 2, (_hitPoint.z + _hitPrevPoint.z) / 2);
+                _hitPrevPoint = hit.point;
+            }
+            hitChunk.EditWeights(_hitPoint, BrushSize, add);
+        }
+    }
 }

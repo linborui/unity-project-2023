@@ -347,16 +347,16 @@ public class player_weapon : MonoBehaviour
             obj.AddComponent<MeshFilter>();
             obj.AddComponent<MeshRenderer>();
             Material[] origin_met;
-            
+
             if(origin.GetComponent<MeshRenderer>() != null) origin_met = origin.GetComponentInChildren<MeshRenderer>().materials;
             else origin_met = origin.GetComponentInParent<SkinnedMeshRenderer>().materials;
 
             obj.GetComponent<MeshFilter>().mesh = mesh;
             obj.GetComponent<MeshRenderer>().sharedMaterials = origin_met;
             obj.GetComponent<sliceable>().life_time = origin.GetComponentInParent<sliceable>().life_time - 1;
-            
+
             MeshCollider collider;
-            
+
             if(mesh.triangles.Length < 12){
                 Destroy(obj);
                 return;
@@ -368,7 +368,7 @@ public class player_weapon : MonoBehaviour
 
             var rig = obj.AddComponent<Rigidbody>();
             rig.useGravity = true;
-            
+
             obj.transform.localScale = origin.transform.localScale;
             obj.transform.rotation = origin.transform.rotation;
             obj.transform.position = origin.transform.position;
@@ -400,7 +400,8 @@ public class player_weapon : MonoBehaviour
 
             rigBody = origin.GetComponent<Rigidbody>();
         }
-        Vector3 newNormal = (Quaternion.FromToRotation(Vector3.up, transNormal) * transform.rotation).eulerAngles * 0.02f;
+        Vector3 newNormal = (Quaternion.FromToRotation(Vector3.up, transNormal) * transform.rotation).eulerAngles;
+        newNormal = (transNormal.normalized + newNormal.normalized) * 5;
         rigBody.AddForce(newNormal, ForceMode.Impulse);
     }
 
@@ -542,7 +543,7 @@ public class player_weapon : MonoBehaviour
         });
 
         for(int i = objs.Count - 1; i > 0; --i)
-            createObject(a, objs[i], transNormal, true);
+            createObject(a, objs[i], -transNormal, true);
         for(int i = 0; skin && i < objs[0].vertices.Count; ++i)
             objs[0].vertices[i] = bakedMeshToMesh[hash(objs[0].vertices[i])];
         createObject(a, objs[0], transNormal, false);
