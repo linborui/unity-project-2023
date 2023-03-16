@@ -330,15 +330,18 @@ public class player_weapon : MonoBehaviour
         Rigidbody rigBody;
         Vector3 size = origin.GetComponentInParent<sliceable>().scale;
         Mesh mesh;
-        if(set){
+        TimeBody parenttime = origin.GetComponent<TimeBody>();
+        TimeBody childtime = new TimeBody();
+
+        if (set){
             set_all(element);
             mesh = element.mesh;
             GameObject obj = new GameObject();
 
             obj.layer = origin.layer;
             obj.AddComponent<TimeBody>();
-            TimeBody childtime = obj.GetComponent<TimeBody>();
-            TimeBody parenttime = origin.GetComponent<TimeBody>();
+
+            childtime = obj.GetComponent<TimeBody>();
             childtime.recordedVelocity = parenttime.recordedVelocity;
             childtime.recordedMagnitude = parenttime.recordedMagnitude;
             childtime.IsStopped = parenttime.IsStopped;
@@ -403,6 +406,10 @@ public class player_weapon : MonoBehaviour
         Vector3 newNormal = (Quaternion.FromToRotation(Vector3.up, transNormal) * transform.rotation).eulerAngles;
         newNormal = (transNormal.normalized + newNormal.normalized) * 5;
         rigBody.AddForce(newNormal, ForceMode.Impulse);
+        if(set)
+            childtime.addingForceNormal = newNormal;
+        else
+            parenttime.addingForceNormal = newNormal;
     }
 
     public void slice(GameObject a, Plane plane, Vector3 transNormal){
