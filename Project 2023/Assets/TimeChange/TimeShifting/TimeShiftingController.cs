@@ -10,7 +10,12 @@ public class TimeShiftingController : MonoBehaviour {
     [SerializeField] private string featureName = null;
     [SerializeField] private float transitionPeriod = 1;
 
-    private bool transitioning;
+    public Material PastSky;
+    public Material PresentSky;
+
+
+
+    //private bool transitioning;
     private float startTime;
     ScriptableRendererFeature feature;
     Material mat;
@@ -46,6 +51,7 @@ public class TimeShiftingController : MonoBehaviour {
     private Color baseColor;
     private int pastlayer;
     private int presentlayer;
+    private int playerlayer;
 
     public int PastBool = 0;  //0:present, 1:presentToPast 2:past 3:pastToPresent
 
@@ -53,8 +59,9 @@ public class TimeShiftingController : MonoBehaviour {
     {
         pastlayer = LayerMask.NameToLayer("Past");
         presentlayer = LayerMask.NameToLayer("Present");
+        playerlayer = LayerMask.NameToLayer("Player");
         mycamera.cullingMask &= ~(1 << pastlayer);
-        Physics.IgnoreLayerCollision(0, pastlayer, false);
+        Physics.IgnoreLayerCollision(playerlayer, pastlayer, true);
 
         feature = rendererData.rendererFeatures.Where((f) => f.name == featureName).FirstOrDefault();
         var blitFeature = feature as BlitMaterialFeature;
@@ -71,8 +78,8 @@ public class TimeShiftingController : MonoBehaviour {
 
     public void StartPassThroughEffect()
     {
-        if (PastBool == 1) PastBool = 2;
-        else if (PastBool == 3) PastBool = 0;
+        if (PastBool == 0) PastBool = 1;
+        else if (PastBool == 2) PastBool = 3;
         currentTime = 0.0f;
         StartCoroutine(UpdatePassThroughEffect());
     }
@@ -99,7 +106,7 @@ public class TimeShiftingController : MonoBehaviour {
             mat.SetFloat("_DistortFactor", distortFactor);
             mat.SetFloat("_DistortStrength", distortStrength);
             mat.SetColor("_AddColor", baseColor);
-            if (currentTime >= (passThroughTime - 0.5f) && PastBool == 0)
+            if (currentTime >= (passThroughTime - 0.5f) && PastBool == 1)
             {
                 if(ObjectControl.controledObject!=null && ObjectControl.controledObject.layer == presentlayer)  //bring the object during time shifting
                 {
@@ -111,10 +118,11 @@ public class TimeShiftingController : MonoBehaviour {
                     cameras[i].cullingMask |= (1 << pastlayer);
                     cameras[i].cullingMask &= ~(1 << presentlayer);
                 }
-                Physics.IgnoreLayerCollision(0, pastlayer, false); Physics.IgnoreLayerCollision(0, presentlayer, true);
-                PastBool = 1;
+                RenderSettings.skybox = PastSky;
+                Physics.IgnoreLayerCollision(playerlayer, pastlayer, false); Physics.IgnoreLayerCollision(playerlayer, presentlayer, true);
+                PastBool = 2;
             }  //加pastlayer, 減presentlayer
-            else if (currentTime >= (passThroughTime - 0.5f) && PastBool == 2)
+            else if (currentTime >= (passThroughTime - 0.5f) && PastBool == 3)
             {
                 if (ObjectControl.controledObject != null && ObjectControl.controledObject.layer == pastlayer) //bring the object during time shifting
                 {
@@ -126,8 +134,9 @@ public class TimeShiftingController : MonoBehaviour {
                     cameras[i].cullingMask &= ~(1 << pastlayer);
                     cameras[i].cullingMask |= (1 << presentlayer);
                 }
-                Physics.IgnoreLayerCollision(0, pastlayer, true); Physics.IgnoreLayerCollision(0, presentlayer, false);
-                PastBool = 3;
+                RenderSettings.skybox = PresentSky;
+                Physics.IgnoreLayerCollision(playerlayer, pastlayer, true); Physics.IgnoreLayerCollision(playerlayer, presentlayer, false);
+                PastBool = 0;
             }//減pastlayer, 加presentlayer
         }
     }
