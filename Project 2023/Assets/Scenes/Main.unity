@@ -954,10 +954,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeBeforeAffected: 0
-  recordedVelocity: {x: 0, y: 0, z: 0}
   flyingtime: 0
+  recordedVelocity: {x: 0, y: 0, z: 0}
   recordedMagnitude: 0
   IsStopped: 0
+  addingForceNormal: {x: 0, y: 0, z: 0}
 --- !u!1 &233355495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1330,10 +1331,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeBeforeAffected: 0
-  recordedVelocity: {x: 0, y: 0, z: 0}
   flyingtime: 0
+  recordedVelocity: {x: 0, y: 0, z: 0}
   recordedMagnitude: 0
   IsStopped: 0
+  addingForceNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &301500681 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7192204356321494343, guid: ee1f956151cf27d4e8103e187be8a465,
@@ -1820,6 +1822,8 @@ MonoBehaviour:
   rendererData: {fileID: 11400000, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
   featureName: TimeShift
   transitionPeriod: 1
+  PastSky: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  PresentSky: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   distortFactor: 0
   distortCenter: {x: 0.5, y: 0.5}
   NoiseTexture: {fileID: 2800000, guid: 7f200914f1b73714182072d0aa0872ff, type: 3}
