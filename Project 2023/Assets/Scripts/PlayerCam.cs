@@ -237,7 +237,7 @@ public class PlayerCam : MonoBehaviour
     //Control Marching Cubes
     private void LateUpdate()
     {
-        if (InputManager.GetButton("Grow"))
+        if (InputManager.GetButton("Grow") && false)
         {
             laser.SetActive(true);
             Terraform(true);

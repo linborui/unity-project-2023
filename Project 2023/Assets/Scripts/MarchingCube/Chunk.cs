@@ -1,26 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Luminosity.IO;
 public class Chunk : MonoBehaviour
 {
     public ComputeShader MarchingShader;
-
+    public bool Control;
     public MeshFilter MeshFilter;
     public MeshCollider MeshCollider;
-    public int Size;
+
     ComputeBuffer _trianglesBuffer;
     ComputeBuffer _trianglesCountBuffer;
     ComputeBuffer _weightsBuffer;
-
+    Transform player;
     public WeightGenerator NoiseGenerator;
     Mesh _mesh;
     bool up = false,down = false,left = false,right = false,forward = false,back = false;
     private void Awake() {
         NoiseGenerator = FindObjectOfType<WeightGenerator>();
         CreateBuffers();
+        if(Control){
+            player = FindObjectOfType<PlayerMovement>().transform;
+            transform.position = player.position - player.up * 1.5f;
+        }
     }
+    void Update(){
+        if (InputManager.GetButton("Grow"))
+        {
+            UpdatePositon();
+        }
+    }
+    void UpdatePositon(){
+        if(Control){
+            transform.position = new Vector3(player.position.x,player.position.y, player.position.z)- player.up * 1.5f;
 
+        }
+    }
     private void OnDestroy() {
         ReleaseBuffers();
     }
@@ -36,7 +51,6 @@ public class Chunk : MonoBehaviour
 
     void Start() {
         _weights = NoiseGenerator.GetNoise();
-        MarchingShader.SetInt("size", Size);
         _mesh = new Mesh();
         UpdateMesh();
     }
