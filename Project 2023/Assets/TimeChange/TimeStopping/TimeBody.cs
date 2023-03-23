@@ -31,6 +31,7 @@ public class TimeBody : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(rb == null) return;
         TimeBeforeAffectedTimer -= Time.deltaTime; // minus 1 per second
         if(TimeBeforeAffectedTimer <= 0f)
         {
@@ -71,6 +72,7 @@ public class TimeBody : MonoBehaviour
 
     public void ContinueTime()
     {
+        if(rb == null) return;
         rb.isKinematic = false;
         IsStopped = false;
         rb.velocity = recordedVelocity * recordedMagnitude; //Adds back the recorded velocity when time continues
