@@ -372,8 +372,11 @@ public class player_weapon : MonoBehaviour
             rig.useGravity = true;
 
             obj.transform.localScale = origin.transform.localScale;
-            obj.transform.rotation = origin.transform.rotation;
-            obj.transform.position = origin.transform.position;
+            if(!element.skinned){
+                obj.transform.rotation = origin.transform.rotation;
+                obj.transform.position = origin.transform.position;
+            }
+            else obj.transform.position = origin.GetComponentInParent<sliceable>().transform.position;
             obj.transform.tag = origin.tag;
 
             rigBody = obj.GetComponent<Rigidbody>();
@@ -389,6 +392,8 @@ public class player_weapon : MonoBehaviour
                 SkinnedMeshRenderer old = parent.GetComponent<SkinnedMeshRenderer>();
                 mesh.bindposes = old.sharedMesh.bindposes;
                 old.sharedMesh = mesh;
+                foreach(BoxCollider it in origin.GetComponentsInChildren<BoxCollider>())
+                    it.enabled = false;
             }
             else{
                 origin.GetComponent<MeshFilter>().mesh = mesh;
