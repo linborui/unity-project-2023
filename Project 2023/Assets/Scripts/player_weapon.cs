@@ -83,7 +83,6 @@ public class player_weapon : MonoBehaviour
         //Flip the plane so that we always know which side the positive mesh is on
         if (direction < 0)
             slicePlane = slicePlane.flipped;
-
         slice(other.gameObject, slicePlane, transformedNormal);
     }
 
@@ -330,7 +329,7 @@ public class player_weapon : MonoBehaviour
         Rigidbody rigBody;
         Vector3 size = origin.GetComponentInParent<sliceable>().scale;
         Mesh mesh;
-        TimeBody parenttime = origin.GetComponent<TimeBody>();
+        TimeBody parenttime = origin.GetComponentInParent<TimeBody>();
         TimeBody childtime = new TimeBody();
 
         if (set){

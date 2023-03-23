@@ -168,8 +168,8 @@ public class Delauny_Triangulation : MonoBehaviour
         foreach(Triangle it in triangles)
             ans_triangles.Add(it);
 
-        Debug.Log(" vertices: " + vertices_2d.Count);
-        Debug.Log(" triangles: " + ans_triangles.Count);
+        //Debug.Log(" vertices: " + vertices_2d.Count);
+        //Debug.Log(" triangles: " + ans_triangles.Count);
 
         foreach(Triangle it in ans_triangles){
             ans.Add(vertices[it.vertices[0].ind]);

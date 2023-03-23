@@ -824,7 +824,6 @@ GameObject:
   - component: {fileID: 186160315}
   - component: {fileID: 186160316}
   - component: {fileID: 186160317}
-  - component: {fileID: 186160318}
   m_Layer: 10
   m_Name: Cube (1)
   m_TagString: Moveable
@@ -961,23 +960,6 @@ MonoBehaviour:
   recordedMagnitude: 0
   IsStopped: 0
   addingForceNormal: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
---- !u!114 &186160318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 186160309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a64698fb6ad1d6c4cb7f5a31218eeba3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphicsObject: {fileID: 637631232}
-  isPlayer: 0
-=======
->>>>>>> b9ee0c230e8b4f31cefc1fe9b40c46357a0e9e0a
 --- !u!1 &233355495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,10 +1199,9 @@ GameObject:
   - component: {fileID: 247611848}
   - component: {fileID: 247611847}
   - component: {fileID: 247611849}
-  - component: {fileID: 247611850}
   - component: {fileID: 247611851}
+  - component: {fileID: 247611850}
   - component: {fileID: 247611852}
-  - component: {fileID: 247611853}
   m_Layer: 9
   m_Name: Cube
   m_TagString: Moveable
@@ -1357,23 +1338,6 @@ MonoBehaviour:
   recordedMagnitude: 0
   IsStopped: 0
   addingForceNormal: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
---- !u!114 &247611853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247611844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a64698fb6ad1d6c4cb7f5a31218eeba3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphicsObject: {fileID: 570834678}
-  isPlayer: 0
-=======
->>>>>>> b9ee0c230e8b4f31cefc1fe9b40c46357a0e9e0a
 --- !u!114 &301500681 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7192204356321494343, guid: ee1f956151cf27d4e8103e187be8a465,
@@ -6481,6 +6445,30 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &1635935217 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7105491944369996562, guid: 037fc4d8b90617440bfe4a2cb36c4af2,
+    type: 3}
+  m_PrefabInstance: {fileID: 3871794829954899306}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1635935220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635935217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c1ef66e35abaa45935a4d608435dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeBeforeAffected: 0
+  flyingtime: 0
+  recordedVelocity: {x: 0, y: 0, z: 0}
+  recordedMagnitude: 0
+  IsStopped: 0
+  addingForceNormal: {x: 0, y: 0, z: 0}
 --- !u!1 &1636366922
 GameObject:
   m_ObjectHideFlags: 0
