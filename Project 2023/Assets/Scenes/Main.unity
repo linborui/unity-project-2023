@@ -1202,6 +1202,7 @@ GameObject:
   - component: {fileID: 247611851}
   - component: {fileID: 247611850}
   - component: {fileID: 247611852}
+  - component: {fileID: 247611853}
   m_Layer: 9
   m_Name: Cube
   m_TagString: Moveable
@@ -1338,6 +1339,20 @@ MonoBehaviour:
   recordedMagnitude: 0
   IsStopped: 0
   addingForceNormal: {x: 0, y: 0, z: 0}
+--- !u!114 &247611853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247611844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a64698fb6ad1d6c4cb7f5a31218eeba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicsObject: {fileID: 570834678}
+  isPlayer: 0
 --- !u!114 &301500681 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7192204356321494343, guid: ee1f956151cf27d4e8103e187be8a465,
@@ -4108,6 +4123,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Chunk
+      objectReference: {fileID: 0}
+    - target: {fileID: 4325261828691138661, guid: fed72f16d50584f409f4d9238dd14575,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325261828691138663, guid: fed72f16d50584f409f4d9238dd14575,
         type: 3}
