@@ -170,6 +170,7 @@ public class ObjectControl : MonoBehaviour
         if (objectState != 3)
             return;
 
+        controledObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         diff = destination - controledObject.transform.position;
         speed = moveSpeed * deltaTime * Mathf.Max(diff.magnitude, 1.1f);
         Vector3 currPos = controledObject.transform.position;

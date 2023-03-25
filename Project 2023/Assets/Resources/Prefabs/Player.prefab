@@ -987,10 +987,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphicsObject: {fileID: 0}
   isPlayer: 0
-  gravity: 9.8
   moveSpeed: 30
   airSpeedMult: 0.05
   runSpeedMult: 2
+  straightenSpeed: 50
   sameButtonRunDash: 1
   buttonPressTime: 0.5
   jumpForce: 6
