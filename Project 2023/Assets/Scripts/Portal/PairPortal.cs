@@ -21,6 +21,7 @@ public class PairPortal : MonoBehaviour
     List<PortalTraveller> trackedTravellers;
     MeshFilter screenMeshFilter;
     private int portalId;
+    private Collider wallCollider;
     public void setPortalId(int id){
         portalId = id;
     }
@@ -41,6 +42,7 @@ public class PairPortal : MonoBehaviour
         trackedTravellers = new List<PortalTraveller> ();
         screenMeshFilter = screen.GetComponent<MeshFilter> ();
         screen.material.SetInt ("displayMask", 1);
+        wallCollider = null;
     }
     public void setPrivateVariable(PairPortal portal){
         linkedPortal = portal;
@@ -326,6 +328,7 @@ public class PairPortal : MonoBehaviour
             Debug.Log(traveller.gameObject.name + " entered portal");
             
             OnTravellerEnterPortal (traveller);
+            traveller.SetIsInPortal(this, linkedPortal, wallCollider);
         }
     }
 
@@ -334,6 +337,7 @@ public class PairPortal : MonoBehaviour
         if (traveller && trackedTravellers.Contains (traveller)) {
             traveller.ExitPortalThreshold ();
             trackedTravellers.Remove (traveller);
+            traveller.ExitPortal(wallCollider);
         }
     }
 
@@ -360,6 +364,16 @@ public class PairPortal : MonoBehaviour
         if (linkedPortal != null) {
             linkedPortal.linkedPortal = this;
         }
+    }
+    public void setCollider(Collider wallCollider)
+    {
+        this.wallCollider = wallCollider;
+    }
+    public bool getCollider(){
+        if(this.wallCollider == null){
+            return false;
+        }
+        return true;
     }
 }
 

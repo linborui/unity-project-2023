@@ -301,6 +301,7 @@ public class Portal : MonoBehaviour {
         var traveller = other.GetComponent<PortalTraveller> ();   
         if (traveller) {
             OnTravellerEnterPortal (traveller);
+            
         }
     }
 

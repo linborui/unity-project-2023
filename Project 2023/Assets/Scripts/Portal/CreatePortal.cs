@@ -99,14 +99,16 @@ public class CreatePortal : MonoBehaviour
             if(_portals.Length == 0)
             {
                 GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(hitfirst.normal));
-                p.transform.position += 2.5f *p.transform.forward;
+                p.transform.position += 0.05f *p.transform.forward;
                 p.GetComponentInChildren<Camera>().enabled = false;
+                
                 //change Sceen 's material 第一個portal為橘色
                 p.GetComponentInChildren<MeshRenderer>().material = Orangematerial;
                 p.GetComponentInChildren<ParticleSystem>().Stop();
                
                 _portals = FindObjectsOfType<PairPortal>();
                 _portals[0].setPortalId (0) ;
+                _portals[0].setCollider (hitfirst.collider) ;
                 OrangePortal = _portals[0];
                 turn ++;
                 
@@ -114,11 +116,15 @@ public class CreatePortal : MonoBehaviour
             else if(_portals.Length == 1)
             {
                 GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(-hitfirst.normal));
-                p.transform.position -= 2.5f *p.transform.forward;
+                p.transform.position -= 0.05f *p.transform.forward;
                 p.GetComponentInChildren<Camera>().enabled = false;
+
                 //change Sceen 's material 第二個portal為藍色
                 p.GetComponentInChildren<MeshRenderer>().material = Bluematerial;
+                
                 _portals = FindObjectsOfType<PairPortal>();
+                if(_portals[0].getCollider()) _portals[1].setCollider (hitfirst.collider) ;
+                else _portals[0].setCollider (hitfirst.collider) ;
                 //Add component to portal at simpleportal
                 //set private variable in portal
                 _portals[0].setPrivateVariable(_portals[1]);
@@ -143,18 +149,20 @@ public class CreatePortal : MonoBehaviour
             {
                 //if turn is enum portal type 1 orange
                 if(turn == 0){
+                    _portals[1].setCollider(hitfirst.collider);
                     _portals[1].transform.position = hitfirst.point;
                     Debug.Log("portal 1"+_portals[1].transform.position);
-                    _portals[1].transform.position += 1 *hitfirst.normal;
+                    _portals[1].transform.position += 0.05f *hitfirst.normal;
                     Debug.Log("portal 1"+_portals[1].transform.position);
                     _portals[1].transform.rotation = Quaternion.LookRotation(hitfirst.normal);
                     turn ++;
                 }
                 else
                 {
+                    _portals[0].setCollider(hitfirst.collider);
                     _portals[0].transform.position = hitfirst.point;
                     Debug.Log("portal 0"+_portals[0].transform.position);
-                    _portals[0].transform.position += 1 *hitfirst.normal;
+                    _portals[0].transform.position -= 0.05f *hitfirst.normal;
                     Debug.Log("portal 0"+_portals[0].transform.position);
                     _portals[0].transform.rotation = Quaternion.LookRotation(-hitfirst.normal);
 

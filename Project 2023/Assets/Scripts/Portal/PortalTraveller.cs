@@ -83,4 +83,26 @@ public class PortalTraveller : MonoBehaviour {
         }
         return matList.ToArray ();
     }
+    public void SetIsInPortal(PairPortal inPortal, PairPortal outPortal, Collider wallCollider)
+    {
+        //this.inPortal = inPortal;
+        //this.outPortal = outPortal;
+
+        Physics.IgnoreCollision(transform.GetComponent<Collider>() ,wallCollider);
+
+        //cloneObject.SetActive(false);
+
+        //++inPortalCount;
+    }
+
+    public void ExitPortal(Collider wallCollider)
+    {
+        Physics.IgnoreCollision(transform.GetComponent<Collider>(), wallCollider, false);
+        //--inPortalCount;
+
+        //if (inPortalCount == 0)
+        //{
+        //    cloneObject.SetActive(false);
+        //}
+    }
 }
