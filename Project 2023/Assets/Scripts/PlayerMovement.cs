@@ -10,10 +10,10 @@ using Luminosity.IO;
 
 public class PlayerMovement : PortalTraveller
 {
-    public float gravity;
     public float moveSpeed;
     public float airSpeedMult;
     public float runSpeedMult;
+    public float straightenSpeed;
     public static bool moving;
     public static bool running;
 
@@ -35,7 +35,6 @@ public class PlayerMovement : PortalTraveller
     float verticalInput;
     float horizontalInput;
 
-    Vector3 gravityForce;
     Vector3 inputDirection;
     Vector3 moveDirection;
     Vector3 moveForce;
@@ -99,7 +98,7 @@ public class PlayerMovement : PortalTraveller
     void FixedUpdate()
     {
         MovePlayer();
-        Gravity();
+        Straighten();
     }
 
     void MovePlayer()
@@ -120,6 +119,7 @@ public class PlayerMovement : PortalTraveller
                 else
                     vel = rotation * Vector3.forward * 5f;
                 rigidbody.velocity = new Vector3(0f, rigidbody.velocity.y, 0f) + vel;
+                rigidbody.useGravity = true;
             }
             inputDirection = Vector3.forward * verticalInput + Vector3.right * horizontalInput;
             moveDirection = rotation * inputDirection;
@@ -136,13 +136,9 @@ public class PlayerMovement : PortalTraveller
             rigidbody.AddForce(moveForce, ForceMode.Force);
     }
 
-    void Gravity()
+    void Straighten()
     {
-        if (!onWall)
-        {
-            gravityForce = Vector3.down * gravity;
-            rigidbody.AddForce(gravityForce, ForceMode.Force);
-        }
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, straightenSpeed * Time.deltaTime);
     }
 
     void Input()
@@ -310,6 +306,14 @@ public class PlayerMovement : PortalTraveller
         onGround = LandscapeDetect();
         topBlock = TopDetect();
         onWall = WallDetect();
+        if (onWall)
+        {
+            rigidbody.useGravity = false;
+        }
+        else
+        {
+            rigidbody.useGravity = true;
+        }
     }
 
     bool LandscapeDetect()
@@ -380,6 +384,7 @@ public class PlayerMovement : PortalTraveller
     {
         if (!onGround)
         {
+            int ignoreLayer = ~((1 << 2) | (1 << 3) | (1 << 6));
             RaycastHit hit;
             Vector3 pos, igPos;
             Quaternion igRot;
@@ -546,6 +551,7 @@ public class PlayerMovement : PortalTraveller
         }
         dashDirection = dashDirection.normalized;
         dashStartTime = Time.time;
+        rigidbody.useGravity = false;
     }
 
     void Restart()
