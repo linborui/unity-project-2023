@@ -1354,7 +1354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a64698fb6ad1d6c4cb7f5a31218eeba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphicsObject: {fileID: 570834678}
+  graphicsObject: {fileID: 0}
   isPlayer: 0
 --- !u!114 &301500681 stripped
 MonoBehaviour:
@@ -1362,7 +1362,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 56085604}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1412963999}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57b9885b89b6d4fbe92f77801ecc3671, type: 3}
@@ -5543,6 +5543,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1402881591}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1412963999 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 77229936062074190, guid: ee1f956151cf27d4e8103e187be8a465,
+    type: 3}
+  m_PrefabInstance: {fileID: 56085604}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1448654118
 GameObject:
   m_ObjectHideFlags: 0
@@ -8639,6 +8645,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 282862573643314560, guid: 5f51da62728310641944eb314f107748,
+        type: 3}
+      propertyPath: straightenSpeed
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 282862574091779476, guid: 5f51da62728310641944eb314f107748,
         type: 3}
       propertyPath: collectRadius
@@ -8649,6 +8660,11 @@ PrefabInstance:
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 952466278}
+    - target: {fileID: 282862574091779479, guid: 5f51da62728310641944eb314f107748,
+        type: 3}
+      propertyPath: pmodel
+      value: 
+      objectReference: {fileID: 1412963999}
     - target: {fileID: 7953335493176584228, guid: 5f51da62728310641944eb314f107748,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.a
