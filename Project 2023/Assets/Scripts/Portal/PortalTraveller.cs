@@ -19,14 +19,24 @@ public class PortalTraveller : MonoBehaviour {
     }
     // Called when first touches portal
     public virtual void EnterPortalThreshold () {
-        
-        if (graphicsClone == null) {
-            graphicsClone = Instantiate (graphicsObject);
-            graphicsClone.transform.parent = graphicsObject.transform.parent;
-            graphicsClone.transform.localScale = graphicsObject.transform.localScale;
-            originalMaterials = GetMaterials (graphicsObject);
+        graphicsObject = this.gameObject;
+        if(graphicsClone == null) {
+            graphicsClone = new GameObject();
+            graphicsClone.AddComponent<MeshFilter>();
+            graphicsClone.AddComponent<MeshRenderer>();
+            MeshRenderer met = graphicsClone.GetComponent<MeshRenderer>();
+            MeshFilter mesh = graphicsClone.GetComponent<MeshFilter>();
+            
+            if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
+                met.material = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
+                mesh.sharedMesh = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
+            }else{
+                met.sharedMaterial = this.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+                mesh.sharedMesh = this.GetComponentInChildren<MeshFilter>().sharedMesh;
+            }
+            originalMaterials = GetMaterials (graphicsClone);
             cloneMaterials = GetMaterials (graphicsClone);
-        } 
+        }
         else {
             graphicsClone.SetActive (true);
         }

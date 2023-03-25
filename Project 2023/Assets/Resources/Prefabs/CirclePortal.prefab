@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 60337149}
   - component: {fileID: 60337148}
   - component: {fileID: 60337147}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: vfx_ParOut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4824,7 +4824,7 @@ GameObject:
   - component: {fileID: 103164900}
   - component: {fileID: 103164902}
   - component: {fileID: 103164901}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: vfx_ParOut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9637,7 +9637,7 @@ GameObject:
   - component: {fileID: 1238463281}
   - component: {fileID: 1238463283}
   - component: {fileID: 1238463282}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: vfx_Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14451,7 +14451,7 @@ GameObject:
   - component: {fileID: 1860008319}
   - component: {fileID: 1860008318}
   - component: {fileID: 1860008317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: vfx_Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19265,7 +19265,7 @@ GameObject:
   - component: {fileID: 77229936062074188}
   - component: {fileID: 77229936062074189}
   - component: {fileID: 7192204356321494343}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: CirclePortal
   m_TagString: Portal
   m_Icon: {fileID: 0}
@@ -19335,7 +19335,7 @@ GameObject:
   - component: {fileID: 77229936481833962}
   - component: {fileID: 77229936481833960}
   - component: {fileID: 77229936481833963}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Portal Camera
   m_TagString: Portal
   m_Icon: {fileID: 0}
@@ -19446,7 +19446,7 @@ GameObject:
   - component: {fileID: 1644928314346681431}
   - component: {fileID: 9022534075040225903}
   - component: {fileID: 5628378276029529365}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: portal
   m_TagString: Screen
   m_Icon: {fileID: 0}
