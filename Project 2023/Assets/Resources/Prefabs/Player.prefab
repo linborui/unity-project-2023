@@ -294,6 +294,7 @@ MonoBehaviour:
   moveSpeed: 8
   throwSpeed: 20
   throwAngle: 10
+  collectRadius: 2
 --- !u!114 &282862574091779479
 MonoBehaviour:
   m_ObjectHideFlags: 0
