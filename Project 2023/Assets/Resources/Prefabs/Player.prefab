@@ -294,6 +294,7 @@ MonoBehaviour:
   moveSpeed: 8
   throwSpeed: 20
   throwAngle: 10
+  collectRadius: 2
 --- !u!114 &282862574091779479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +313,7 @@ MonoBehaviour:
   Orangematerial: {fileID: 2100000, guid: ba784aea4cc107947a8717ffee426bfb, type: 2}
   Bluematerial: {fileID: 2100000, guid: aae986f37b949314080f4582e8b5bc4e, type: 2}
   PortalMaterial: {fileID: 2100000, guid: a745f6b832343d04c83e49d466f7789e, type: 2}
+  pmodel: {fileID: 0}
 --- !u!1 &282862574284713399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1125,7 +1127,7 @@ PrefabInstance:
     - target: {fileID: 7904664508826979745, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.a
-      value: 0.5764706
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7904664508826979745, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
         type: 3}
@@ -1135,7 +1137,17 @@ PrefabInstance:
     - target: {fileID: 7904664508826979745, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
         type: 3}
       propertyPath: TrailModule.colorOverLifetime.maxColor.a
-      value: 0.5176471
+      value: 0.5058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 7904664508826979745, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
+        type: 3}
+      propertyPath: TrailModule.colorOverLifetime.minColor.a
+      value: 0.015686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 7904664508826979745, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
+        type: 3}
+      propertyPath: TrailModule.colorOverLifetime.minMaxState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7904664508826979746, guid: 1b3b351aa22b7bb4d8ed51b18648f815,
         type: 3}

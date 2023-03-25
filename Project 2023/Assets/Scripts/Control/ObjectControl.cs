@@ -15,6 +15,7 @@ public class ObjectControl : MonoBehaviour
     public float moveSpeed;
     public float throwSpeed;
     public float throwAngle;
+    public float collectRadius;
 
     static public GameObject controledObject;
     int objectState; // 0-nothing  1-get object  2-can move  3-moving  4-on hand
@@ -23,6 +24,8 @@ public class ObjectControl : MonoBehaviour
     Vector3 destination;
     DStarLite3d dStarLiteRoute;
     Queue<Vector3> objectPath;
+
+    List<GameObject> collectedItems;
 
     GameObject timeManager;
     int pastlayer;
@@ -33,6 +36,7 @@ public class ObjectControl : MonoBehaviour
         controledObject = null;
         objectState = 0;
         objectPath = null;
+        collectedItems = new List<GameObject>();
         timeManager = GameObject.FindGameObjectWithTag("TimeManager");
         pastlayer = LayerMask.NameToLayer("Past");
         presentlayer = LayerMask.NameToLayer("Present");
@@ -42,6 +46,10 @@ public class ObjectControl : MonoBehaviour
     {
         MoveObject();
         GetInput();
+    }
+
+    void FixedUpdate()
+    {
         OnHand();
     }
 
@@ -78,15 +86,28 @@ public class ObjectControl : MonoBehaviour
             ignoreLayer |= 1 << pastlayer;
         else
             ignoreLayer |= 1 << presentlayer;
+        ignoreLayer = ~ignoreLayer;
 
         RaycastHit hit;
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, controlDistance, ~ignoreLayer, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, controlDistance, ignoreLayer, QueryTriggerInteraction.Ignore))
         {
             GameObject hitObject = hit.transform.gameObject;
             if (hitObject.CompareTag("Moveable"))
             {
                 controledObject = hitObject;
                 objectState = 1;
+            }
+            else if (hitObject.CompareTag("Item"))
+            {
+                collectedItems.Add(hitObject);
+                Collider[] colliders = Physics.OverlapSphere(hitObject.transform.position, collectRadius, ignoreLayer);
+                foreach (Collider collider in colliders)
+                {
+                    if (collider.CompareTag("Item") && !hitObject.Equals(collider.gameObject))
+                    {
+                        collectedItems.Add(collider.gameObject);
+                    }
+                }
             }
             else
             {
@@ -116,12 +137,42 @@ public class ObjectControl : MonoBehaviour
 
     void MoveObject()
     {
+        if (timeManager.GetComponent<DesaturateController>().TimeIsStopped)
+            return;
+
+        float deltaTime = (Time.deltaTime < 0.1f) ? Time.deltaTime : 0.1f;
+        destination = cam.transform.position + cam.transform.rotation * controlPosition;
+        Vector3 diff;
+        float speed;
+        Queue<GameObject> removedItems = new Queue<GameObject>();
+        foreach (GameObject item in collectedItems)
+        {
+            diff = destination - item.transform.position;
+            speed = moveSpeed * deltaTime * Mathf.Max(diff.magnitude, 1.1f);
+
+            if (diff.magnitude > speed)
+            {
+                item.transform.position += diff.normalized * speed;
+            }
+            else
+            {
+                removedItems.Enqueue(item);
+            }
+        }
+        while(removedItems.Count > 0)
+        {
+            GameObject item = removedItems.Dequeue();
+            collectedItems.Remove(item);
+            Debug.Log("Collect " + item);
+            Destroy(item);
+        }
+
         if (objectState != 3)
             return;
-        float deltaTime = (Time.deltaTime < 0.1f) ? Time.deltaTime : 0.1f;
+
+        diff = destination - controledObject.transform.position;
+        speed = moveSpeed * deltaTime * Mathf.Max(diff.magnitude, 1.1f);
         Vector3 currPos = controledObject.transform.position;
-        Vector3 diff = destination - controledObject.transform.position;
-        float speed = moveSpeed * deltaTime * Mathf.Max(diff.magnitude, 1.1f);
         while (speed > 0)
         {
             if (objectPath.Count == 0)

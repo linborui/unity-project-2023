@@ -256,15 +256,14 @@ public class DStarLite3d
 
     private bool IsNodeValidCheckBox(Vector3 node)
     {
-        int ignoreLayer = GetIgnoreLayer();
-        return !Physics.CheckBox(node, objectSize / 2f, Quaternion.identity, ~ignoreLayer, QueryTriggerInteraction.Ignore);
+        return !Physics.CheckBox(node, objectSize / 2f, Quaternion.identity, GetIgnoreLayer(), QueryTriggerInteraction.Ignore);
     }
 
     private bool IsNodeValidRaycast(Vector3 origin, Vector3 dir)
     {
         int ignoreLayer = GetIgnoreLayer();
         RaycastHit hit;
-        if (Physics.Raycast(origin, dir, out hit, dir.magnitude, ~ignoreLayer, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(origin, dir, out hit, dir.magnitude, ignoreLayer, QueryTriggerInteraction.Ignore))
         {
             if (!hits.Contains(hit.transform.gameObject))
             {
@@ -278,7 +277,7 @@ public class DStarLite3d
                 for (int z = -1; z < 2; z += 2)
                 {
                     var vertex = Vector3.Scale(objectSize, new Vector3(x, y, z)) * 0.5f;
-                    if (Physics.Raycast(origin + vertex, dir, out hit, dir.magnitude, ~ignoreLayer, QueryTriggerInteraction.Ignore))
+                    if (Physics.Raycast(origin + vertex, dir, out hit, dir.magnitude, ignoreLayer, QueryTriggerInteraction.Ignore))
                     {
                         if (!hits.Contains(hit.transform.gameObject))
                         {
@@ -308,7 +307,7 @@ public class DStarLite3d
             ignoreLayer |= (1 << pastlayer);
         else if (pastBool == 3)
             ignoreLayer |= (1 << presentlayer);
-        return ignoreLayer;
+        return ~ignoreLayer;
     }
 
 }

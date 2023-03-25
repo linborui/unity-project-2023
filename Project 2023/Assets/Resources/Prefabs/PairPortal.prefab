@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 469257243}
   - component: {fileID: 469257245}
   - component: {fileID: 469257244}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: vfx_ParOut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4824,7 +4824,7 @@ GameObject:
   - component: {fileID: 869193586}
   - component: {fileID: 869193588}
   - component: {fileID: 869193587}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: vfx_Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9638,7 +9638,7 @@ GameObject:
   - component: {fileID: 3261802506883278171}
   - component: {fileID: 3261802506883278170}
   - component: {fileID: 3958289415568658712}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: PairPortal
   m_TagString: Portal
   m_Icon: {fileID: 0}
@@ -9703,7 +9703,7 @@ GameObject:
   - component: {fileID: 3261802507537923069}
   - component: {fileID: 3261802507537923071}
   - component: {fileID: 3261802507537923068}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Portal Camera
   m_TagString: Portal
   m_Icon: {fileID: 0}
@@ -9814,7 +9814,7 @@ GameObject:
   - component: {fileID: 6622334443570598821}
   - component: {fileID: 3329852459322560157}
   - component: {fileID: 2828211009196006289}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9911,5 +9911,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.0000005, y: 3, z: 12}
+  m_Size: {x: 3.0000005, y: 3, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
