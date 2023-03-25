@@ -29,7 +29,9 @@ public class PortalTraveller : MonoBehaviour {
             
             if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
                 met.material = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
-                mesh.sharedMesh = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
+                Mesh bakedMesh = new Mesh();
+                this.GetComponentInChildren<SkinnedMeshRenderer>().BakeMesh(bakedMesh);
+                mesh.sharedMesh = bakedMesh;
             }else{
                 met.sharedMaterial = this.GetComponentInChildren<MeshRenderer>().sharedMaterial;
                 mesh.sharedMesh = this.GetComponentInChildren<MeshFilter>().sharedMesh;
@@ -38,6 +40,12 @@ public class PortalTraveller : MonoBehaviour {
             cloneMaterials = GetMaterials (graphicsClone);
         }
         else {
+            if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
+                MeshFilter mesh = graphicsClone.GetComponent<MeshFilter>();
+                Mesh bakedMesh = new Mesh();
+                this.GetComponentInChildren<SkinnedMeshRenderer>().BakeMesh(bakedMesh);
+                mesh.sharedMesh = bakedMesh;
+            }
             graphicsClone.SetActive (true);
         }
     }

@@ -76,7 +76,7 @@ public class CreatePortal : MonoBehaviour
             Debug.Log("hit的到的物體"+hitfirst.collider.gameObject.name);
             Debug.Log("hitfirst.point"+hitfirst.point);
     
-            p.transform.position = hitfirst.point +  3 *p.transform.forward;
+            p.transform.position = hitfirst.point +  1 *p.transform.forward;
             p.transform.rotation = Quaternion.LookRotation(hitfirst.normal);
             if(turn == 0){
                 p.GetComponentInChildren<MeshRenderer>().material = Orangematerial;
@@ -99,7 +99,7 @@ public class CreatePortal : MonoBehaviour
             if(_portals.Length == 0)
             {
                 GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(hitfirst.normal));
-                p.transform.position += 5 *p.transform.forward;
+                p.transform.position += 0.5f *p.transform.forward;
                 p.GetComponentInChildren<Camera>().enabled = false;
                 //change Sceen 's material 第一個portal為橘色
                 p.GetComponentInChildren<MeshRenderer>().material = Orangematerial;
@@ -114,7 +114,7 @@ public class CreatePortal : MonoBehaviour
             else if(_portals.Length == 1)
             {
                 GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(-hitfirst.normal));
-                p.transform.position += 5 *p.transform.forward;
+                p.transform.position -= 0.5f *p.transform.forward;
                 p.GetComponentInChildren<Camera>().enabled = false;
                 //change Sceen 's material 第二個portal為藍色
                 p.GetComponentInChildren<MeshRenderer>().material = Bluematerial;
@@ -145,7 +145,7 @@ public class CreatePortal : MonoBehaviour
                 if(turn == 0){
                     _portals[1].transform.position = hitfirst.point;
                     Debug.Log("portal 1"+_portals[1].transform.position);
-                    _portals[1].transform.position += 3 *hitfirst.normal;
+                    _portals[1].transform.position += 1 *hitfirst.normal;
                     Debug.Log("portal 1"+_portals[1].transform.position);
                     _portals[1].transform.rotation = Quaternion.LookRotation(hitfirst.normal);
                     turn ++;
@@ -154,7 +154,7 @@ public class CreatePortal : MonoBehaviour
                 {
                     _portals[0].transform.position = hitfirst.point;
                     Debug.Log("portal 0"+_portals[0].transform.position);
-                    _portals[0].transform.position += 3 *hitfirst.normal;
+                    _portals[0].transform.position += 1 *hitfirst.normal;
                     Debug.Log("portal 0"+_portals[0].transform.position);
                     _portals[0].transform.rotation = Quaternion.LookRotation(-hitfirst.normal);
 
