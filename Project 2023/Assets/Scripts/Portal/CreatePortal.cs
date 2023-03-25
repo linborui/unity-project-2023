@@ -99,7 +99,7 @@ public class CreatePortal : MonoBehaviour
             if(_portals.Length == 0)
             {
                 GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(hitfirst.normal));
-                p.transform.position += 1f *p.transform.forward;
+                p.transform.position += 2.5f *p.transform.forward;
                 p.GetComponentInChildren<Camera>().enabled = false;
                 //change Sceen 's material 第一個portal為橘色
                 p.GetComponentInChildren<MeshRenderer>().material = Orangematerial;
@@ -114,7 +114,7 @@ public class CreatePortal : MonoBehaviour
             else if(_portals.Length == 1)
             {
                 GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(-hitfirst.normal));
-                p.transform.position -= 1f *p.transform.forward;
+                p.transform.position -= 2.5f *p.transform.forward;
                 p.GetComponentInChildren<Camera>().enabled = false;
                 //change Sceen 's material 第二個portal為藍色
                 p.GetComponentInChildren<MeshRenderer>().material = Bluematerial;
