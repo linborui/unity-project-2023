@@ -113,7 +113,7 @@ public class CreatePortal : MonoBehaviour
             }
             else if(_portals.Length == 1)
             {
-                GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(hitfirst.normal));
+                GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(-hitfirst.normal));
                 p.transform.position += 5 *p.transform.forward;
                 p.GetComponentInChildren<Camera>().enabled = false;
                 //change Sceen 's material 第二個portal為藍色
@@ -156,7 +156,7 @@ public class CreatePortal : MonoBehaviour
                     Debug.Log("portal 0"+_portals[0].transform.position);
                     _portals[0].transform.position += 3 *hitfirst.normal;
                     Debug.Log("portal 0"+_portals[0].transform.position);
-                    _portals[0].transform.rotation = Quaternion.LookRotation(hitfirst.normal);
+                    _portals[0].transform.rotation = Quaternion.LookRotation(-hitfirst.normal);
 
                     turn --;
                 }
