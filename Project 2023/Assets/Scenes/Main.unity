@@ -8182,6 +8182,12 @@ PrefabInstance:
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 952466278}
+    - target: {fileID: 282862574091779479, guid: 5f51da62728310641944eb314f107748,
+        type: 3}
+      propertyPath: pmodel
+      value: 
+      objectReference: {fileID: 3261802506883278169, guid: 1a77049e9038f044a97b272704b1e812,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f51da62728310641944eb314f107748, type: 3}
 --- !u!1001 &3871794829954899306
