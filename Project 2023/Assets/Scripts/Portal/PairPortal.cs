@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 public class PairPortal : MonoBehaviour
 {
 
-    PairPortal linkedPortal;
+    public PairPortal linkedPortal;
     public MeshRenderer screen;
     int recursionLimit = 10;
 
@@ -16,7 +16,7 @@ public class PairPortal : MonoBehaviour
     // Private variables
     RenderTexture viewTexture;
     Camera portalCam;
-    Camera playerCam;
+    public Camera playerCam;
     Material firstRecursionMat;
     List<PortalTraveller> trackedTravellers;
     MeshFilter screenMeshFilter;
@@ -28,18 +28,12 @@ public class PairPortal : MonoBehaviour
     public int getPortalId(){
         return portalId;
     }
-    public PairPortal LinkedPortal { get {return linkedPortal;}
-                                    set{
-                                        linkedPortal = value;
-                                        
-                                    } }
+
                                     
     void Awake () {
         portalId = -1;
-        linkedPortal = null;
-        playerCam = Camera.main;
         portalCam = GetComponentInChildren<Camera> ();
-        portalCam.enabled = false;
+        //portalCam.enabled = false;
         trackedTravellers = new List<PortalTraveller> ();
         screenMeshFilter = screen.GetComponent<MeshFilter> ();
         screen.material.SetInt ("displayMask", 1);
