@@ -35,6 +35,7 @@ public class PairPortal : MonoBehaviour
                                     } }
                                     
     void Awake () {
+        portalId = -1;
         linkedPortal = null;
         playerCam = Camera.main;
         portalCam = GetComponentInChildren<Camera> ();

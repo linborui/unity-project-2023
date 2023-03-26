@@ -88,6 +88,7 @@ public class CreatePortal : MonoBehaviour
         
         }
     }
+    bool orange = true;
     void SpawnPortal () {
         p.SetActive(false);
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -133,13 +134,14 @@ public class CreatePortal : MonoBehaviour
                 _portals[1].GetComponentInChildren<MeshRenderer>().material = PortalMaterial;
                 //_portals[0].GetComponentInChildren<Camera>().enabled = true;
                 //_portals[1].GetComponentInChildren<Camera>().enabled = true;
+            
                 if(_portals[0].getPortalId() == 0){
                     _portals[1].setPortalId(1);
                     OrangePortal = _portals[0];
                     BluePortal = _portals[1];
                 }
-                else{
-                    _portals[1].setPortalId(0);
+                else if(_portals[0].getPortalId() == -1){
+                    _portals[0].setPortalId(1);
                     OrangePortal = _portals[1];
                     BluePortal = _portals[0];
                 }
@@ -149,23 +151,26 @@ public class CreatePortal : MonoBehaviour
             {
                 //if turn is enum portal type 1 orange
                 if(turn == 0){
-                    _portals[1].setCollider(hitfirst.collider);
-                    _portals[1].transform.position = hitfirst.point;
-                    Debug.Log("portal 1"+_portals[1].transform.position);
-                    _portals[1].transform.position += 0.05f *hitfirst.normal;
-                    Debug.Log("portal 1"+_portals[1].transform.position);
-                    _portals[1].transform.rotation = Quaternion.LookRotation(hitfirst.normal);
+                    
+                    _portals[0].setCollider(hitfirst.collider);
+                    _portals[0].transform.rotation  = Quaternion.LookRotation(hitfirst.normal);
+                    _portals[0].transform.position = hitfirst.point;
+                    Debug.Log("portal 0"+_portals[0].transform.position);
+                    _portals[0].transform.position += 0.05f *hitfirst.normal;   
+                    Debug.Log("portal 0"+_portals[0].transform.position);
                     turn ++;
                 }
                 else
                 {
-                    _portals[0].setCollider(hitfirst.collider);
-                    _portals[0].transform.position = hitfirst.point;
-                    Debug.Log("portal 0"+_portals[0].transform.position);
-                    _portals[0].transform.position -= 0.05f *hitfirst.normal;
-                    Debug.Log("portal 0"+_portals[0].transform.position);
-                    _portals[0].transform.rotation = Quaternion.LookRotation(-hitfirst.normal);
+                   _portals[1].setCollider(hitfirst.collider);
+   
+                    _portals[1].transform.rotation = Quaternion.LookRotation(-hitfirst.normal);
+                    _portals[1].transform.position = hitfirst.point;
+                    Debug.Log("portal 1"+_portals[1].transform.position);
+                    _portals[1].transform.position -= 0.05f *hitfirst.normal;
+                    Debug.Log("portal 1"+_portals[1].transform.position);
 
+                   
                     turn --;
                 }
             }
