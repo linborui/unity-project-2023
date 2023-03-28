@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Luminosity.IO;
+using UnityEngine.Rendering;
 public class CreatePortal : MonoBehaviour
 {
     // Start is called before the first frame update
     //Add on the camera 
     
-    Vector3 _hitPoint;
-    public GameObject prefab;
+
     public GameObject CubePrefab;
     public Material Orangematerial;
     public Material Bluematerial;
     public Material PortalMaterial;
-    private PairPortal[]  _portals;
-    private PairPortal OrangePortal;
-    private PairPortal BluePortal;
+   
+    public PairPortal InPortal;
+    public PairPortal OutPortal;
     public GameObject pmodel; 
     GameObject p;
     Camera _cam;
@@ -35,22 +35,49 @@ public class CreatePortal : MonoBehaviour
     }
     void Awake () {
         //instantiate portal to empty list
-        _portals = FindObjectsOfType<PairPortal>();
         _cam = GetComponent<Camera>();
+        InPortal.GetComponentInChildren<MeshRenderer>().material = Orangematerial;
+        OutPortal.GetComponentInChildren<MeshRenderer>().material = Bluematerial;
+        InPortal.GetComponentInChildren<Camera>().enabled = false;
+        OutPortal.GetComponentInChildren<Camera>().enabled = false;
+        RenderPipelineManager.beginCameraRendering += RenderPortal;
     }
 
+    private void OnDestroy()
+    {
+        RenderPipelineManager.beginCameraRendering -= RenderPortal;
+    }
+
+    void RenderPortal(ScriptableRenderContext context, Camera camera)
+    {
+        InPortal.PrePortalRender(context);
+        OutPortal.PrePortalRender(context);
+        InPortal.Render(context);
+        OutPortal.Render(context);
+        InPortal.PostPortalRender(context);
+        OutPortal.PostPortalRender(context);
+
+    }
     void Update () {
-        if (InputManager.GetButtonDown("Portal")){
+        if (InputManager.GetButtonDown("PortalIn")){
             p.SetActive(true);
         }
-        if (InputManager.GetButton("Portal") /*&& mouseX != lastmouseX && mouseY != lastmouseY*/){
-            PositionShow();
-            lastmouseX = mouseX;
-            lastmouseY = mouseY;
+        if (InputManager.GetButton("PortalIn") /*&& mouseX != lastmouseX && mouseY != lastmouseY*/){
+            //PositionShow();
         }
-        if (InputManager.GetButtonUp("Portal")) {
+        if (InputManager.GetButtonUp("PortalIn")) {
             p.SetActive(false);
-            SpawnPortal ();
+            SpawnPortal (0);
+        }
+        if (InputManager.GetButtonDown("PortalIn")){
+            p.SetActive(true);
+        }
+        if (InputManager.GetButton("PortalOut") /*&& mouseX != lastmouseX && mouseY != lastmouseY*/){
+            //PositionShow();
+        }
+        if (InputManager.GetButtonUp("PortalOut")) {
+            p.SetActive(false);
+            SpawnPortal (1);
         }
         if(InputManager.GetButtonDown("Cube")){
             SpawnCube();
@@ -88,86 +115,54 @@ public class CreatePortal : MonoBehaviour
         
         }
     }
-    void SpawnPortal () {
+    bool orange = true;
+    void SpawnPortal (int portalID) {
         p.SetActive(false);
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitfirst;
         int layermask = 1<<6;
         if (Physics.Raycast(ray, out hitfirst,1000,~layermask) )
         {
-            _portals = FindObjectsOfType<PairPortal>();
-            if(_portals.Length == 0)
+            // Orient the portal according to camera look direction and surface direction.
+            var cameraRotation = _cam.transform.rotation;
+            var portalRight = cameraRotation * Vector3.right;
+            
+            if(Mathf.Abs(portalRight.x) >= Mathf.Abs(portalRight.z))
             {
-                GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(hitfirst.normal));
-                p.transform.position += 0.05f *p.transform.forward;
-                p.GetComponentInChildren<Camera>().enabled = false;
-                
-                //change Sceen 's material 第一個portal為橘色
-                p.GetComponentInChildren<MeshRenderer>().material = Orangematerial;
-                p.GetComponentInChildren<ParticleSystem>().Stop();
-               
-                _portals = FindObjectsOfType<PairPortal>();
-                _portals[0].setPortalId (0) ;
-                _portals[0].setCollider (hitfirst.collider) ;
-                OrangePortal = _portals[0];
-                turn ++;
-                
-            }
-            else if(_portals.Length == 1)
-            {
-                GameObject p = Instantiate(prefab, hitfirst.point, Quaternion.LookRotation(-hitfirst.normal));
-                p.transform.position -= 0.05f *p.transform.forward;
-                p.GetComponentInChildren<Camera>().enabled = false;
-
-                //change Sceen 's material 第二個portal為藍色
-                p.GetComponentInChildren<MeshRenderer>().material = Bluematerial;
-                
-                _portals = FindObjectsOfType<PairPortal>();
-                if(_portals[0].getCollider()) _portals[1].setCollider (hitfirst.collider) ;
-                else _portals[0].setCollider (hitfirst.collider) ;
-                //Add component to portal at simpleportal
-                //set private variable in portal
-                _portals[0].setPrivateVariable(_portals[1]);
-                _portals[1].setPrivateVariable(_portals[0]);
-                _portals[0].GetComponentInChildren<MeshRenderer>().material = PortalMaterial;
-                _portals[1].GetComponentInChildren<MeshRenderer>().material = PortalMaterial;
-                //_portals[0].GetComponentInChildren<Camera>().enabled = true;
-                //_portals[1].GetComponentInChildren<Camera>().enabled = true;
-                if(_portals[0].getPortalId() == 0){
-                    _portals[1].setPortalId(1);
-                    OrangePortal = _portals[0];
-                    BluePortal = _portals[1];
-                }
-                else{
-                    _portals[1].setPortalId(0);
-                    OrangePortal = _portals[1];
-                    BluePortal = _portals[0];
-                }
-                turn --;
+                portalRight = (portalRight.x >= 0) ? Vector3.right : -Vector3.right;
             }
             else
             {
-                //if turn is enum portal type 1 orange
-                if(turn == 0){
-                    _portals[1].setCollider(hitfirst.collider);
-                    _portals[1].transform.position = hitfirst.point;
-                    Debug.Log("portal 1"+_portals[1].transform.position);
-                    _portals[1].transform.position += 0.05f *hitfirst.normal;
-                    Debug.Log("portal 1"+_portals[1].transform.position);
-                    _portals[1].transform.rotation = Quaternion.LookRotation(hitfirst.normal);
-                    turn ++;
-                }
-                else
-                {
-                    _portals[0].setCollider(hitfirst.collider);
-                    _portals[0].transform.position = hitfirst.point;
-                    Debug.Log("portal 0"+_portals[0].transform.position);
-                    _portals[0].transform.position -= 0.05f *hitfirst.normal;
-                    Debug.Log("portal 0"+_portals[0].transform.position);
-                    _portals[0].transform.rotation = Quaternion.LookRotation(-hitfirst.normal);
+                portalRight = (portalRight.z >= 0) ? Vector3.forward : -Vector3.forward;
+            }
 
-                    turn --;
-                }
+            var portalForward = -hitfirst.normal;
+            var portalUp = -Vector3.Cross(portalRight, portalForward);
+
+            if(portalID == 0)
+            {
+                InPortal.transform.rotation = Quaternion.LookRotation(portalForward, portalUp);
+                InPortal.transform.position = hitfirst.point ;
+                InPortal.transform.position -= 1f *InPortal.transform.forward;
+                //InPortal.GetComponentInChildren<ParticleSystem>().Stop();
+                if(InPortal.getCollider()) InPortal.setCollider (hitfirst.collider) ;
+                else InPortal.setCollider (hitfirst.collider) ;
+
+                
+            }
+            else if(portalID == 1)
+            {
+                OutPortal.transform.rotation = Quaternion.LookRotation(-portalForward, portalUp);
+                OutPortal.transform.position = hitfirst.point ;
+                OutPortal.transform.position += 1f *OutPortal.transform.forward;
+                
+                if(OutPortal.getCollider()) OutPortal.setCollider (hitfirst.collider) ;
+                else OutPortal.setCollider (hitfirst.collider) ;
+                
+                InPortal.GetComponentInChildren<MeshRenderer>().material = PortalMaterial;
+                OutPortal.GetComponentInChildren<MeshRenderer>().material = PortalMaterial;
+
+                
             }
         }
     }
