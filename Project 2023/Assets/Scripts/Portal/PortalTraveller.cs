@@ -1,73 +1,57 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
-//任何要穿過傳送門的東西都要記得繼承這個類別
+//Every thing that need to transport the portal need to inherit this class or just mount this code
 public class PortalTraveller : MonoBehaviour {
-
-    public GameObject graphicsObject;
     public GameObject graphicsClone { get; set; }
     public Vector3 previousOffsetFromPortal { get; set; }
-
+    
     public Material[] originalMaterials { get; set; }
     public Material[] cloneMaterials { get; set; }
 
-    public bool isPlayer;
- 
-    public virtual void Teleport (Transform fromPortal, Transform toPortal){//, Vector3 pos, Quaternion rot) {
-        //transform.position = pos;
-        //transform.rotation = rot;
-    }
-    // Called when first touches portal
-    public virtual void EnterPortalThreshold () {
-        graphicsObject = this.gameObject;
-        if(graphicsClone == null) {
-            graphicsClone = new GameObject();
-            graphicsClone.AddComponent<MeshFilter>();
-            graphicsClone.AddComponent<MeshRenderer>();
-            MeshRenderer met = graphicsClone.GetComponent<MeshRenderer>();
-            MeshFilter mesh = graphicsClone.GetComponent<MeshFilter>();
-            
-            if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
-                met.material = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
-                Mesh bakedMesh = new Mesh();
-                this.GetComponentInChildren<SkinnedMeshRenderer>().BakeMesh(bakedMesh);
-                mesh.sharedMesh = bakedMesh;
-            }else{
-                met.sharedMaterial = this.GetComponentInChildren<MeshRenderer>().sharedMaterial;
-                mesh.sharedMesh = this.GetComponentInChildren<MeshFilter>().sharedMesh;
-            }
-            originalMaterials = GetMaterials (graphicsClone);
-            cloneMaterials = GetMaterials (graphicsClone);
+    private int inPortalCount = 0;
+    private Portal inPortal;
+    private Portal outPortal;
+    private PortalForPair inPairPortal;
+    private PortalForPair outPairPortal;
+    new public Rigidbody rigidbody;
+    protected Collider collider;
+    public static bool isTransporting { get; set; } = false;
+    public bool isPlayer = false;
+    private static readonly Quaternion halfTurn = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+    public virtual void Teleport (Transform fromPortal, Transform toPortal){ 
+        if(!isPlayer){
+            Matrix4x4 m = toPortal.localToWorldMatrix * fromPortal.worldToLocalMatrix * transform.localToWorldMatrix;
+            transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
+            Physics.SyncTransforms ();    
+            GetComponent<Rigidbody>().velocity = toPortal.TransformVector (fromPortal.InverseTransformVector (GetComponent<Rigidbody>().velocity ));
         }
-        else {
-            if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
-                MeshFilter mesh = graphicsClone.GetComponent<MeshFilter>();
-                Mesh bakedMesh = new Mesh();
-                this.GetComponentInChildren<SkinnedMeshRenderer>().BakeMesh(bakedMesh);
-                mesh.sharedMesh = bakedMesh;
-            }
-            graphicsClone.SetActive (true);
+        else{
+            PlayerMovement.isTransport = true;       
+            Matrix4x4 pre = toPortal.localToWorldMatrix * fromPortal.worldToLocalMatrix;
+            Matrix4x4 m = pre * transform.localToWorldMatrix;
+            Matrix4x4 c = pre * Camera.main.transform.localToWorldMatrix; 
+            Camera.main.transform.SetPositionAndRotation (c.GetColumn (3), c.rotation);
+            transform.SetPositionAndRotation (m.GetColumn (3), m.rotation); 
+            Camera.main.GetComponent<PlayerCam>().ResetTargetRotation();
+            rigidbody.velocity = toPortal.TransformVector (fromPortal.InverseTransformVector (rigidbody.velocity ));
+            Vector3 dashDirection = GetComponent<PlayerMovement>().getDashDirection();
+            GetComponent<PlayerMovement>().setDashDirection(toPortal.TransformVector (fromPortal.InverseTransformVector (dashDirection )));
+            Physics.SyncTransforms ();
+            PlayerMovement.isTransport = false;  
         }
     }
-
-    // Called once no longer touching portal (excluding when teleporting)
     public virtual void ExitPortalThreshold () {
         graphicsClone.SetActive (false);
-        // Disable slicing
         for (int i = 0; i < originalMaterials.Length; i++) {
             originalMaterials[i].SetVector ("sliceNormal", Vector3.zero);
         }
     }
-
-    //更新shader的參數
     public void SetSliceOffsetDst (float dst, bool clone) {
         for (int i = 0; i < originalMaterials.Length; i++) {
-            if (clone) 
-            {
+            if (clone){
                 cloneMaterials[i].SetFloat ("sliceOffsetDst", dst);
             } 
-            else 
-            {
+            else{
                 originalMaterials[i].SetFloat ("sliceOffsetDst", dst);
             }
         }
@@ -83,26 +67,127 @@ public class PortalTraveller : MonoBehaviour {
         }
         return matList.ToArray ();
     }
-    public void SetIsInPortal(PairPortal inPortal, PairPortal outPortal, Collider wallCollider)
+    
+    protected virtual void Awake()
     {
-        //this.inPortal = inPortal;
-        //this.outPortal = outPortal;
+        graphicsClone = new GameObject();
+        graphicsClone.SetActive(false);
+        MeshRenderer met = graphicsClone.AddComponent<MeshRenderer>();//.materials;
+        MeshFilter mesh = graphicsClone.AddComponent<MeshFilter>();
+        graphicsClone.transform.localScale = transform.localScale;
 
-        Physics.IgnoreCollision(transform.GetComponent<Collider>() ,wallCollider);
-
-        //cloneObject.SetActive(false);
-
-        //++inPortalCount;
+        rigidbody = GetComponent<Rigidbody>();
+        collider = GetComponent<Collider>();
+        if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
+            met.material = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
+            Mesh bakedMesh = new Mesh();
+            this.GetComponentInChildren<SkinnedMeshRenderer>().BakeMesh(bakedMesh);
+            mesh.sharedMesh = bakedMesh;
+        }
+        else{
+            met.sharedMaterial = this.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+            mesh.sharedMesh = this.GetComponentInChildren<MeshFilter>().sharedMesh;
+        }
+        originalMaterials = GetMaterials (graphicsClone);
+        cloneMaterials = GetMaterials (graphicsClone);
     }
 
-    public void ExitPortal(Collider wallCollider)
+    private void LateUpdate()
     {
-        Physics.IgnoreCollision(transform.GetComponent<Collider>(), wallCollider, false);
+        if(inPairPortal == null || outPairPortal == null)
+        {
+            return;
+        }
+        if(graphicsClone.activeSelf && inPairPortal.IsPlaced && outPairPortal.IsPlaced)
+        {
+            var inTransform = inPairPortal.transform;
+            var outTransform = outPairPortal.transform;
+
+            // Update position of clone.
+            Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
+            relativePos = halfTurn * relativePos;
+            graphicsClone.transform.position = outTransform.TransformPoint(relativePos);
+
+            // Update rotation of clone.
+            Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
+            relativeRot = halfTurn * relativeRot;
+            graphicsClone.transform.rotation = outTransform.rotation * relativeRot;
+        }
+        else
+        {
+            graphicsClone.transform.position = new Vector3(-1000.0f, 1000.0f, -1000.0f);
+        }
+    }
+    public void SetIsInPortal(Portal inPortal, Portal outPortal, Collider wallCollider)
+    {
+        this.inPortal = inPortal;
+        this.outPortal = outPortal;
+        graphicsClone.SetActive(false);
+        //++inPortalCount;
+    }
+    public void ExitPortal()
+    {
         //--inPortalCount;
 
-        //if (inPortalCount == 0)
-        //{
-        //    cloneObject.SetActive(false);
-        //}
+        graphicsClone.SetActive(false);
+        
+    }
+    public void SetIsInPairPortal(PortalForPair inPortal, PortalForPair outPortal, Collider wallCollider)
+    {
+        this.inPairPortal = inPortal;
+        this.outPairPortal = outPortal;
+        Physics.IgnoreCollision(collider, wallCollider);
+        graphicsClone.SetActive(false);
+        ++inPortalCount;
+    }
+    public void ExitPairPortal(Collider wallCollider)
+    {
+        Physics.IgnoreCollision(collider, wallCollider, false);
+        --inPortalCount;
+
+        if (inPortalCount == 0)
+        {
+            graphicsClone.SetActive(false);
+        }
+    }
+
+    public void Warp()
+    {
+        var inTransform = inPairPortal.transform;
+        var outTransform = outPairPortal.transform;
+        
+        if(isPlayer)
+        { 
+            isTransporting = true;
+            Camera cam = Camera.main;
+            Vector3 relativePosCam = inTransform.InverseTransformPoint(cam.transform.position);
+            relativePosCam = halfTurn * relativePosCam;
+            cam.transform.position = outTransform.TransformPoint(relativePosCam);
+            
+            Quaternion relativeRotCam = Quaternion.Inverse(inTransform.rotation) * cam.transform.rotation;
+            relativeRotCam = halfTurn * relativeRotCam;
+            cam.transform.rotation = outTransform.rotation * relativeRotCam;
+            rigidbody.useGravity = false;
+        }
+        Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
+        relativePos = halfTurn * relativePos;
+        transform.position = outTransform.TransformPoint(relativePos);
+        Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
+        relativeRot = halfTurn * relativeRot;
+        transform.rotation = outTransform.rotation * relativeRot;
+        Vector3 relativeVel = inTransform.InverseTransformDirection(rigidbody.velocity);
+        relativeVel = halfTurn * relativeVel;
+        rigidbody.velocity = outTransform.TransformDirection(relativeVel);
+        Physics.SyncTransforms ();
+        var tmp = inPairPortal;
+        inPairPortal = outPairPortal;
+        outPairPortal = tmp;
+        if(isPlayer){
+            PlayerCam playerCam = Camera.main.GetComponent<PlayerCam>();
+            playerCam.ResetTargetRotation();
+            Physics.SyncTransforms ();
+            isTransporting = false;
+            rigidbody.useGravity = true;
+        }
     }
 }

@@ -11,8 +11,6 @@ public static class CameraUtility {
         new Vector3 (1, 1, -1),
         new Vector3 (1, -1, 1),
     };
-
-    // http://wiki.unity3d.com/index.php/IsVisibleFrom
     public static bool VisibleFromCamera (Renderer renderer, Camera camera) {
         Plane[] frustumPlanes = GeometryUtility.CalculateFrustumPlanes (camera);
         return GeometryUtility.TestPlanesAABB (frustumPlanes, renderer.bounds);
@@ -37,8 +35,6 @@ public static class CameraUtility {
         }
         return false;
     }
-
-    // With thanks to http://www.turiyaware.com/a-solution-to-unitys-camera-worldtoscreenpoint-causing-ui-elements-to-display-when-object-is-behind-the-camera/
     public static MinMax3D GetScreenRectFromBounds (MeshFilter renderer, Camera mainCamera) {
         MinMax3D minMax = new MinMax3D (float.MaxValue, float.MinValue);
 
