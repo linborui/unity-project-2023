@@ -7,7 +7,6 @@ using UnityEngine.Rendering;
 public class PlayerCam : MonoBehaviour
 {
     public int state;
-
     public float xSensitivity;
     public float ySensitivity;
     public float heightSpeed;

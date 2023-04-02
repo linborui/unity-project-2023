@@ -89,8 +89,9 @@ public class player_weapon : MonoBehaviour
     void SwapeSword() { 
         float xAxis = InputManager.mousePosition.x;
         float yAxis = InputManager.mousePosition.y;
+        float zAxis = 0.4f;
         if(InputManager.GetButton("Slash")){
-            transform.localPosition = new Vector3(xAxis / Screen.width - 0.5f, yAxis / Screen.height - 0.5f, 0.9f);
+            transform.localPosition = new Vector3(Mathf.Min(Mathf.Max(xAxis, 0), Screen.width) / Screen.width - 0.5f, Mathf.Min(Mathf.Max(yAxis, 0), Screen.height) / Screen.height - 0.5f, zAxis);
             if(!swapeDone){
                 float vx = xAxis - prevX, vy = yAxis - prevY;
                 float v = Mathf.Sqrt(vx * vx + vy * vy) * Time.deltaTime;
@@ -117,7 +118,7 @@ public class player_weapon : MonoBehaviour
         }
         else if(!InputManager.GetButton("Slash"))
         {
-            transform.localPosition = Vector3.SmoothDamp(transform.localPosition, new Vector3(0.5f, -0.1f, 0.9f),ref moveVel, 0.1f);
+            transform.localPosition = Vector3.SmoothDamp(transform.localPosition, new Vector3(0.3f, -0.1f, zAxis),ref moveVel, 0.1f);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(0f, 0f, 0f), 6f * Time.deltaTime);
         }
         prevX = xAxis;

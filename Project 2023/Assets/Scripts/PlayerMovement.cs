@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine;
 using Luminosity.IO;
 
@@ -57,6 +59,14 @@ public class PlayerMovement : PortalTraveller
     public float dashSpeed;
     public float dashTime;
     public float dashCD;
+
+    [Range(0, 1)]
+    public float Intensity = 0.25f;
+    [Range(0, 1)]
+    public float Clamp = 0.03f;
+
+    public Volume v;
+    private MotionBlur mb;
     bool canDash;
     float dashStartTime;
     Vector3 dashDirection;
@@ -101,15 +111,23 @@ public class PlayerMovement : PortalTraveller
         Straighten();
     }
 
+    void setMotionBlur(float intensity, float clamp){
+        v.profile.TryGet<MotionBlur>(out mb);
+        mb.intensity.Override(intensity);
+        mb.clamp.Override(clamp);
+    }
+
     void MovePlayer()
     {
         rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
         if (dashing && Time.time < dashStartTime + dashTime)
         {
+            setMotionBlur(1f, 1f);
             moveForce = dashDirection * dashSpeed;
         }
         else
         {
+            setMotionBlur(Intensity, Clamp);
             if (dashing)
             {
                 dashing = false;
