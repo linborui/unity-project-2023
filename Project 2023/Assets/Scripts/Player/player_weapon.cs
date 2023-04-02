@@ -353,7 +353,7 @@ public class player_weapon : MonoBehaviour
 
             if(origin.GetComponent<MeshRenderer>() != null) origin_met = origin.GetComponentInChildren<MeshRenderer>().materials;
             else origin_met = origin.GetComponentInParent<SkinnedMeshRenderer>().materials;
-            if(origin.GetComponentInParent<Movement>()) obj.AddComponent<Movement>();
+            if(origin.GetComponentInParent<PortalTraveller>()) obj.AddComponent<PortalTraveller>();
 
             obj.GetComponent<MeshFilter>().mesh = mesh;
             obj.GetComponent<MeshRenderer>().sharedMaterials = origin_met;

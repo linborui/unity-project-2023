@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 public class PlayerCam : MonoBehaviour
 {
     public int state;
+    public Quaternion TargetRotation { private set; get; }
     public float xSensitivity;
     public float ySensitivity;
     public float heightSpeed;
@@ -109,24 +110,24 @@ public class PlayerCam : MonoBehaviour
 
     void MouseControl()
     {
-        if (!InputManager.GetButton("Slash") && !PlayerMovement.isTransport)
+        if (!InputManager.GetButton("Slash") && !PlayerMovement.isTransporting)
         {
             float deltaTime = (Time.deltaTime < 0.1f) ? Time.deltaTime : 0.1f;
             float mouseX = InputManager.GetAxisRaw("Mouse X") * deltaTime * xSensitivity;
             float mouseY = InputManager.GetAxisRaw("Mouse Y") * deltaTime * ySensitivity;
-            float xMax = PlayerMovement.sliding ? 15f : 75f;
-
-            xRotation -= mouseY; //(pitch)
-            xRotation = Mathf.Clamp(xRotation, -60f, xMax);
-            yRotation += mouseX; //(yaw)
-
-            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f); //相機的rotation
+            var rotation = new Vector2(-mouseY, mouseX);
+            var targetEuler = TargetRotation.eulerAngles + (Vector3)rotation  ;
+            xRotation = xRotation - mouseY; //(pitch)
+            yRotation = yRotation + mouseX; //(yaw)
+            if(xRotation > 180.0f) xRotation -= 360.0f;
+            if(targetEuler.x > 180.0f) targetEuler.x -= 360.0f;
+            targetEuler.x = Mathf.Clamp(targetEuler.x, -75.0f, 75.0f);
+            xRotation = Mathf.Clamp(xRotation, -75f, 75f);
+            TargetRotation = Quaternion.Euler(targetEuler);
+            transform.rotation = Quaternion.Slerp(transform.rotation, TargetRotation, deltaTime* 20.0f);
+            PlayerMovement.onWall = false;
             if (!PlayerMovement.onWall)
                 tf.rotation = Quaternion.Euler(tf.rotation.eulerAngles.x, yRotation, tf.rotation.eulerAngles.z); //人物的rotation
-        }
-        else
-        {
-            Physics.SyncTransforms();
         }
     }
 
@@ -256,5 +257,11 @@ public class PlayerCam : MonoBehaviour
             }
             hitChunk.EditWeights(_hitPoint, BrushSize, add);
         }
+    }
+    public void ResetTargetRotation()
+    {
+        TargetRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+        xRotation =  transform.rotation.eulerAngles.x;
+        yRotation =  transform.rotation.eulerAngles.y;
     }
 }

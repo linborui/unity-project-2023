@@ -620,34 +620,11 @@ public class PlayerMovement : PortalTraveller
     Step 2. collider變超小，加寬portal 移動的距離 詳見Portal.cs 
 
     */
-    public override void Teleport (Transform fromPortal, Transform toPortal){//}, Vector3 pos, Quaternion rot){
-        isTransport = true;       
-        Vector3 eulerRot;
-        float delta;
-        //CASE : 玩家
-        if(isPlayer){
-            Matrix4x4 m = toPortal.localToWorldMatrix * fromPortal.worldToLocalMatrix * transform.localToWorldMatrix;
-            Matrix4x4 c = toPortal.localToWorldMatrix * fromPortal.worldToLocalMatrix * Camera.main.transform.localToWorldMatrix; 
-            transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
-            Camera.main.transform.SetPositionAndRotation (c.GetColumn (3), c.rotation);
-          
-            Physics.SyncTransforms ();    
-            eulerRot = m.rotation.eulerAngles;
-            delta = Mathf.DeltaAngle(cam.GetComponent<PlayerCam>().yRotation, eulerRot.y);
-            cam.GetComponent<PlayerCam>().yRotation += delta;
-            //Reference : https://blog.csdn.net/charlsdm/article/details/125423805?fbclid=IwAR03my70BG61cK7KGhh8mFpT7lnKrISM1AKLZlPX4wmvOqoO8AQwYZh5GAw
-            rigidbody.velocity = toPortal.TransformVector (fromPortal.InverseTransformVector (rigidbody.velocity ));
-            dashDirection = toPortal.TransformVector (fromPortal.InverseTransformVector (dashDirection ));
-        }
-        //CASE : 非玩家 (之後再加)
-        else{
-            Matrix4x4 m = toPortal.localToWorldMatrix * fromPortal.worldToLocalMatrix * transform.localToWorldMatrix;
-            transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
-            Physics.SyncTransforms ();    
-            rigidbody.velocity = toPortal.TransformVector (fromPortal.InverseTransformVector (rigidbody.velocity ));
-            dashDirection = toPortal.TransformVector (fromPortal.InverseTransformVector (dashDirection ));
-        }
-        isTransport = false;
+    
+    public Vector3 getDashDirection(){
+        return dashDirection;
     }
-    /***PORTAL***********************************************************************************/
+    public void setDashDirection(Vector3 direst){
+        dashDirection = direst;
+    }
 }
