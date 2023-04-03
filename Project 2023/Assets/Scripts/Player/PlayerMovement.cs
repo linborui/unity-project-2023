@@ -130,6 +130,7 @@ public class PlayerMovement : PortalTraveller
             setMotionBlur(Intensity, Clamp);
             if (dashing)
             {
+                ignoreWall = null;
                 dashing = false;
                 Vector3 vel;
                 if (onWall)
@@ -247,6 +248,7 @@ public class PlayerMovement : PortalTraveller
 
         if (InputManager.GetButtonDown("Jump"))
         {
+            ignoreWall = detectWall;
             if (crouching)
             {
                 CrouchReset();
@@ -285,10 +287,6 @@ public class PlayerMovement : PortalTraveller
                 {
                     Crouch();
                 }
-            }
-            else if (onWall)
-            {
-                ignoreWall = detectWall;
             }
         }
 
@@ -402,7 +400,7 @@ public class PlayerMovement : PortalTraveller
     {
         if (!onGround)
         {
-            int ignoreLayer = ~((1 << 2) | (1 << 3) | (1 << 6));
+            int ignoreLayer = ~((1 << 2) | (1 << 3) | (1 << 6) | (1 << 12));
             RaycastHit hit;
             Vector3 pos, igPos;
             Quaternion igRot;
@@ -418,12 +416,16 @@ public class PlayerMovement : PortalTraveller
                     igPos = igRot * pos;
                     Debug.DrawRay(transform.position + pos, transform.right * side * 0.2f, Color.green, 0.5f);
                     Debug.DrawRay(transform.position + igPos, igRot * transform.right * side * 0.2f, Color.red, 0.5f);
-                    if (Physics.Raycast(transform.position + igPos, igRot * transform.right * side, 0.2f, -1))
+                    if (Physics.Raycast(transform.position + igPos, igRot * transform.right * side, 0.2f, ignoreLayer, QueryTriggerInteraction.Ignore))
                     {
                         wallSide = 0;
                         return false;
                     }
-                    if (Physics.Raycast(transform.position + pos, transform.right * side, out hit, 0.2f, -1))
+                    if (horizontalInput * side <= 0)
+                    {
+                        break;
+                    }
+                    if (Physics.Raycast(transform.position + pos, transform.right * side, out hit, 0.2f, ignoreLayer, QueryTriggerInteraction.Ignore))
                     {
                         if (hit.transform.gameObject.Equals(ignoreWall))
                         {
@@ -509,6 +511,7 @@ public class PlayerMovement : PortalTraveller
 
     void JumpReset()
     {
+        ignoreWall = null;
         if (onGround || onWall)
         {
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z);
