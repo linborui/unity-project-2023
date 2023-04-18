@@ -1436,7 +1436,7 @@ MonoBehaviour:
   groundDrag: 10
   playerHeight: 1.9
   crouchSpeedMult: 0.5
-  backIgnoreWallDegree: 30
+  backIgnoreWallDegree: 60
   dashSpeed: 300
   dashTime: 0.3
   dashCD: 0.5
