@@ -45,12 +45,14 @@ public class Portal : MonoBehaviour {
             Transform travellerT = traveller.transform;
             Vector3 offsetFromPortal = travellerT.position - transform.position;
             int portalSide = System.Math.Sign (Vector3.Dot (offsetFromPortal, transform.forward));
-            int lastPortalSide = System.Math.Sign (Vector3.Dot (traveller.previousOffsetFromPortal, transform.forward));
-
-            if (portalSide != lastPortalSide) { 
+            //int lastPortalSide = System.Math.Sign (Vector3.Dot (traveller.previousOffsetFromPortal, transform.forward));
+            Debug.Log("LastportalSide: " + traveller.previousOffsetFromPortal);
+            Debug.Log("portalSide: " + portalSide);
+            if (portalSide != traveller.previousOffsetFromPortal) { 
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
                 traveller.Teleport (transform, linkedPortal.transform);
+                Debug.Log("Transport");
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 linkedPortal.OnTravellerEnterPortal (traveller);
                 trackedTravellers.RemoveAt (i);
@@ -59,7 +61,7 @@ public class Portal : MonoBehaviour {
             else {
                 Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
                 traveller.graphicsClone.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
-                traveller.previousOffsetFromPortal = offsetFromPortal;
+                traveller.previousOffsetFromPortal = portalSide;
             }
         }
     }
@@ -249,7 +251,7 @@ public class Portal : MonoBehaviour {
     void OnTravellerEnterPortal (PortalTraveller traveller) {
         if (!trackedTravellers.Contains (traveller)) {
             traveller.graphicsClone.SetActive (true);
-            traveller.previousOffsetFromPortal = traveller.transform.position - transform.position;
+            traveller.previousOffsetFromPortal = System.Math.Sign (Vector3.Dot((traveller.transform.position - transform.position) , transform.forward));
             LastportalSide = System.Math.Sign(transform.InverseTransformPoint(traveller.transform.position).z);
             traveller.SetIsInPortal(this, linkedPortal, null);
             trackedTravellers.Add (traveller);
@@ -257,6 +259,7 @@ public class Portal : MonoBehaviour {
     }
     void OnTriggerEnter (Collider other) {
         var traveller = other.GetComponent<PortalTraveller> ();
+        Debug.Log("PortalTrigger");
         if (traveller) {
             OnTravellerEnterPortal (traveller);
             
@@ -266,9 +269,9 @@ public class Portal : MonoBehaviour {
     void OnTriggerExit (Collider other) {
         var traveller = other.GetComponent<PortalTraveller> ();
         if (traveller && trackedTravellers.Contains (traveller)) {
+            trackedTravellers.Remove (traveller);
             traveller.ExitPortalThreshold ();
             traveller.ExitPortal();
-            trackedTravellers.Remove (traveller);
         }
     }
     int SideOfPortal (Vector3 pos) { //判斷傳送門穿過的內積

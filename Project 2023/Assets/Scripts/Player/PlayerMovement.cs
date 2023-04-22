@@ -78,6 +78,7 @@ public class PlayerMovement : PortalTraveller
     Vector3 savePoint;
     Camera cam;
     public static bool isTransport;
+    
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -610,19 +611,6 @@ public class PlayerMovement : PortalTraveller
             Restart();
         }
     }
-    /***PORTAL***********************************************************************************/
-    /*問題
-    camera 跟 body兩個在PlayerCam.cs互相連動有一個計算的方式讓玩家帶相機移動，相機帶玩家轉動。
-    但我為了要在傳送的當下同步這兩個我就不能等到PlayCam的code那邊去做，
-    因為他那邊的運算是在update。但是傳送門處理是在LateUpdate 這樣等於我要去等到下一次Update才能進行。
-    所以我自己在LateUpdate那邊計算好了，但是等到Update時PlayCam的code還會再算一次，而這兩個計算方式不同。
-    感覺是因為這樣才有誤差上下跳動的關係。
-
-    解決方法 :
-    Step 1. 將計算量降低，矩陣相乘 
-    Step 2. collider變超小，加寬portal 移動的距離 詳見Portal.cs 
-
-    */
     
     public Vector3 getDashDirection(){
         return dashDirection;

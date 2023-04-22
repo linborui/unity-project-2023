@@ -52,6 +52,7 @@ public class PortalForPair : MonoBehaviour
             if (objPos.z > 0.0f)
             {
                 portalObjects[i].Warp();
+                Debug.Log("PortalPairTransport");
             }
         }
     }
@@ -59,6 +60,7 @@ public class PortalForPair : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var obj = other.GetComponent<PortalTraveller>();
+        Debug.Log("PortalPairTrigger");
         if (obj != null && first)
         {
             OtherPortal.first = false;

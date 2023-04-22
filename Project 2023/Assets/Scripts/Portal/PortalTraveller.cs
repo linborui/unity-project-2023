@@ -3,7 +3,7 @@ using UnityEngine;
 //Every thing that need to transport the portal need to inherit this class or just mount this code
 public class PortalTraveller : MonoBehaviour {
     public GameObject graphicsClone { get; set; }
-    public Vector3 previousOffsetFromPortal { get; set; }
+    public int previousOffsetFromPortal { get; set; }
     
     public Material[] originalMaterials { get; set; }
     public Material[] cloneMaterials { get; set; }
@@ -13,7 +13,7 @@ public class PortalTraveller : MonoBehaviour {
     private Portal outPortal;
     private PortalForPair inPairPortal;
     private PortalForPair outPairPortal;
-    new public Rigidbody rigidbody;
+    public Rigidbody rigidBody;
     protected Collider collider;
     public static bool isTransporting { get; set; } = false;
     public bool isPlayer = false;
@@ -33,7 +33,7 @@ public class PortalTraveller : MonoBehaviour {
             Camera.main.transform.SetPositionAndRotation (c.GetColumn (3), c.rotation);
             transform.SetPositionAndRotation (m.GetColumn (3), m.rotation); 
             Camera.main.GetComponent<PlayerCam>().ResetTargetRotation();
-            rigidbody.velocity = toPortal.TransformVector (fromPortal.InverseTransformVector (rigidbody.velocity ));
+            rigidBody.velocity = toPortal.TransformVector (fromPortal.InverseTransformVector (rigidBody.velocity ));
             Vector3 dashDirection = GetComponent<PlayerMovement>().getDashDirection();
             GetComponent<PlayerMovement>().setDashDirection(toPortal.TransformVector (fromPortal.InverseTransformVector (dashDirection )));
             Physics.SyncTransforms ();
@@ -76,7 +76,7 @@ public class PortalTraveller : MonoBehaviour {
         MeshFilter mesh = graphicsClone.AddComponent<MeshFilter>();
         graphicsClone.transform.localScale = transform.localScale;
 
-        rigidbody = GetComponent<Rigidbody>();
+        rigidBody = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
         if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
             met.material = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
@@ -167,7 +167,7 @@ public class PortalTraveller : MonoBehaviour {
             Quaternion relativeRotCam = Quaternion.Inverse(inTransform.rotation) * cam.transform.rotation;
             relativeRotCam = halfTurn * relativeRotCam;
             cam.transform.rotation = outTransform.rotation * relativeRotCam;
-            rigidbody.useGravity = false;
+            rigidBody.useGravity = false;
         }
         Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
         relativePos = halfTurn * relativePos;
@@ -175,9 +175,9 @@ public class PortalTraveller : MonoBehaviour {
         Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
         relativeRot = halfTurn * relativeRot;
         transform.rotation = outTransform.rotation * relativeRot;
-        Vector3 relativeVel = inTransform.InverseTransformDirection(rigidbody.velocity);
+        Vector3 relativeVel = inTransform.InverseTransformDirection(rigidBody.velocity);
         relativeVel = halfTurn * relativeVel;
-        rigidbody.velocity = outTransform.TransformDirection(relativeVel);
+        rigidBody.velocity = outTransform.TransformDirection(relativeVel);
         Physics.SyncTransforms ();
         var tmp = inPairPortal;
         inPairPortal = outPairPortal;
@@ -187,7 +187,7 @@ public class PortalTraveller : MonoBehaviour {
             playerCam.ResetTargetRotation();
             Physics.SyncTransforms ();
             isTransporting = false;
-            rigidbody.useGravity = true;
+            rigidBody.useGravity = true;
         }
     }
 }

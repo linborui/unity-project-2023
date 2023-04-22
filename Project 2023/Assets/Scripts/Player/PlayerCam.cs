@@ -219,6 +219,7 @@ public class PlayerCam : MonoBehaviour
     //Control Marching Cubes
     private void LateUpdate()
     {
+        /*
         if (InputManager.GetButton("Grow") && false)
         {
             laser.SetActive(true);
@@ -233,8 +234,9 @@ public class PlayerCam : MonoBehaviour
         {
             laser.SetActive(false);
         }
+        */
     }
-
+    /*
     private void Terraform(bool add)
     {
         RaycastHit hit;
@@ -257,7 +259,7 @@ public class PlayerCam : MonoBehaviour
             }
             hitChunk.EditWeights(_hitPoint, BrushSize, add);
         }
-    }
+    }*/
     public void ResetTargetRotation()
     {
         TargetRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
