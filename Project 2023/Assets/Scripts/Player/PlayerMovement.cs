@@ -17,7 +17,7 @@ public class PlayerMovement : PortalTraveller
     public float runSpeedMult;
     public float straightenSpeed;
     public static bool moving;
-    public static bool running;
+    public static bool running = true;
 
     public bool sameButtonRunDash;
     public float buttonPressTime;
@@ -95,6 +95,11 @@ public class PlayerMovement : PortalTraveller
         //非玩家傳送則不需要改變相機
         isPlayer = true;
         isTransport= false;
+
+        float mass = rigidbody.mass;
+        moveSpeed *= mass;
+        jumpForce *= mass;
+        dashSpeed *= mass;
     }
 
     void Update()
@@ -169,7 +174,6 @@ public class PlayerMovement : PortalTraveller
         if (verticalInput == 0 && horizontalInput == 0)
         {
             moving = false;
-            running = false;
             if (sliding)
             {
                 SlideReset();
@@ -185,14 +189,15 @@ public class PlayerMovement : PortalTraveller
             if (InputManager.GetButtonDown("Run"))
             {
                 dashPressTime = Time.time;
-                if (onGround && moving && !crouching)
+                if (onGround && !crouching)
                     runPressTime = Time.time;
             }
             if (InputManager.GetButton("Run"))
             {
-                if (onGround && moving && !crouching && runPressTime > 0 && Time.time >= runPressTime + buttonPressTime)
+                if (onGround && !crouching && runPressTime > 0 && Time.time >= runPressTime + buttonPressTime)
                 {
                     running = !running;
+                    Debug.Log("Player Movement: run " + running);
                     if (sliding)
                     {
                         SlideReset();
@@ -582,7 +587,7 @@ public class PlayerMovement : PortalTraveller
         rigidbody.velocity = Vector3.zero;
         transform.position = savePoint;
         transform.rotation = Quaternion.identity;
-        running = false;
+        running = true;
         onWall = false;
         detectWall = null;
         ignoreWall = null;
