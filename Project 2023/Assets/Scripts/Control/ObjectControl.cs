@@ -20,7 +20,6 @@ public class ObjectControl : MonoBehaviour
     static public GameObject controledObject;
     int objectState; // 0-nothing  1-get object  2-can move  3-moving  4-on hand
     float controlTime;
-
     Vector3 destination;
     DStarLite3d dStarLiteRoute;
     Queue<Vector3> objectPath;
@@ -71,7 +70,6 @@ public class ObjectControl : MonoBehaviour
                 ThrowObject();
                 controlTime = Time.time;
             }
-            Debug.Log("State: " + objectState);
         }
     }
 

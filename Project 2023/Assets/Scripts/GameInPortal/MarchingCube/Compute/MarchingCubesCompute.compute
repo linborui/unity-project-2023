@@ -1,0 +1,94 @@
+﻿#pragma kernel March
+#pragma kernel UpdateWeights
+
+#include "Includes\MarchingTable.hlsl"
+
+#include "Includes\MetricsCompute.compute"
+
+
+RWStructuredBuffer<float> _Weights;
+
+float3 _HitPosition;
+float _BrushSize;
+float _TerraformStrength;
+
+float _IsoLevel;
+
+struct Triangle {
+    float3 a, b, c;
+};
+
+AppendStructuredBuffer<Triangle> _Triangles;
+
+float3 interp(float3 edgeVertex1, float valueAtVertex1, float3 edgeVertex2, float valueAtVertex2)
+{
+    return (edgeVertex1 + (_IsoLevel - valueAtVertex1) * (edgeVertex2 - edgeVertex1) / (valueAtVertex2 - valueAtVertex1));
+}
+
+
+[numthreads(numThreads, numThreads, numThreads)]
+void March(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= _ChunkSize - 1 || id.y >= _ChunkSize - 1 || id.z >= _ChunkSize - 1)
+    {
+        return;
+    }
+
+    float cubeValues[8] = {
+       _Weights[indexFromCoord(id.x, id.y, id.z + 1)],
+       _Weights[indexFromCoord(id.x + 1, id.y, id.z + 1)],
+       _Weights[indexFromCoord(id.x + 1, id.y, id.z)],
+       _Weights[indexFromCoord(id.x, id.y, id.z)],
+       _Weights[indexFromCoord(id.x, id.y + 1, id.z + 1)],
+       _Weights[indexFromCoord(id.x + 1, id.y + 1, id.z + 1)],
+       _Weights[indexFromCoord(id.x + 1, id.y + 1, id.z)],
+       _Weights[indexFromCoord(id.x, id.y + 1, id.z)]
+    };
+
+    int cubeIndex = 0;
+    if (cubeValues[0] < _IsoLevel) cubeIndex |= 1;
+    if (cubeValues[1] < _IsoLevel) cubeIndex |= 2;
+    if (cubeValues[2] < _IsoLevel) cubeIndex |= 4;
+    if (cubeValues[3] < _IsoLevel) cubeIndex |= 8;
+    if (cubeValues[4] < _IsoLevel) cubeIndex |= 16;
+    if (cubeValues[5] < _IsoLevel) cubeIndex |= 32;
+    if (cubeValues[6] < _IsoLevel) cubeIndex |= 64;
+    if (cubeValues[7] < _IsoLevel) cubeIndex |= 128;
+
+    int edges[] = triTable[cubeIndex];
+
+    for (int i = 0; edges[i] != -1; i += 3)
+    {
+        // First edge lies between vertex e00 and vertex e01
+        int e00 = edgeConnections[edges[i]][0];
+        int e01 = edgeConnections[edges[i]][1];
+
+        // Second edge lies between vertex e10 and vertex e11
+        int e10 = edgeConnections[edges[i + 1]][0];
+        int e11 = edgeConnections[edges[i + 1]][1];
+
+        // Third edge lies between vertex e20 and vertex e21
+        int e20 = edgeConnections[edges[i + 2]][0];
+        int e21 = edgeConnections[edges[i + 2]][1];
+        Triangle tri;
+        tri.a = interp(cornerOffsets[e00], cubeValues[e00], cornerOffsets[e01], cubeValues[e01]) + id;
+        tri.b = interp(cornerOffsets[e10], cubeValues[e10], cornerOffsets[e11], cubeValues[e11]) + id;
+        tri.c = interp(cornerOffsets[e20], cubeValues[e20], cornerOffsets[e21], cubeValues[e21]) + id;
+        _Triangles.Append(tri);
+    }
+
+}
+
+[numthreads( numThreads, numThreads, numThreads )]
+void UpdateWeights( uint3 id : SV_DispatchThreadID )
+{
+    if ( id.x >= _ChunkSize -1 || id.y >= _ChunkSize-1  || id.z >= _ChunkSize-1 )
+    {
+        return;
+    }
+
+    if ( distance( id, _HitPosition ) <= _BrushSize )
+    {
+        _Weights[indexFromCoord( id.x, id.y, id.z )] += _TerraformStrength;
+    }
+}
