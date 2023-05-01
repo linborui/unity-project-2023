@@ -26,20 +26,9 @@ public class PlayerCam : MonoBehaviour
     public float xRotation; //pitch set public for transformer to handle portal 葉惟欣 
     public float yRotation; //yaw set public for transformer to handle portal 葉惟欣 給portal access
 
-    /* for marching cube*/
-
-
-    Camera cam;
-    Vector3 _hitPoint;
-    Vector3 _hitPrevPoint;
-    public float BrushSize = 2f;
-    public GameObject laser;
-    public Laser laserObject;
-    /* for marching cube*/
+  
     void Start()
     {
-        laser.SetActive(false);
-        cam = GetComponent<Camera>();
         tf = body.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -110,7 +99,7 @@ public class PlayerCam : MonoBehaviour
 
     void MouseControl()
     {
-        if (!InputManager.GetButton("Slash") && !PlayerMovement.isTransporting)
+        if (!InputManager.GetButton("Slash") && !PlayerMovement.isTransport)
         {
             float deltaTime = (Time.deltaTime < 0.1f) ? Time.deltaTime : 0.1f;
             float mouseX = InputManager.GetAxisRaw("Mouse X") * deltaTime * xSensitivity;
@@ -216,50 +205,7 @@ public class PlayerCam : MonoBehaviour
             crosshair.transform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0f);
         }
     }
-    //Control Marching Cubes
-    private void LateUpdate()
-    {
-        /*
-        if (InputManager.GetButton("Grow") && false)
-        {
-            laser.SetActive(true);
-            Terraform(true);
-        }
-        else if (InputManager.GetButton("Eclipse"))
-        {
-            laser.SetActive(true);
-            Terraform(false);
-        }
-        else
-        {
-            laser.SetActive(false);
-        }
-        */
-    }
-    /*
-    private void Terraform(bool add)
-    {
-        RaycastHit hit;
-
-        if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, 1000))
-        {
-            Chunk hitChunk = hit.collider.gameObject.GetComponent<Chunk>();
-            if (hitChunk == null)
-                return;
-            _hitPoint = hit.point;
-            laserObject.UpdateTarget(hit.point, add);
-            float mouseX = Input.mousePosition.x;
-            float mouseY = Input.mousePosition.y;
-            if (_hitPrevPoint == Vector3.zero)
-                _hitPrevPoint = hit.point;
-            else
-            {
-                _hitPoint = new Vector3((_hitPoint.x + _hitPrevPoint.x) / 2, (_hitPoint.y + _hitPrevPoint.y) / 2, (_hitPoint.z + _hitPrevPoint.z) / 2);
-                _hitPrevPoint = hit.point;
-            }
-            hitChunk.EditWeights(_hitPoint, BrushSize, add);
-        }
-    }*/
+    
     public void ResetTargetRotation()
     {
         TargetRotation = Quaternion.LookRotation(transform.forward, Vector3.up);

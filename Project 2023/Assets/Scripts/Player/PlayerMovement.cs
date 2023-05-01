@@ -10,7 +10,7 @@ using Luminosity.IO;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
 
-public class PlayerMovement : PortalTraveller
+public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed;
     public float airSpeedMult;
@@ -78,9 +78,15 @@ public class PlayerMovement : PortalTraveller
     Vector3 savePoint;
     Camera cam;
     public static bool isTransport;
-    
+    private CharacterStates characterStates;
+    void Awake()
+    {
+        characterStates = GetComponent<CharacterStates>();
+    }
     void Start()
     {
+        //GameManager.Instance.RegisterPlayer(characterStates);
+
         rigidbody = GetComponent<Rigidbody>();
         rigidbody.freezeRotation = true;
         animator = GetComponent<Animator>();
@@ -93,8 +99,8 @@ public class PlayerMovement : PortalTraveller
         cam = Camera.main;
         //判斷現在傳送該物體是否需要改變相機，如果是玩家傳送就要改變main相機的位置，
         //非玩家傳送則不需要改變相機
-        isPlayer = true;
-        isTransport= false;
+        //isPlayer = true;
+        //isTransport= false;
 
         float mass = rigidbody.mass;
         moveSpeed *= mass;
@@ -104,11 +110,13 @@ public class PlayerMovement : PortalTraveller
 
     void Update()
     {
+        //if(Death()) return;
         DetectAround();
         Input();
         speedControl();
         Drag();
         AnimatorUpdate();
+        //Attack();
     }
 
     void FixedUpdate()
@@ -623,4 +631,70 @@ public class PlayerMovement : PortalTraveller
     public void setDashDirection(Vector3 direst){
         dashDirection = direst;
     }
+    /*
+    private GameObject attackTarget;
+    //TODO: set attackRadius，change animation add attack event
+    float attackRadius = 3f;
+    bool isDead = false;
+    void Attack(){
+        if (InputManager.GetButton("Slash"))
+        {
+            var colliders = Physics.OverlapSphere(transform.position,attackRadius); //物理球體範圍是否有碰撞體
+            foreach(var target in colliders){
+                if(target.CompareTag("Enemy") || target.CompareTag("Attackable")){
+                    attackTarget = target.gameObject;
+                    characterStates.isCritical = UnityEngine.Random.value < characterStates.attackData.criticalChance;
+                    Hit();
+                }
+            }
+        }
+    }
+    
+    IEnumerator MoveToAttackTarget(){
+        transform.LookAt(attackTarget.transform);
+        while(Vector3.Distance(attackTarget.transform.position,transform.position) > characterStates.attackData.attackRange)
+        {
+            //agent.distination = attackTarget.transform.position;
+            yield return null;
+        }
+        //agent.isStopped = true;
+        //Attack
+        /*
+        if(lastAttackTime < 0){
+            //anim.SetTrigger("Attack");
+            //重設冷卻時間
+            lastAttackTime = characterStates.attackData.coolDown;
+        }
+   
+    }
+    //Animation Hit
+    void Hit(){
+        if(attackTarget != null){
+            if(attackTarget.CompareTag("Attackable"))
+            {
+                if(attackTarget.GetComponent<Rock>() && attackTarget.GetComponent<Rock>().rockStates == Rock.RockStates.HitNothing){
+                    attackTarget.GetComponent<Rock>().rockStates = Rock.RockStates.HitEnemy;
+                    attackTarget.GetComponent<Rigidbody>().velocity = Vector3.one;
+                    attackTarget.GetComponent<Rigidbody>().AddForce(transform.forward*20,ForceMode.Impulse);
+                    Debug.Log("反擊");
+                }
+            }
+            else
+            {
+                //獲得攻擊目標身上的狀態
+                var targetStates = attackTarget.GetComponent<CharacterStates>();
+                targetStates.TakeDamage(characterStates,targetStates);
+            }
+        }
+    }
+    bool Death(){
+        if(characterStates.CurrentHealth <= 0){
+            isDead = true;
+            //anim.SetTrigger("Death");
+            //agent.isStopped = true;
+        }
+        if(isDead)
+            GameManager.Instance.NotifyObservers(); //廣播自己死掉
+        return isDead;
+    }*/
 }

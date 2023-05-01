@@ -15,6 +15,7 @@ public class PortalTraveller : MonoBehaviour {
     private PortalForPair outPairPortal;
     public Rigidbody rigidBody;
     protected Collider collider;
+    [HideInInspector]
     public static bool isTransporting { get; set; } = false;
     public bool isPlayer = false;
     private static readonly Quaternion halfTurn = Quaternion.Euler(0.0f, 180.0f, 0.0f);
@@ -123,14 +124,10 @@ public class PortalTraveller : MonoBehaviour {
         this.inPortal = inPortal;
         this.outPortal = outPortal;
         graphicsClone.SetActive(false);
-        //++inPortalCount;
     }
     public void ExitPortal()
     {
-        //--inPortalCount;
-
-        graphicsClone.SetActive(false);
-        
+        graphicsClone.SetActive(false);     
     }
     public void SetIsInPairPortal(PortalForPair inPortal, PortalForPair outPortal, Collider wallCollider)
     {
@@ -178,14 +175,14 @@ public class PortalTraveller : MonoBehaviour {
         Vector3 relativeVel = inTransform.InverseTransformDirection(rigidBody.velocity);
         relativeVel = halfTurn * relativeVel;
         rigidBody.velocity = outTransform.TransformDirection(relativeVel);
-        Physics.SyncTransforms ();
+        
+
         var tmp = inPairPortal;
         inPairPortal = outPairPortal;
         outPairPortal = tmp;
         if(isPlayer){
             PlayerCam playerCam = Camera.main.GetComponent<PlayerCam>();
             playerCam.ResetTargetRotation();
-            Physics.SyncTransforms ();
             isTransporting = false;
             rigidBody.useGravity = true;
         }

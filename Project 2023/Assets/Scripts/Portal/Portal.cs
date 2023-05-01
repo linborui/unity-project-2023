@@ -10,8 +10,7 @@ public class Portal : MonoBehaviour {
     public Portal linkedPortal;
     public MeshRenderer screen;
     public int recursionLimit = 5;
-
-    [Header ("Advanced Settings")]
+    [HideInInspector]
     public float nearClipOffset = 0.05f;
     public float nearClipLimit = 0.2f;
 
@@ -45,14 +44,10 @@ public class Portal : MonoBehaviour {
             Transform travellerT = traveller.transform;
             Vector3 offsetFromPortal = travellerT.position - transform.position;
             int portalSide = System.Math.Sign (Vector3.Dot (offsetFromPortal, transform.forward));
-            //int lastPortalSide = System.Math.Sign (Vector3.Dot (traveller.previousOffsetFromPortal, transform.forward));
-            Debug.Log("LastportalSide: " + traveller.previousOffsetFromPortal);
-            Debug.Log("portalSide: " + portalSide);
             if (portalSide != traveller.previousOffsetFromPortal) { 
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
                 traveller.Teleport (transform, linkedPortal.transform);
-                Debug.Log("Transport");
                 traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 linkedPortal.OnTravellerEnterPortal (traveller);
                 trackedTravellers.RemoveAt (i);
@@ -259,7 +254,6 @@ public class Portal : MonoBehaviour {
     }
     void OnTriggerEnter (Collider other) {
         var traveller = other.GetComponent<PortalTraveller> ();
-        Debug.Log("PortalTrigger");
         if (traveller) {
             OnTravellerEnterPortal (traveller);
             
