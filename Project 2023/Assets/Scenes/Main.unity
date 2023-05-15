@@ -8607,6 +8607,16 @@ PrefabInstance:
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 952466278}
+    - target: {fileID: 282862574091779480, guid: 5f51da62728310641944eb314f107748,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 7807
+      objectReference: {fileID: 0}
+    - target: {fileID: 282862574091779482, guid: 5f51da62728310641944eb314f107748,
+        type: 3}
+      propertyPath: m_VolumeLayerMask.m_Bits
+      value: 7807
+      objectReference: {fileID: 0}
     - target: {fileID: 1150672313779100814, guid: 5f51da62728310641944eb314f107748,
         type: 3}
       propertyPath: portalCamera
