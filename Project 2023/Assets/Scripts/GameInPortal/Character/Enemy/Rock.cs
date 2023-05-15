@@ -38,6 +38,12 @@ public class Rock : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
+        if(other.gameObject.CompareTag("Enemy"))
+        {
+            var otherStates = other.gameObject.GetComponent<CharacterStates>();
+            otherStates.TakeDamage(damage,otherStates);
+            Destroy(gameObject);
+        }
         switch(rockStates)
         {
             case RockStates.HitPlayer:
@@ -55,11 +61,11 @@ public class Rock : MonoBehaviour
                 }
                 break;
             case RockStates.HitEnemy:
-                if(other.gameObject.GetComponent<Golem>())
+                if(other.gameObject.CompareTag("Enemy"))
                 {
                     var otherStates = other.gameObject.GetComponent<CharacterStates>();
                     otherStates.TakeDamage(damage,otherStates);
-                    Destroy(gameObject);
+                    //Destroy(gameObject);
                 }
                 break;
         }

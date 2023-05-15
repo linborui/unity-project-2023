@@ -24,12 +24,6 @@ public class Chunk : MonoBehaviour
             transform.position = player.position - player.up * 1.5f;
         }
     }
-    void Update(){
-        if (InputManager.GetButton("Grow"))
-        {
-            //UpdatePositon();
-        }
-    }
     void UpdatePositon(){
         if(Control){
             transform.position = new Vector3(player.position.x,player.position.y, player.position.z)- player.up * 1.5f;
@@ -60,7 +54,9 @@ public class Chunk : MonoBehaviour
         MeshFilter.sharedMesh = mesh;
         MeshCollider.sharedMesh = mesh;
     }
-
+    public void Update(){
+        UpdateMesh();
+    }
     public void EditWeights(Vector3 hitPosition, float brushSize, bool add) {
         int kernel = MarchingShader.FindKernel("UpdateWeights");
         

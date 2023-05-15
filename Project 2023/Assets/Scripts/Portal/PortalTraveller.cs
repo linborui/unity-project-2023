@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 //Every thing that need to transport the portal need to inherit this class or just mount this code
 public class PortalTraveller : MonoBehaviour {

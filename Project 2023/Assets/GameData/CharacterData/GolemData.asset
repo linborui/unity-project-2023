@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c6ce08099240b245a42f0aa2d7cdb5a, type: 3}
   m_Name: GolemData
   m_EditorClassIdentifier: 
-  maxHealth: 80
-  currentHealth: 80
-  baseDefence: 3
-  currentDefence: 5
+  maxHealth: 400
+  currentHealth: 400
+  baseDefence: 60
+  currentDefence: 60

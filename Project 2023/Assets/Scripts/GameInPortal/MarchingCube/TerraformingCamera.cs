@@ -39,7 +39,6 @@ public class TerraformingCamera : MonoBehaviour
 			_hitPoint = hit.point;
 			float mouseX = Input.mousePosition.x;
 			float mouseY = Input.mousePosition.y;
-			Debug.Log("MOUSE" + mouseX + " " + mouseY);
 			
 			if(_hitPrevPoint == Vector3.zero)
 				_hitPrevPoint = hit.point;

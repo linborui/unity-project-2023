@@ -4,17 +4,31 @@
 
 RWStructuredBuffer<float> _Weights;
 float _Size;
+bool _Circle;
 [numthreads(numThreads, numThreads, numThreads)]
 void GenerateNoise(uint3 id : SV_DispatchThreadID)
 {
     float3 pos = id ;
     float ground ;   
 	//Create a cube
-	if(  pos.x<0+(_ChunkSize-_Size)/2.0f || pos.x>=_ChunkSize-(_ChunkSize-_Size)/2.0f || 
-	     pos.y<0+(_ChunkSize-_Size)/2.0f || pos.y>=_ChunkSize-(_ChunkSize-_Size)/2.0f || 
-		 pos.z<0+(_ChunkSize-_Size)/2.0f || pos.z>=_ChunkSize-(_ChunkSize-_Size)/2.0f)
-		ground = -1;
-	else
-		ground = 1;
-    _Weights[indexFromCoord(id.x, id.y, id.z)] = ground;
+	if(!_Circle){
+		if(  pos.x<0+(_ChunkSize-_Size)/2.0f || pos.x>=_ChunkSize-(_ChunkSize-_Size)/2.0f || 
+	     	pos.y<0+(_ChunkSize-_Size)/2.0f || pos.y>=_ChunkSize-(_ChunkSize-_Size)/2.0f || 
+		 	pos.z<0+(_ChunkSize-_Size)/2.0f || pos.z>=_ChunkSize-(_ChunkSize-_Size)/2.0f)
+			ground = -1;
+		else
+			ground = 1;
+    	_Weights[indexFromCoord(id.x, id.y, id.z)] = ground;
+	}
+	else{
+		int radius = (_ChunkSize-_Size)/2;
+		if( (pos.x-(_ChunkSize-1)/2.0f) * (pos.x-(_ChunkSize-1)/2.0f) +
+		    (pos.y-(_ChunkSize-1)/2.0f) * (pos.y-(_ChunkSize-1)/2.0f) +
+		    (pos.z-(_ChunkSize-1)/2.0f) * (pos.z-(_ChunkSize-1)/2.0f) > 
+			(_ChunkSize - 1) * (_ChunkSize - 1) /4 )
+			ground = -1;
+		else
+			ground = 1;
+		_Weights[indexFromCoord(id.x, id.y, id.z)] = ground;
+	}
 }

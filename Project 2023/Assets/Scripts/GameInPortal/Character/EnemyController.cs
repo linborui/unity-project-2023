@@ -82,7 +82,7 @@ public class EnemyController : MonoBehaviour,IEndGameObserver
         anim.SetBool("Chase",isChase);
         anim.SetBool("Follow",isFollow);
         anim.SetBool("Critical",characterStates.isCritical);
-        anim.SetBool("Dead",isDead);
+        anim.SetBool("Death",isDead);
     }
 
     void SwitchStates(){
@@ -128,7 +128,10 @@ public class EnemyController : MonoBehaviour,IEndGameObserver
         {
             isWalk = false;
             if(remainLookAtTime > 0) remainLookAtTime -= Time.deltaTime; //還需看一會兒
-            else GetNewWayPoint();  //不用看了
+            else{
+                //Debug.Log("Patrol to new destination");
+                GetNewWayPoint();  //不用看了
+            }
         }
         else //沒到給定的點
         {
@@ -174,6 +177,9 @@ public class EnemyController : MonoBehaviour,IEndGameObserver
     }
     void Dead(){
         coll.enabled = false;
+        if(transform.GetComponent<DeadInLevel2>()!= null){
+            ControlBossPlatform.GolemInLevel2Num--;
+        }
         //agent.enabled = false;
         agent.radius = 0;
         Destroy(gameObject,2f);

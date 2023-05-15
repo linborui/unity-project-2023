@@ -17,6 +17,7 @@ TagManager:
   - Shape4D
   - Enemy
   - Attackable
+  - lb_bird
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,7 @@ TagManager:
   - Past
   - Wall
   - NotWall
-  - 
+  - Minimap
   - 
   - 
   - 

@@ -8,6 +8,7 @@ public class Golem : EnemyController
     public float kickForce = 30;
     public GameObject rockPrefab;
     public Transform handPos;
+    public ControlBossPlatform settings;
     //Animation Event
     public void KickOff()
     {
@@ -35,6 +36,13 @@ public class Golem : EnemyController
         {
             var rock = Instantiate(rockPrefab,handPos.position,Quaternion.identity);
             rock.GetComponent<Rock>().target = attackTarget;
+        }
+    }
+    public void OnCillisionEnter(Collider sender){
+        Debug.Log("GolemOnCillisionEnter");
+        if(sender.CompareTag("Attackable") || sender.CompareTag("Moveable")){
+            
+            settings.dead();
         }
     }
 }

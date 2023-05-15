@@ -70,7 +70,7 @@ public class CharacterStates : MonoBehaviour
         if(isCritical)
         {
             coreDamage *= attackData.criticalMultiplier; //傷害乘以爆擊倍率
-            Debug.Log("爆擊 " + coreDamage + "血量" + CurrentHealth);
+            //Debug.Log("爆擊 " + coreDamage + "血量" + CurrentHealth);
         }
         return (int)coreDamage;
     }

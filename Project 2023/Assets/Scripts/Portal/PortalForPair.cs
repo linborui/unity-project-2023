@@ -52,18 +52,17 @@ public class PortalForPair : MonoBehaviour
             if (objPos.z > 0.0f)
             {
                 portalObjects[i].Warp();
-                Debug.Log("PortalPairTransport");
             }
         }
     }
-    public bool first = true;
+    //public bool first = true;
     private void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("TriggerEnter");
         var obj = other.GetComponent<PortalTraveller>();
-        Debug.Log("PortalPairTrigger");
-        if (obj != null && first)
+        if (obj != null /*&& first*/)
         {
-            OtherPortal.first = false;
+            //OtherPortal.first = false;
             portalObjects.Add(obj);
             obj.SetIsInPairPortal(this, OtherPortal, wallCollider);
         }
