@@ -1,0 +1,12 @@
+	
+
+
+			#pragma shader_feature_local GF_SPECULAR
+			#pragma shader_feature_local GF_PPLIGHTS
+			#pragma shader_feature_local GF_NORMAL_MAP
+			#pragma shader_feature_local GF_SELF_SHADOW
+
+			#pragma shader_feature_local MESH_NORMALS
+
+			#pragma shader_feature_local MAP_COLOR
+			#pragma shader_feature_local MAP_TYPE

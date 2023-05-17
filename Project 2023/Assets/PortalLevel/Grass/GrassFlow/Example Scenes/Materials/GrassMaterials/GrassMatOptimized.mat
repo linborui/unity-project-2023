@@ -1,0 +1,198 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GrassMatOptimized
+  m_Shader: {fileID: 4800000, guid: 379cec742d8d97b4887874d4adcc9171, type: 3}
+  m_ShaderKeywords: ALPHALOCK_ON BILLBOARD GF_SPECULAR LOD_SCALING SEMI_TRANSPARENT
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2450
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 2219cc952d5c5d448aec3d277d483e97, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 8400000, guid: dea7f088858bd2a449abec833e9032d0, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex2D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - bumpMap:
+        m_Texture: {fileID: 2800000, guid: e40561688979bbd4e9968016ef72a42a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - colorMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - dhfParamMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - terrainNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - typeMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Depth_Pass: 0
+    - Forward_Add: 0
+    - GF_SELF_SHADOW: 0
+    - GRASS_FORCES: 0
+    - GRASS_RIPPLES: 0
+    - Global_Keywords: 0
+    - LOWER_QUALITY: 0
+    - Lower_Quality: 1
+    - MAP_COLOR: 0
+    - MAP_PARAM: 0
+    - MAP_TYPE: 0
+    - MESH_COLORS: 0
+    - MESH_NORMALS: 0
+    - MESH_UVS: 0
+    - No_Transparency: 1
+    - Pipe_Type: 0
+    - Render_Path: 0
+    - Render_Type: 2
+    - Rendermode: 0
+    - VERSION: 13
+    - _ALPHA_TO_MASK: 0
+    - _AO: -0.1
+    - _BILLBOARD: 1
+    - _Blend: 1
+    - _BumpScale: 1
+    - _CollapseEnd: 0
+    - _CollapseStart: 0
+    - _Cull: 0
+    - _Cutoff: 0
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 89.73
+    - _GF_NORMAL_MAP: 0
+    - _GF_SPECULAR: 1
+    - _GF_USE_DITHER: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _LOD_SCALING: 1
+    - _MULTI_SEGMENT: 0
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _Rendermode: 0
+    - _SEMI_TRANSPARENT: 1
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 16.02
+    - _USE: 0
+    - _UVSec: 0
+    - _Use: 1
+    - _ZWrite: 1
+    - _instanceLod: 0
+    - _ppLights: 0
+    - alphaClip: 0.2
+    - alphaLock: 1
+    - ambientCO: 0.2
+    - ambientCOShadow: 0.2
+    - bladeHeight: 4
+    - bladeLateralCurve: 0
+    - bladeSharp: 0.25
+    - bladeStiffness: 0
+    - bladeVerticalCurve: 0.1
+    - bladeWidth: 0.3
+    - blendNormal: 0.99
+    - cellSize: 0.05
+    - edgeLight: 1
+    - edgeLightSharp: 17.94
+    - falloff: 0.45
+    - flatnessMult: 1.25
+    - grassFade: 2750
+    - grassFadeSharpness: 8
+    - lodMult: 0
+    - noiseScale: 0.08
+    - noiseSpeed: 2
+    - normalStrength: 0.15
+    - numTextures: 5
+    - posBufferOffset: 0
+    - seekSun: 0.5
+    - selfShadowWind: 0.15
+    - specHeight: 0.88
+    - specSmooth: 0.4
+    - specularMult: 40
+    - specularPow: 1
+    - t1: 1
+    - t2: 0
+    - terrainTriCount: 0
+    - textureAtlasScalingCutoff: 16
+    - topViewPush: 1
+    - variance: 0.3
+    - widthLODscale: 0.035
+    - windMult: 2
+    m_Colors:
+    - _Color: {r: 1, g: 0.5251572, b: 0.556077, a: 0.8980392}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LOD: {r: 2.14, g: 1.33, b: 8, a: 0}
+    - _noiseScale: {r: 1, g: 0.5, b: 0.7, a: 0}
+    - _noiseScale2: {r: 2, g: 2, b: 1, a: 1}
+    - _noiseSpeed: {r: 1.5, g: 1, b: 0.35, a: 0}
+    - _noiseSpeed2: {r: 2.5, g: 2, b: 1.35, a: 1}
+    - altCol: {r: 0, g: 0, b: 0, a: 1}
+    - flatTint: {r: 1, g: 1, b: 1, a: 0.34509805}
+    - noiseScale: {r: 1, g: 1, b: 0.5, a: 0}
+    - selfShadowScaleOffset: {r: 0.75, g: 0.75, b: 0.5, a: 0}
+    - specTint: {r: 1, g: 0.70859134, b: 0.6981132, a: 1}
+    - terrainChunkSize: {r: 200, g: 200, b: 0, a: 0}
+    - terrainSize: {r: 1000, g: 600, b: 1000, a: 0}
+    - variance: {r: 0.25, g: 0.4, b: 0.8, a: 0.3}
+    - windDir: {r: -0.4, g: -0.3, b: 0.1, a: 0}
+    - windDir2: {r: 0.3, g: 0.3, b: 0.7, a: 1}
+    - windTint: {r: 1, g: 1, b: 0.92517304, a: 0.4}
+  m_BuildTextureStacks: []

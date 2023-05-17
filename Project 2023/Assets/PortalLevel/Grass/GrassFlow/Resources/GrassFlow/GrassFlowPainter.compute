@@ -1,0 +1,122 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel PaintKernel
+
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+
+RWTexture2D<float4> mapToPaint;
+Texture2D<float4> tmpMapRT;
+
+
+Texture2D brushTexture;
+SamplerState samplerbrushTexture {
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Clamp;
+	AddressV = Clamp;
+};
+
+
+Texture2D splatTex;
+SamplerState samplersplatTex {
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Clamp;
+	AddressV = Clamp;
+};
+
+float4 blendParams; // either color or dhf info
+float4 srsBrushParams; // strength, radius, unused, alpha controls type/0 for color 1 for dhf
+float2 brushPos; //brush pos is in uv space
+float2 clampRange;
+
+
+#define map(value, min1, max1, min2, max2) (value - min1) / (max1 - min1) * (max2 - min2) + min2
+
+[numthreads(8,8,1)]
+void PaintKernel(uint3 id : SV_DispatchThreadID) {	
+
+	uint w, h;
+	mapToPaint.GetDimensions(w, h);
+
+	//uint bw, bh, bl;
+	//brushTexture.GetDimensions(0, bw, bh, bl);
+	//float2 halfDim = float2(bw, bh) * 0.5;
+
+	float2 topLeft = brushPos - srsBrushParams.y;
+	float2 topRight = brushPos + srsBrushParams.y;
+	float2 uv = id.xy / float2(w, h);
+	float2 brushTexCoord = map(uv, topLeft, topRight, float2(0, 0), float2(1, 1));
+	if (brushTexCoord.x < 0 || brushTexCoord.y < 0 || brushTexCoord.x > 1 || brushTexCoord.y > 1)
+		return;
+
+
+	float4 col = tmpMapRT[id.xy];
+	float brushPct = saturate(brushTexture.SampleLevel(samplerbrushTexture, brushTexCoord, 0).a  * srsBrushParams.x);
+
+	//float dist = distance(brushPos, uv);
+	//float brushPct = saturate((1.0 - dist / srsBrushParams.y)) * srsBrushParams.x;
+
+	float4 colorBlend = lerp(col, blendParams, brushPct);
+	float4 dhfBlend = col + blendParams * brushPct;
+
+	//clamping red channel is specifically only here for the case of the type-map
+	colorBlend.x = colorBlend.x != 0 && brushPct > 0.001 ? clamp(colorBlend.x, clampRange.x, clampRange.y) : colorBlend.x;
+
+	dhfBlend.x =  blendParams.x != 0 && brushPct > 0.001 ? clamp(dhfBlend.x,  clampRange.x, clampRange.y) : dhfBlend.x;
+	dhfBlend.y =  blendParams.y != 0 && brushPct > 0.001 ? clamp(dhfBlend.y,  clampRange.x, clampRange.y) : dhfBlend.y;
+	dhfBlend.z =  blendParams.z != 0 && brushPct > 0.001 ? clamp(dhfBlend.z,  clampRange.x, clampRange.y) : dhfBlend.z;
+	dhfBlend.w =  blendParams.w != 0 && brushPct > 0.001 ? clamp(dhfBlend.w,  clampRange.x, clampRange.y) : dhfBlend.w;
+
+	mapToPaint[id.xy] = lerp(colorBlend, dhfBlend, srsBrushParams.w);
+	//mapToPaint[id.xy] = colorBlend;
+}
+
+
+#pragma kernel ApplySplatTex
+
+int splatMode;
+int splatChannel;
+float splatTolerance;
+
+[numthreads(8, 8, 1)]
+void ApplySplatTex(uint3 id : SV_DispatchThreadID) {
+
+	uint w, h;
+	mapToPaint.GetDimensions(w, h);
+	if (id.x > w || id.y > h) return;
+
+
+	uint sW, sH;
+	splatTex.GetDimensions(sW, sH);
+	float2 splatTexOff = float2(0.5 / sW, 0.5 / sH);
+
+	float2 uv = id.xy / float2(w, h) + splatTexOff;
+
+	float4 result = tmpMapRT[id.xy];
+	float splat = splatTex.SampleLevel(samplersplatTex, uv, 0)[splatChannel];
+	splat = lerp(splat == 1, splat, splatTolerance);
+	splat = lerp(splat, splat > 0, splatTolerance);
+
+
+	switch (splatMode) {
+
+		case 0:
+			//add
+			result.r = max(result.r, splat);
+			break;
+
+		case 1:
+			//subtract
+			splat = saturate(1 - splat);
+			result.r = min(result.r, splat);
+			break;
+
+		case 2:
+			//replace
+			result.r = splat;
+			break;
+	}
+
+	mapToPaint[id.xy] = result;
+}

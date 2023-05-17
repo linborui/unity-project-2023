@@ -1,0 +1,8 @@
+	
+
+
+			#if !NO_TRANSPARENCY
+			AlphaToMask[_ALPHA_TO_MASK]
+			#endif
+
+			Cull [_Cull]

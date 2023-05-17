@@ -1,0 +1,517 @@
+﻿
+
+
+
+#define MAX_RIPPLES 128
+#define PREMULTIPLIED_WPOS
+
+
+
+
+
+
+
+
+
+
+
+
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel AddRipple
+
+struct RippleData {
+	float4 pos; // w = strength
+	float4 drssParams;//xyzw = decay, radius, sharpness, speed 
+};
+
+uniform float4 pos;
+uniform float4 drssParams;
+uniform float ripDeltaTime;
+
+uniform RWStructuredBuffer<RippleData> forcesBuffer;
+
+
+#include "UnityCG.cginc"
+
+#define GetRipCount(idx) forcesBuffer[MAX_RIPPLES].pos.x
+#define SetRipCount(val) forcesBuffer[MAX_RIPPLES].pos.x = val
+
+[numthreads(1, 1, 1)]
+void AddRipple(uint3 id : SV_DispatchThreadID) {
+	uint ripIdx = GetRipCount(0); // get current ripple count
+	SetRipCount(ripIdx + (ripIdx < MAX_RIPPLES - 1)); //incrememnt ripple count but dont go past max ripples
+
+	RippleData rip;
+	rip.pos = pos;
+	rip.drssParams = drssParams;
+
+	forcesBuffer[ripIdx] = rip;
+}
+
+
+#pragma kernel UpdateRipples
+[numthreads(1, 1, 1)]
+void UpdateRipples(uint3 id : SV_DispatchThreadID) {
+
+	uint ripCount = GetRipCount(0); // get current ripple count
+	RippleData rip;
+
+	for (uint i = 0; i < ripCount;) {
+		rip = forcesBuffer[i];
+
+		//strength less than zero so replace this ripple and move on;
+		rip.pos.w -= rip.drssParams.x * ripDeltaTime;
+
+		if (rip.pos.w <= 0) {
+			ripCount--;
+			rip = forcesBuffer[ripCount];
+			forcesBuffer[i] = rip;
+			continue;
+		}
+
+		rip.drssParams.y += rip.drssParams.w * ripDeltaTime;
+
+		//uhhh i never actaully implemented sharpness......
+		//so imma just steal this value for precalculating radius multipliers
+		rip.drssParams.z = 1.0 / (rip.drssParams.y * rip.drssParams.y);
+
+		forcesBuffer[i] = rip;
+		i++;
+	}
+
+	SetRipCount(ripCount);
+}
+
+
+
+#pragma kernel NormalsMain
+#pragma kernel HeightmapMain
+
+uniform uint resolution;
+StructuredBuffer<float> inHeights;
+RWTexture2D<half4> NormalResult;
+RWTexture2D<float> HeightResult;
+Texture2D<float2> HeightMapInput;
+
+[numthreads(8, 8, 1)]
+void HeightmapMain(uint3 id : SV_DispatchThreadID) {
+	HeightResult[id.xy] = inHeights[id.x + resolution * id.y];
+}
+
+
+[numthreads(8, 8, 1)]
+void NormalsMain(uint2 id : SV_DispatchThreadID) {
+
+	#define SampleHeight(pos) UnpackHeightmap(HeightMapInput[pos].rgrg)
+
+	float s[9] = {
+		SampleHeight(id + int2(-1,  1)),
+		SampleHeight(id + int2( 0,  1)),
+		SampleHeight(id + int2( 1,  1)),
+		SampleHeight(id + int2(-1,  0)),
+		SampleHeight(id + int2( 0,  0)),
+		SampleHeight(id + int2( 1,  0)),
+		SampleHeight(id + int2(-1, -1)),
+		SampleHeight(id + int2( 0, -1)),
+		SampleHeight(id + int2( 1, -1)),
+	};
+
+	if (id.x < 1) {
+		s[6] = s[4];
+		s[3] = s[4];
+		s[0] = s[4];
+	}
+
+	if (id.x >= resolution - 1) {
+		s[8] = s[4];
+		s[5] = s[4];
+		s[2] = s[4];
+	}
+
+	if (id.y < 1) {
+		s[6] = s[4];
+		s[7] = s[4];
+		s[8] = s[4];
+	}
+
+	if (id.y >= resolution - 1) {
+		s[0] = s[4];
+		s[1] = s[4];
+		s[2] = s[4];
+	}
+
+	float3 n;
+	n.x = -(s[2] - s[0] + 2.0 * (s[5] - s[3]) + s[8] - s[6]);
+	n.z = (s[6] - s[0] + 2.0 * (s[7] - s[1]) + s[8] - s[2]);
+	n.y = 0.01;
+	n = normalize((n));
+
+	NormalResult[id] = float4(n, 1);
+}
+
+
+// checks to see if a chunk contains any grass
+#pragma kernel EmptyChunkDetect
+
+RWStructuredBuffer<int> chunkResults;
+RWTexture2D<float4> paramMap;
+float2 chunkDims;
+
+[numthreads(8, 8, 1)]
+void EmptyChunkDetect(uint3 id : SV_DispatchThreadID) {
+
+	uint w, h;
+	paramMap.GetDimensions(w, h);
+	if (id.x > w || id.y > h) return;
+
+	float density = paramMap[id.xy].r;
+
+	if (density > 0) {
+		float2 uv = id.xy / float2(w, h);
+		uv = saturate(uv);
+		float2 chunk = floor(uv * chunkDims.xy);
+		int idx = floor(chunk.y * chunkDims.x + chunk.x);
+		chunkResults[idx] = 1;
+	}
+
+}
+
+
+// bro i dont even fucking know
+// this function somehow just doesnt perform properly on *at least* my phone
+// its fine on PC
+// why tf does math function differently on differnt platforms 
+//#define rngfloat float2
+//inline float rndm(inout rngfloat x) {
+//
+//	x = frac(cos(rngfloat(
+//		dot(x, rngfloat(127.1537542, 311.745273)),
+//		dot(x, rngfloat(269.545375, 183.34537))
+//	)) * 43758.5453123);
+//
+//	return x.x;
+//}
+
+#define rngfloat float4
+static float4 _q = float4(1225.0, 1585.0, 2457.0, 2098.0);
+static float4 _r = float4(1112.0, 367.0, 92.0, 265.0);
+static float4 _a = float4(3423.0, 2646.0, 1707.0, 1999.0);
+static float4 _m = float4(4194287.0, 4194277.0, 4194191.0, 4194167.0);
+
+inline float rndm(inout rngfloat n) {
+	rngfloat beta = floor(n / _q);
+	rngfloat p = _a * (n - beta * _q) - beta * _r;
+	beta = (sign(-p) + rngfloat(1.0, 1.0, 1.0, 1.0)) * rngfloat(0.5, 0.5, 0.5, 0.5) * _m;
+	n = (p + beta);
+
+	return frac(dot(n / _m, rngfloat(1.0, -1.0, 1.0, -1.0)));
+}
+
+struct GrassPos {
+	float3 pos;
+	float3 norm;
+	float2 uv;
+	float4 params; // chunk id, height, flatness, wind
+	float4 col;
+	float type;
+	#define chunkIdx params.x
+};
+
+AppendStructuredBuffer<GrassPos> posBuffer;
+RWStructuredBuffer<uint> countBuff;
+Texture2D<half4> dhfParamMap;
+Texture2D<half4>     colorMap;
+Texture2D<half4>     typeMap;
+SamplerState linearRepeatSampler;
+SamplerState linearClampSampler;
+uint chunkID;
+uint dispatchCount;
+float4x4 terrainMatrix;
+bool bakeDensity;
+
+bool SampleGrassProps(inout GrassPos pos, inout rngfloat rng, SamplerState SS){
+
+	float2 uv = pos.uv;
+	half4 paramSamp = dhfParamMap.SampleLevel(SS, uv, 0);
+
+	if(bakeDensity && rndm(rng) >= paramSamp.x){
+		return false;
+	}
+
+	half4 colorSamp = colorMap.SampleLevel(SS, uv, 0);
+	half typeSamp =  typeMap.SampleLevel(SS, uv, 0).r;
+	paramSamp.z = saturate(1.0 - paramSamp.z) * 0.75;
+
+	pos.params.yzw = paramSamp.yzw;
+	pos.chunkIdx = chunkID;
+
+	pos.col = colorSamp;
+	pos.type = typeSamp;
+
+	return true;
+}
+
+
+
+
+
+#pragma kernel FillMeshPosBuffer
+struct VertexData {
+    float3 pos;
+    float3 norm;
+    float2 uv;
+};
+
+StructuredBuffer<VertexData> verts;
+StructuredBuffer<uint> tris;
+uint triCount;
+
+[numthreads(64, 1, 1)]
+void FillMeshPosBuffer(uint idx : SV_DispatchThreadID){
+
+	if(idx >= dispatchCount) return;
+
+	GrassPos gPos = (GrassPos)0;
+
+	float3 bladePos;
+	float4 rng = float4(idx, idx * 9.24, idx * 23.52, idx * 2.215) + chunkID;	
+	rndm(rng);
+	//float2 rng = float2(idx * 1.541, idx * 9.24) + chunkID;
+
+	float2 UV = float2(rndm(rng), rndm(rng));
+
+	float sqrtR = sqrt(UV.x);
+	float a = 1.0 - sqrtR;
+	float b = sqrtR * (1.0 - UV.y);
+	float c = sqrtR * UV.y;
+
+	//need to randomize this or otherwise the order in which sections are used for culling is too consistent
+	//uint tIdx = (idx % triCount) * 3;
+	uint tIdx = (uint)floor(rndm(rng) * (float)triCount) * 3;
+
+	VertexData t0 = verts[tris[tIdx + 0]];
+	VertexData t1 = verts[tris[tIdx + 1]];
+	VertexData t2 = verts[tris[tIdx + 2]];
+
+	#define PointMult(v1, v2, v3) v1 * a + v2 * b + v3 * c
+
+	gPos.uv = PointMult(t0.uv, t1.uv, t2.uv);
+
+	//SampleGrassProps(gPos, rng, linearRepeatSampler);
+	if(!SampleGrassProps(gPos, rng, linearRepeatSampler)) return;
+
+	gPos.pos = PointMult(t0.pos, t1.pos, t2.pos);
+	gPos.norm = PointMult(t0.norm, t1.norm, t2.norm);
+
+	#if defined(PREMULTIPLIED_WPOS)
+	gPos.norm = normalize(mul((float3x3)terrainMatrix, gPos.norm));
+	gPos.pos = mul(terrainMatrix, float4(gPos.pos, 1));
+	#endif
+
+	posBuffer.Append(gPos);
+	InterlockedAdd(countBuff[chunkID], 1);
+}
+
+
+
+#pragma kernel FillTerrainPosBuffer
+Texture2D terrainHeightMap;
+Texture2D terrainNormalMap;
+float3 terrainSize;
+float3 invTerrainSize;
+float2 terrainChunkSize;
+float terrainExpansion;
+float terrainMapOffset;
+float2 _chunkPos;
+
+float ReadHeightmapo(float4 height) {
+	#if (API_HAS_GUARANTEED_R16_SUPPORT)
+	return height.r;
+	#else
+	return (height.r + height.g * 256.0f) / 257.0f; // (255.0f * height.r + 255.0f * 256.0f * height.g) / 65535.0f
+	#endif
+}
+
+[numthreads(64, 1, 1)]
+void FillTerrainPosBuffer(uint idx : SV_DispatchThreadID){
+
+	if(idx >= dispatchCount) return;
+
+	GrassPos gPos = (GrassPos)0;
+	float3 bladePos;
+	//float2 rng = float2(chunkID, idx) + 1.152;
+	float4 rng = float4(idx, idx * 9.24, idx * 23.52, idx * 2.215) + chunkID;
+	rndm(rng);
+	float2 rndUV = float2(rndm(rng), rndm(rng));
+
+	float2 chunkVariance = (float2(rndm(rng), rndm(rng)) - 0.5) * terrainChunkSize * terrainExpansion;
+	bladePos.xz = _chunkPos + terrainChunkSize * rndUV + chunkVariance;
+
+	float2 rndUVNoOffset = bladePos.xz * invTerrainSize.xz;
+	gPos.uv = rndUVNoOffset * (1 - terrainMapOffset * 2) + terrainMapOffset;
+
+	if(!SampleGrassProps(gPos, rng, linearClampSampler)) return;
+
+	static const float edgeBound = 0.15;
+	if (bladePos.x < -edgeBound || bladePos.z < -edgeBound ||
+		bladePos.x > terrainSize.x + edgeBound || bladePos.z > terrainSize.z + edgeBound) {
+		//cull blades that are off the edge of the terrain
+		return;
+	}
+
+	
+	float heightSamp = ReadHeightmapo(terrainHeightMap.SampleLevel(linearClampSampler, gPos.uv, 0)) * 2;
+	float3 normalSamp = terrainNormalMap.SampleLevel(linearClampSampler, gPos.uv, 0);
+
+	bladePos.y = heightSamp * terrainSize.y;
+	gPos.pos = bladePos;
+	gPos.norm = normalSamp;
+
+	#if defined(PREMULTIPLIED_WPOS)
+	gPos.norm = normalize(mul((float3x3)terrainMatrix, gPos.norm));
+	gPos.pos = mul(terrainMatrix, float4(gPos.pos, 1));
+	#endif
+
+	posBuffer.Append(gPos);
+	InterlockedAdd(countBuff[chunkID], 1);
+}
+
+
+#pragma kernel TrimPosBuffer
+struct GrassPosCompressed {
+	float3 pos;
+	uint3 data1;
+	uint2 data2;
+};
+
+uint trimWidth;
+
+#define COMPRESSED_POS
+
+#if defined(COMPRESSED_POS)
+RWStructuredBuffer<GrassPosCompressed> trimmedPosBuffer;
+#else
+RWStructuredBuffer<GrassPos> trimmedPosBuffer;
+#endif
+
+StructuredBuffer<GrassPos> posBufferSource;
+
+[numthreads(32, 32, 1)]
+void TrimPosBuffer(uint2 idt : SV_DispatchThreadID) {	
+
+	if(any(idt >= trimWidth)) return;
+
+	uint id = idt.y * trimWidth + idt.x;
+
+#if defined(COMPRESSED_POS)
+
+	GrassPos g = posBufferSource[id];
+	GrassPosCompressed c;
+	uint chunk = g.chunkIdx;
+
+	c.pos = g.pos;
+	c.data1[0] = (chunk & 0x0000FFFF) | f32tof16(g.norm.x) << 16;
+	c.data1[1] = f32tof16(g.norm.y) | f32tof16(g.norm.z) << 16;
+	c.data1[2] = f32tof16(g.uv.x)   |   f32tof16(g.uv.y) << 16;
+
+	g.params.x = g.type;
+	uint4 params = floor(g.params * 255.0);
+	uint4 col = floor(g.col * 255.0);
+	#define pack(val) (val.x << 0) | (val.y << 8) | (val.z << 16) | (val.w << 24)
+	c.data2[0] = pack(params);
+	c.data2[1] = pack(col);
+
+	trimmedPosBuffer[id] = c;
+#else
+	trimmedPosBuffer[id] = posBufferSource[id];
+#endif
+}
+
+
+
+
+//Changing these allows to control the precomputed noise appearance
+//Do not change unless you seriously know what youre doing
+#define falloff 0.45
+#define noiseScale 10.0
+
+#include "NoiseCompute.cginc"
+
+#pragma kernel NoiseMain
+RWTexture3D<half4> NoiseResult;
+RWTexture2D<half4> _NoiseTex2D;
+
+[numthreads(8, 8, 8)]
+void NoiseMain(uint3 id : SV_DispatchThreadID) {
+
+	uint w, h, d;
+	NoiseResult.GetDimensions(w, h, d);
+
+	float3 uvw = id / float3(w, h, d) * noiseScale;
+
+	float noise = NoiseCombinedOctaves(uvw);
+	NoiseResult[id] = noise;
+	_NoiseTex2D[id.xy] = noise;
+}
+
+
+
+
+
+#pragma kernel GrassCull
+AppendStructuredBuffer<float2> culledGrassIdxBuff;
+StructuredBuffer<float4> chunkLodData;
+StructuredBuffer<GrassPosCompressed> grassPosBuffer;
+RWStructuredBuffer<uint> indirectArgs;
+float4x4 VPMatrix;
+float4x4 objMatrix;
+float maxDrawDistance;
+uint startOffset;
+uint grassPerTri;
+float2 cullThresh;
+
+[numthreads(128, 1, 1)]
+void GrassCull(uint id : SV_DispatchThreadID) {
+
+	//if(id >= cullLength) return;
+
+	uint buffID = startOffset + id;
+	GrassPosCompressed gPos = grassPosBuffer[buffID];
+	uint curChunkIdx = gPos.data1[0] & 0x0000FFFF;
+	float4 chunkData = chunkLodData[curChunkIdx];
+	#define chunkInvLodStepMult chunkData.w
+	#define chunkInstancesToRender chunkData.y
+	#define chunkOffset chunkData.x
+	#define chunkBladeCnt chunkData.z
+
+
+	int chunkInstIdx = id - chunkOffset;
+
+	if(chunkInstIdx > chunkInstancesToRender * grassPerTri) return;
+
+	//culledGrassIdxBuff.Append(float2(buffID, 1));
+
+	#if defined(PREMULTIPLIED_WPOS)
+	float4 absPosCS = abs(mul(VPMatrix, float4(gPos.pos, 1.0)));
+	#else
+	float4 absPosCS = abs(mul(VPMatrix, mul(objMatrix, float4(gPos.pos, 1.0))));
+	#endif
+
+    if (absPosCS.z <= absPosCS.w && 
+		absPosCS.y <= absPosCS.w * cullThresh.y && absPosCS.x <= absPosCS.w * cullThresh.x &&
+		absPosCS.w <= maxDrawDistance)
+	{
+		uint ogInstID = chunkInstIdx * chunkInvLodStepMult;
+		float fracFade = 1;
+		if (ogInstID > 0 && ogInstID > (chunkBladeCnt)-1) {
+			fracFade = frac((chunkBladeCnt));
+			fracFade = (fracFade > 0 ? fracFade : 1);
+		}
+		culledGrassIdxBuff.Append(float2(buffID, fracFade));
+		if(id % (grassPerTri) == 0){
+			InterlockedAdd(indirectArgs[1], 1);
+		}
+	}
+
+}
+

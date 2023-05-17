@@ -1,0 +1,625 @@
+  
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" href="https://i.imgur.com/H0oTiQk.png">
+<title>GrassFlow Documentation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+body{
+	font-family: "Verdana";
+	color: #0f0f0f;
+	font-size: 16px;
+}
+.bg {
+  background: #f1f1f1;
+  padding: 15px 15px 20px 15px;
+}
+
+.toc{
+	background-color: #dfdfdf;
+	border-radius: 8px;
+   padding: 12px;
+	margin: 16px 0px;
+	display: flex;
+	flex-flow: column;
+	gap: 4px;
+}
+
+img{
+	transform: scale(0.9) translate(-5%, -3%);
+	max-height: 200px;
+	max-width: 500px;
+}
+
+.collapsible {
+  background-color: #777;  
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  padding: 7px;  
+  margin: 3px 0px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+}
+
+.sub.collapsible {
+	padding: 4px;  
+	margin: 2px 0px;
+}
+
+.indent {
+	padding: 0 32px;
+}
+
+button{
+	border-radius: 1px;
+	border: none;
+	background: gray;
+	color: white;
+	padding: 3px 6px;
+}
+
+.content {
+  padding: 6px 50px 16px 50px;
+  display: none;
+  overflow: hidden;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+pre{
+	font-family: "Verdana";
+	margin : 0;
+	white-space: pre-wrap;
+}
+
+a{
+	margin : 2px 0px;
+}
+a:link {color: #007a96;}
+a:visited {color: #007a96;}
+a:hover {color: #0075ff;}
+a:active {color: #0005ff;}
+
+</style>
+</head>
+
+
+
+
+<body class="bg">
+
+<h2 class="toc">GrassFlow V2.5</h2>
+<pre>
+Thanks for using GrassFlow, hopefully you'll find everything you need here and create some sweet looking interactive grasses.
+This asset was originally inspired by the game Flower. I wanted to create a similarly impressive grass simulation, and so, here we are.
+If you like it, please feel free to leave a review, or post pictures in the discord.
+
+Email: BoltSoft@gmail.com
+Discord: <a href="https://discord.com/invite/CwvB2PDcqC" target="_blank">discord.com/invite/CwvB2PDcqC</a>
+Tutorial Video: <a href="https://youtu.be/t6W1iR4Ruks" target="_blank">youtu.be/t6W1iR4Ruks</a>
+</pre>
+
+<div class="toc">
+<h4 style="margin: 6px 0px;">Table of Contents:</h4>
+
+<a href="#usage">1. Usage</a>
+<div class="toc indent" style="margin: 0;">
+	<a onclick="ShowId('usage')" href="#general">A. General</a>
+	<a onclick="ShowId('usage')" href="#painting">B. Painting and Maps</a>
+</div>
+
+<a href="#shaders">2. Choosing a Shader</a>
+<a href="#functions">3. Functions</a>
+<a href="#exampleScenes">4. Example Scenes</a>
+
+<a href="#performance">5. All About Performance</a>
+<div class="toc indent" style="margin: 0;">
+	<a onclick="ShowId('performance')" href="#LOD">A. LOD</a>
+	<a onclick="ShowId('performance')" href="#shadows">B. Shadows</a>
+	<a onclick="ShowId('performance')" href="#lighting">C. Lighting</a>
+	<a onclick="ShowId('performance')" href="#misc">D. Misc</a>
+</div>
+ 
+<a href="#troubleshooting">6. FAQ, Troubleshooting, and You</a>
+<a href="#srp">7. SRP-URP/HDRP</a>
+<a href="#notes">8. Notes</a>
+</div>
+
+
+
+<br>
+<div>
+	<button onclick="CollapseAll(true)">Collapse All</button>
+	<button onclick="CollapseAll(false)">Expand All</button>
+</div>
+
+
+
+<button id="usage" type="button" class="collapsible">1. Usage</button>
+<div class="content">
+<pre>
+IMPORTANT: Read the tooltips for any setting in the inspector you want to know more about!
+Nearly every setting/button has a tooltip that can be read by hovering over it and often the most pertinent information is in those.
+Wanted to get this out up front so if nothing else you hopefully know this.
+
+It should be fairly simple to get rolling just by following/copying the examples from the included example scenes and adjusting as needed.
+But there's a lot of in-depth information in these docs that dive deeper into performance and other details.
+
+IMPORTANT: In mesh mode, grass is rendered per-triangle of the source mesh, so for uniform looking grass make sure the mesh has fairly uniform triangles.
+You can use the normalize mesh density setting in the GrassFlowRenderer component to attempt to make your triangles more uniform automatically, but this will add initial processing time.
+
+If you run into trouble, well, take a look at the troubleshooting section!
+
+</pre>
+
+	<button id="general" type="button" class="sub collapsible">A. General</button>
+	<div class="content"><pre>
+The main and recomended way to use GrassFlow is with the grassflow component, as it manages all the things for you including LOD chunks, etc.
+It's mostly as simple as adding the component and assigning the required variables. The required variables are as follows:
+ -grassMaterial
+ -a grass mesh to render
+ -terrainTransform
+ -grassMesh/terrainObject (grassMesh is required for mesh mode and terrainObject for terrain mode)
+ 
+The component can be found under: Rendering/GrassFlow
+The component does not need to be placed on the mesh or terrain gameobject, for organizational purposes, but works fine if you do.
+ 
+grassMaterial needs to use one of the included shaders.
+It's best to simply create your materials as duplicates from the included example materials and adjust from there.
+Message me if you're interested in applying GrassFlow properties to your own shader.
+
+If you need to know more about a setting in the GrassFlowRenderer inspector, pretty much all things have very descriptive tooltips you can refer to.
+</pre></div>
+	<button id="painting" type="button" class="sub collapsible">B. Painting and Maps</button>
+	<div class="content"><pre>
+Painting:
+Hopefully the painting controls are fairly intuitive. I modeled them after Unity's terrain editing tools so hopefully they are familiar at least.
+The hotkeys should be the same as the default terrain ones.
+
+In order to paint, you'll need to set up some texture maps to be painted onto.
+Not all maps are required. You only need to create textures for type of painting you want to do. I.E. you only need the color map to paint color.
+For simple use cases this can be conveniently handled automatically by using the built-in texture creator accessed by clicking the plus buttons next to the respective texture fields.
+<img src="https://i.imgur.com/6Vpgk8j.png"></img>
+
+Hotkeys:
+Brush Size - left and right brackets (hold shift to increase amount)
+Brush Strength - control + left and right brackets
+Grass Type Index - alt + left and right brackets
+Change Paint Tool Type - F1-F6
+Revert Maps Without Saving - Shift + R (Be careful with this because there's no warning on it, but it can be undone)
+Undo and Redo are supported for painting
+
+The brush list loads brushes in the same way and from the same places that the terrain editor used to.
+That is to say, from a folder called "Gizmos" at the root of your project.
+I.e. "Assets/Gizmos/BrushTexture.png"
+<img src="https://i.imgur.com/8rs2OYr.png"></img>
+
+
+For the paramter map, the color channels are mapped as following:
+Red channel = density. Green channel = height, Blue channel = flattenedness. Alpha channel = wind strength.
+---
+For the grass type map:
+NOTE: This texture should have NO compression, or at most, high quality compression.
+Because of the way this texture is stored, compressing it can cause bad artifacts.
+Due to how this texture works, when painting with a normal brush, the edges might paint unexpected density due to the texture filtering of the brush texture.
+It's a single channel texture, using the red channel with 8 bits, 256 different values
+The value stored is basically [the index into the texture atlas] divided by 16
+15 is the max index stored (zero indexed). Values inbetween each index are treated as the density of that particular grass type.
+So for example, a value 0 to 0.05859375 would control density of the first texture, 0.0625 to 0.12109375 for the second texture, etc
+To put it in 255 color terms: a value 0 to 15 would control density of the first texture, 16 to 31 for the second texture, etc
+`NOTE V2: The "density" of each type is actually used as a probability to randomly select between the first texture in the atlas and the desired texture index.
+I.e. By default the first texture of the atlas is used, and the desired texture will be randomly swapped in based on the density value, or be always chosen if the denity is the max within the band of 16 values`
+
+For terrain mode, density can be automatically controlled by terrain splat maps if you have them set up.
+e.g. if you have a dirt terrain texture and a grass terrain texture and some areas are painted with dirt, and you don't want grass to show up on the places with the dirt texture,
+you can use the splat maps section under paint mode to select the appropriate layer and remove grass from the dirt layer etc.
+<img src="https://i.imgur.com/r2TnmIA.png"></img>
+
+
+You can also find a utility script called "Obstruction Eraser"
+Add this to a GameObject in the editor to let you scan a volume and adjust grass where there are obstructions.
+This works by painting onto the parameter map, so make sure you have painting set up.
+	</pre></div>
+</div>
+
+
+
+<button id="shaders" type="button" class="collapsible">2. Choosing a Shader</button>
+<div class="content">
+<pre>
+You'll need to make sure to select the appropriate shader settings for your project:
+ -Render Pipeline: Unless you know otherwise, probably should be Standard
+ -Render Path: Can be changed to deferred if desired
+ -Features: Individual features can be added as required
+   -Depth Pass: Required for receiving/casting screen-space shadows, and any other effect requiring a depth-prepass, like DOF
+   -Forward Add: Required in the Standard pipeline for receiving additional lighting
+   -No Transparency: Disables transparent and cutout capabilities. This also means no dithering. May perform drastically better especially on Mobile.
+   -Lower Quality: Disables many superficial calculations in the shader to optimize performance. Useful for mobile platforms.
+ 
+These can be found in the inspector for the grass materials.
+They should be hopefully fairly self-explanatory and simple to choose.
+If for whatever reason the inspector for the material breaks and doesn't let you choose these settings, try changing the shader on the material to "GrassFlow/Grass Material Repair"
+</pre>
+</div>
+
+
+
+<button id="functions" type="button" class="collapsible">3. Functions</button>
+<div class="content">
+<pre>
+I wont describe them all here as they all have descriptions and summaries that should work with intellisense and the monodevelop equivalent. Barring that, you can always just open the script up and read them from there.
+So here's a (non-exhaustive) list of public functions on the script that you might want to use.
+
+Control:
+public void Refresh()
+public void RevertDetailMaps()
+public void UpdateTransform()
+public void UpdateTransformAsync()
+public void UpdateShaders()
+
+Grass Meshes:
+public void AddMesh()
+public void AddTerrain()
+public void RemoveMesh()
+public void RemoveTerrain()
+public void RemoveGrassMesh()
+
+Ripples:
+public static void AddRipple()
+public void AddARipple()
+
+Forces:
+public static void RemoveGrassForce
+public static GrassForce AddGrassForce
+public void RemoveForce
+public GrassForce AddForce
+(View GrassFlowForce example script for example on use.)
+
+Painting:
+public static void SetPaintBrushTexture()
+public void PaintColor()
+public void PaintParameters()
+</pre>
+</div>
+
+
+
+<button id="exampleScenes" type="button" class="collapsible">4. Example Scenes</button>
+<div class="content">
+<pre>
+I just want to mention that example scenes are provided and include some scripts that show how to interface with GrassFlow.
+The scenes aren't necessarily optimized for best performance possible and well, I'm not exactly an artist so take the visuals with a grain of salt.
+Due to the scales involved the example scenes with shadows are meant to have a higher shadow draw distance to look right but it's not that important I guess.
+</pre>
+</div>
+
+
+
+<button id="performance" type="button" class="collapsible">5. All About Performance</button>
+<div class="content">
+<pre>
+
+This is vital information to read as it can be very easy to end up with poor settings that leave much performance on the table.
+	</pre>
+
+	<button id="LOD" type="button" class="sub collapsible">A. LOD</button>
+	<div class="content"><pre>
+-The LOD system is based on the chunks the Mesh or Terrain is split into.
+-They are culled by the frustum of the currently rendering camera.
+-LOD works by decreasing the instances of grass rendered over distance based on the LOD parameters.
+-If a chunk is further away than maxRenderDist it is rejected immediately.
+-Chunk bounds can be expanded by blade height so that in almost all cases grass should be encapsulated by the bounds even at max grass height.
+-Chunk bounds can be visualized with visualizeChunkBounds.
+-In mesh mode, chunking is dependant on the import orientation of the mesh. So be sure that the mesh is imported in the orientation you'd like it to be chunked in to avoid confusing situations.
+
+-You can use "Bake Density" to save a lot on performance if you don't need to change the grass density at runtime.
+This will be significantly more performant if your terrain has large areas without grass.
+This setting relies on the density from the parameter map and thus will do nothing otherwise.
+Be aware this setting will add some additional processing time at startup.
+WARNING: Enabling this removes the grass instances completely, meaning that grass could not be dynamically added back in those areas during runtime.
+
+IMPORTANT V: Too many LOD chunks is bad for performance, but so is too few, and too few also can look bad as it is more apparent that grass dwindles out in chunks.
+Read the tooltip on MeshLodChunks for more info.
+Using frustum culling removes the performance hit of rendering so many individual chunks, but has its own downsides like:
+Not being able to use different meshes/materials for different LODs.
+Shadows aren't culled properly and may look weird when casting shadows.
+
+BATCHING: There are two batching modes in GrassFlow.
+  -Traditionally, GrassFlow requires a draw call per-chunk because it needs per-chunk data in the shader.
+   This is reduced by a limited batching method that allows some number of visible chunks to be batched together.
+   By default this number is 4, which is a decent value that does not compromise on performance of the shader having to decode the batch.
+   This is mostly a limit for mobile, you could increase the batch limit on PC to reduce draw calls further, 16 would probably be decent.
+   With a decent chunk layout, draw calls shouldn't be much of an issue, but draw calls compound when using multiple grass meshes on the same terrain, for example rendering different types of foliage with different densities on the same terrain.
+   If you wish to change this value, please edit the value at the top of both of these files:
+     -GrassFlow\Shaders\GrassStructsVars.cginc
+	 -GrassFlow\Scripts\CullingZone.cs
+  -When using frustum culling, visible grass will be processed in large batches via compute shader into one large buffer.
+   This buffer is then rendered in one draw call.
+
+</pre></div>
+	
+	<button id="shadows" type="button" class="sub collapsible">B. Shadows</button>
+	<div class="content">
+	<pre>
+-Requires the depth pass feature in the material settings.
+-If not receiving/casting shadows, it's recomended to disable the depth pass in order to potentially save performance.
+-There may be other effects that require depth that you would want to use the version with depth pass for though.
+-It should be noted that casting shadows is especially expensive, because well, they're shadows. It's not as bad without cascaded shadows though.
+-Receiving shadows has a very minor performance impact, but moreso if a depth pre-pass is required for screen-space shadows.
+-I think you can get some pretty decent looking results in most cases without casting shadows or even receiving them depending on the scene.
+-And finally, custom shadowing solutions are unknown so I cannot comment whether or not they would work with GrassFlow, so results may vary.
+</pre>
+</div>
+	
+	<button id="lighting" type="button" class="sub collapsible">C. Lighting</button>
+	<div class="content">
+	<pre>
+
+
+Some new lighting features include:
+  -per-pixel lights
+  -specular highlights
+  -normal mapping
+These settings all have a performance impact.
+It's also import to keep in mind that the performance impact of these settings when using per-pixel lights is directly correlated to the pixel fill-rate.
+E.g. Higher resolutions will have to fill more pixels to draw the grass, which means per pixel features will be run more often and hit performance harder.
+NOTE: Normal mapping pretty much requires per-pixel lights because otherwise you won't see the detailed shading.
+NOTE V2: per-pixel lighting is only really noticeable with normal mapping on or using smooth custom meshes. Also when receiving non screen-space shadows.
+NOTE V3: If using additional lights with shadows in URP, you may want to enable per-pixel lights since otherwise shadows will look weird, only being handled per-vertex.
+
+Do not worry about the following if you are using URP or the deferred shader.
+But if you're using built-in standard forward rendering, Grassflow technically supports all standard Unity lights, but will require the material feature "Foward Add" to receive additional lighting in the Standard pipeline.
+About Forward Add:
+	-Something that MUST be understood is that for each LOD chunk affected by additional lights (not the main direct light) that chunk will be rendered <b>again</b> to render that additional lighting
+	-This is honestly a really stupid thing on Unity's part and never should've been done like this. The fact that URP does not have this problem is proof.
+	-But anyway it can be pretty taxing on performance if you have a lot of lights or the lights affect a large area.
+	-So in short, if you can get away without needing grass affected by extra lights in this case, you should.
+	-And if you have to have grass affected by extra lights then try to be as minimal as possible about it.
+	-The deferred and URP versions of the shader do not have to deal with this.
+
+-If you're using deferred rendering, a deferred version of the shader is available that takes advantage of all the benefits of deferred rendering.
+-All lights are supported and shaded using the deferred lighting shader built into Unity.
+-This is much more efficient than the way lighting works in forward rendering.
+-An extra depth pass is also no longer needed in deferred rendering.
+-So in short, deferred rendering is much more efficient to render Grassflow with many lights.
+-But this comes at the downside of not being able to have transparent grass, dithering must be used to fade grass out at a distance.
+-You're also more limited to whatever shading model is used for the separate deferred shading.
+-Also MSAA does not work on deferred rendering.
+	</pre>
+	</div>
+	
+	<button id="misc" type="button" class="sub collapsible">D. Misc</button>
+	<div class="content">
+	<pre>
+-It should be noted that GrassFlow grass is procedurally generated on GPU based on a consistent RNG seed.
+
+-Painting density to remove grass in a certain spot is NOT as efficient as actually not rendering any grass there.
+-This is because the GPU still has to do a lot of calculations to even get to the point to reject the blade of grass, not to mention other rendering overhead.
+-IMPORTANT: You can use the "Bake Density" setting (enabled by default) to bake the density of your parameter map into the precalculated grass instance data, this only applies in play mode however to avoid issues with painting in the editor.
+
+-While it may not seem obvious at first, grass bladeHeight (and other settings that increase grass size) can have a very sizeable performance impact depending on the circumstances.
+-This is mostly because there are more pixels to shade the larger the grass blades are.
+-I've simplified the pixel shading code as much as I can but there are still a few unavoidable things that need to be done there on top of inherent overhead and especially overdraw issues.
+-Ideally depth-priming would be used but isn't usually an option. URP has this feature but may or may not work.
+
+-If you're using any kind of transparent cutout style texture, it may be more performant to set the render queue on the material to Transparent.
+-The reverse is true for opaque textures and rendering individual grass blades, but to a much lesser degree.
+-HOWEVER: Please note that objects in the transparent section of the render queue CANNOT receive shadows, except in URP.
+-Also on the note of transparent cutout textures, counterintuitively, clipping more pixels actually is MORE costly to performance. So you should set AlphaClip as low as is reasonable and design textures that take advantage of most of the space.
+
+-The Alpha to Mask option can be very costly when using a texture with a lot of transparent pixels.
+-Any sort of transparency is costly, and more so with this option on, including the LOD fading.
+-However because the LOD fade usually only affects a small amount of grass at the edge of the LOD distance, this impact isn't much.
+	</pre>
+	</div>	
+</div>
+
+
+
+<button id="troubleshooting" type="button" class="collapsible">6. FAQ, Troubleshooting, and You</button>
+<div class="content">
+<pre>
+Hopefully most of the time if something goes wrong it can be fixed by simply refreshing.
+
+There are various "IMORTANT"s and "NOTE"s around the documentation as well that can be worth looking at.
+
+Grass not properly attached?
+  -Try refreshing the component, the grass needs to be updated if you move the terrainTransform.
+  -If using terrain mode, unity lets you rotate/scale the terrain transform even though it doesnt actually affect the terrain, but this will affect GrassFlow
+  -So make sure the terrainTransform doesn't get rotated/scaled when it's not supposed to.
+  -If none of that works then thats kind of weird, email me and hopefully we can figure that out.
+
+Can't see any grass?
+  -There could be a few reasons for this.
+  -It's possible your LOD settings are bad, make sure LodParams.X is high enough and that LodParams.Y and Z are set to something that makes sense as well.
+  -Make sure maxRenderDist is set high enough as well.
+  -All else fails make sure you try refreshing, some things don't update unless you refresh or it could be stuck and just need a reset.
+
+Map painting isn't working?
+  -Map painting requires a collider to raycast against to get coordinates to paint at. So either add a mesh collider to your mesh or for a terrain, the terrain collider works fine.
+  -Make sure the raycast layer mask includes the layer your terrain is on.
+  -Make sure you have actually created texture maps for the respective type of painting you need. (accessed by clicking the + button by the texture slots)
+  -Custom painting maps should be in .PNG format, if you want to be able to save them anyway.
+  
+Weird behaviour with multiple grass meshes?
+  -If using the same grass material for multiple meshes, it can sometimes be necessary to enable the "Use Material Instance" setting so that some settings on the material can be set per mesh.
+  -Probably only necessary if using different painting maps on each different grass mesh.
+  
+Grass showing at edges of terrain even when grass is erased?
+  -Make sure your parameter maps have their wrap mode set to "clamp"
+
+Message me if you need to have grass on a moving object.
+  
+
+Feel free to contact me with questions or issues.
+</pre>
+</div>
+
+
+
+<button id="srp" type="button" class="collapsible">7. SRP-URP/HDRP</button>
+<div class="content">
+<pre>
+IMPORTANT: The example scenes were not designed for URP and the automatic converter may not work perfectly and thus example scenes may look slightly off.
+
+IMPORTANT V2: URP support must be enabled. Usually the GrassFlowRenderer component should warn you about this and all you have to do is press the button.
+<img src="https://i.imgur.com/hqa79qV.png"></img>
+
+To enable URP manually in GrassFlow you'll need to right click the GrassFlowRenderer component to open the context menu and click the enable URP support option.
+Make sure to give Unity a hot sec to reload everything.
+<img src="https://i.imgur.com/3HkgYxj.png"></img>
+
+You'll know if GrassFlow is in URP mode when this message shows at the top of the inspector.
+<img src="https://i.imgur.com/gRnamd2.png"></img>
+
+IMPORTANT v3: You'll need to make sure to use the URP version of the GrassFlow shader for your grass material.
+There's a URP example scene already set up with this ready to go.
+Otherwise simply switch the render pipeline setting on the material.
+<img src="https://i.imgur.com/6k8pzDs.png"></img>
+
+
+Unfortunately theres no HDRP support at this time because HDRP is completely different.
+And there are no good resources available on how to implement lighting on HDRP. Unity doesn't seem to care about writing shaders anymore, it's all about *graphs* now.
+If you know of a good simple HDRP template resource, let me know. Shoutout to phi-lira for the nice URP template https://gist.github.com/phi-lira/225cd7c5e8545be602dca4eb5ed111ba
+Why we have to rely on the community to figure this out.........
+</pre>
+</div>
+
+
+
+<button id="notes" type="button" class="collapsible">8. Notes</button>
+<div class="content">
+<pre>
+Just some other random things worth mentioning:
+
+GrassFlow requires at least shadermodel 4.0
+Compute shader support is also required.
+
+This should be available on all modern platforms and graphics APIs, including Android.
+
+GrassFlow was designed as a highly interactive, high density grass simulation shader, but it's also pretty versatile.
+You can use it to render more traditional grass textures in a less dense way and if done right it can look pretty good.
+
+Despite all the effort towards optimization and stability, as always there's still bound to be sneaky bugs and room for improvement.
+Feel free to message me with suggestions/requests/bug reports.
+If you like it though, it would be great if you could leave a review!
+And also I'd love to see your beautiful grass based creations posted in the discord.
+
+
+
+Email: BoltSoft@gmail.com
+Discord: <a href="https://discord.com/invite/CwvB2PDcqC" target="_blank">discord.com/invite/CwvB2PDcqC</a>
+</pre>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+var coll = document.getElementsByClassName("collapsible");
+
+for (let i = 0; i < coll.length; i++) {
+	let element = coll[i];
+	element.addEventListener("click", function() {		
+		CollapseElement(element);
+  });
+}
+
+coll = document.getElementsByTagName("a");
+for (let i = 0; i < coll.length; i++) {
+	let element = coll[i];
+	element.addEventListener("click", function() {		
+		HandleAnchor(element);
+  });
+}
+
+function ShowId(id){
+	CollapseElement(document.getElementById(id), "block");
+}
+
+function CollapseElement(element, override){
+	
+	let content = element.nextElementSibling;
+	
+	if(override){		
+		content.style.display = override;
+	}else{
+		if (content.style.display === "block") {
+			content.style.display = "none";
+		} else {
+			content.style.display = "block";
+		}
+	}
+	
+	if (content.style.display === "block") {
+		element.classList.add("active");
+	}else{
+		element.classList.remove("active");
+	}	
+}
+
+
+function CollapseAll(collapse){
+	var coll = document.getElementsByClassName("collapsible");
+	for (let i = 0; i < coll.length; i++) {
+		CollapseElement(coll[i], collapse ? "none" : "block");
+	}	
+}
+
+function HandleAnchor(e){
+	let id = e.href.substr(e.href.lastIndexOf('#')+1);
+	let target = document.getElementById(id);
+	CollapseElement(target, "block");
+}
+
+
+
+if(window.location.host != "bolt-scripts.github.io"){
+	//check if the page is available on the web and use that version if it is
+	var request = new XMLHttpRequest(); 
+	let liveURL = "https://bolt-scripts.github.io/GrassFlowDocs/";
+	request.open("GET", liveURL);
+	request.onreadystatechange = function() { 
+		if (request.readyState === 4 && request.status === 200) {	
+			console.log("available");	
+			window.location.href = liveURL;
+		}
+	};
+	request.send(null); // Send the request now
+}
+
+</script>
+
+</body>
+</html>
