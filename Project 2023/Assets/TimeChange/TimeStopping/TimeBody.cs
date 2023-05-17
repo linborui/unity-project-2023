@@ -41,7 +41,6 @@ public class TimeBody : MonoBehaviour
 
         if (desaturateController.TimeIsStopped)
         {
-
             if (ObjectControl.controledObject == this.gameObject)
             {
                 CanBeAffected = false;

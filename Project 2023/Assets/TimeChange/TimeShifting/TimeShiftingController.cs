@@ -10,8 +10,6 @@ public class TimeShiftingController : MonoBehaviour {
     [SerializeField] private string featureName = null;
     [SerializeField] private float transitionPeriod = 1;
 
-    public Material PastSky;
-    public Material PresentSky;
 
 
 
@@ -20,7 +18,7 @@ public class TimeShiftingController : MonoBehaviour {
     ScriptableRendererFeature feature;
     Material mat;
 
-   // public bool TimeIsStopped;
+    // public bool TimeIsStopped;
 
 
     //收縮強度
@@ -53,26 +51,48 @@ public class TimeShiftingController : MonoBehaviour {
     private int presentlayer;
     private int playerlayer;
 
-    public int PastBool = 0;  //0:present, 1:presentToPast 2:past 3:pastToPresent
+
+    public bool CanChange;
+    public int PastBool;  //0:present, 1:presentToPast 2:past 3:pastToPresent
+
+
+    [Header("Environment")]
+    public GameObject pastlight;
+    public GameObject pastVolume;
+    public Material PastSky;
+    public Color PastFogColor;
+
+    [Space]
+    public GameObject presentlight;
+    public GameObject presentVolume;
+    public Material PresentSky;
+    public Color PresentFogColor;
+
 
     private void Awake()
     {
         pastlayer = LayerMask.NameToLayer("Past");
         presentlayer = LayerMask.NameToLayer("Present");
         playerlayer = LayerMask.NameToLayer("Player");
-        mycamera.cullingMask &= ~(1 << pastlayer);
-        Physics.IgnoreLayerCollision(playerlayer, pastlayer, true);
+        mycamera.cullingMask &= ~(1 << presentlayer);
+        Physics.IgnoreLayerCollision(playerlayer, presentlayer, true);
+        PastBool = 2;
 
         feature = rendererData.rendererFeatures.Where((f) => f.name == featureName).FirstOrDefault();
         var blitFeature = feature as BlitMaterialFeature;
         mat = blitFeature.Material;
         mat.SetTexture("_NoiseTex", NoiseTexture);
         baseColor = new Color(1, 1, 1, 1);
+        CanChange = false;
     }
 
     private void Update() {
-        if(InputManager.GetButtonDown("TimeShift")) {
-            StartPassThroughEffect();
+        if (CanChange)
+        {
+            if (InputManager.GetButtonDown("TimeShift"))
+            {
+                StartPassThroughEffect();
+            }
         }
     }
 
@@ -118,7 +138,9 @@ public class TimeShiftingController : MonoBehaviour {
                     cameras[i].cullingMask |= (1 << pastlayer);
                     cameras[i].cullingMask &= ~(1 << presentlayer);
                 }
-                RenderSettings.skybox = PastSky;
+                ChangeSky(PastSky, PastFogColor, pastlight, pastVolume);
+                presentlight.SetActive(false);
+                presentVolume.SetActive(false);
                 Physics.IgnoreLayerCollision(playerlayer, pastlayer, false); Physics.IgnoreLayerCollision(playerlayer, presentlayer, true);
                 PastBool = 2;
             }  //加pastlayer, 減presentlayer
@@ -134,10 +156,26 @@ public class TimeShiftingController : MonoBehaviour {
                     cameras[i].cullingMask &= ~(1 << pastlayer);
                     cameras[i].cullingMask |= (1 << presentlayer);
                 }
-                RenderSettings.skybox = PresentSky;
+                ChangeSky(PresentSky, PresentFogColor, presentlight, presentVolume);
+                pastlight.SetActive(false);
+                pastVolume.SetActive(false);
                 Physics.IgnoreLayerCollision(playerlayer, pastlayer, true); Physics.IgnoreLayerCollision(playerlayer, presentlayer, false);
                 PastBool = 0;
             }//減pastlayer, 加presentlayer
         }
     }
+
+    private void ChangeSky(Material Sky, Color FogColor, GameObject light, GameObject Volume) {
+        RenderSettings.skybox = Sky;
+        RenderSettings.fogColor = FogColor;
+        light.SetActive(true) ;
+        Volume.SetActive(true);
+    }
+
+
+
 }
+
+
+
+

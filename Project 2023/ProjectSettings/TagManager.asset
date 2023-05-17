@@ -18,6 +18,11 @@ TagManager:
   - Enemy
   - Attackable
   - lb_bird
+  - Grappleable
+  - IvyGenerateable
+  - DeadZone
+  - Burn
+  - Boat
   layers:
   - Default
   - TransparentFX

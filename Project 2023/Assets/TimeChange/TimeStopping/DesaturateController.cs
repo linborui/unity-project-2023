@@ -11,6 +11,8 @@ public class DesaturateController : MonoBehaviour {
     [SerializeField] private string featureName = null;
     [SerializeField] private float transitionPeriod = 1;
 
+
+    public bool CanStop;
     private bool transitioning;
     private float startTime;
     private float fullscreenintensity;
@@ -18,8 +20,13 @@ public class DesaturateController : MonoBehaviour {
     Material mat;
     public bool TimeIsStopped;
 
+    [Space]
+    public List<ParticleSystem> allParticle;
+
+
     private void Start()
     {
+        CanStop = false;
         feature = rendererData.rendererFeatures.Where((f) => f.name == featureName).FirstOrDefault();
         var blitFeature = feature as BlitMaterialFeature;
         mat = blitFeature.Material;
@@ -28,16 +35,32 @@ public class DesaturateController : MonoBehaviour {
     }
 
     private void Update() {
-        if(InputManager.GetButtonDown("TimeStop") && !transitioning) {
-            StartTransition();
-            StopTime();
-        }
-        if(transitioning) {
-            if(Time.timeSinceLevelLoad >= startTime + transitionPeriod) {
-                ContinueTime();
-                ResetTransition();
-            } else {
-                UpdateTransition();
+        if (CanStop)
+        {
+            if (InputManager.GetButtonDown("TimeStop"))
+            {
+                if (!transitioning)
+                {
+                    StartTransition();
+                    StopTime();
+                }
+                else
+                {
+                    ContinueTime();
+                    ResetTransition();
+                }
+            }
+            else if (transitioning)
+            {
+                if (Time.timeSinceLevelLoad >= startTime + transitionPeriod)
+                {
+                    ContinueTime();
+                    ResetTransition();
+                }
+                else
+                {
+                    UpdateTransition();
+                }
             }
         }
     }
@@ -55,7 +78,7 @@ public class DesaturateController : MonoBehaviour {
             mat.SetFloat("_Saturation", saturation);
             mat.SetFloat("_FullScreenIntensity",fullscreenintensity);
     }
-    private void ResetTransition() {
+    public void ResetTransition() {
             mat.SetFloat("_Saturation", 1);
             mat.SetFloat("_FullScreenIntensity", 1);
             transitioning = false;
@@ -73,10 +96,18 @@ public class DesaturateController : MonoBehaviour {
             objects[i].GetComponent<TimeBody>().ContinueTime(); //continue time in each of them
         }
 
+        for (int i = 0; i < allParticle.Count; i++)
+        {
+            allParticle[i].Play(true);
+        }
+
     }
     public void StopTime()
     {
         TimeIsStopped = true;
+        for (int i = 0; i < allParticle.Count; i++) {
+            allParticle[i].Pause(true);
+        }
     }
 
 }
