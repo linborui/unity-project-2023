@@ -598,9 +598,6 @@ MonoBehaviour:
   body: {fileID: 282862574711813023}
   xRotation: 0
   yRotation: 0
-  BrushSize: 2
-  laser: {fileID: 0}
-  laserObject: {fileID: 0}
 --- !u!114 &282862574091779476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -982,6 +979,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 1c304dc753b1c5e49a92512b634f39c7, type: 2}
     - target: {fileID: 9500000, guid: 5917c0e93d180a842b61d1ebc62a195c, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 5917c0e93d180a842b61d1ebc62a195c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
@@ -1301,6 +1302,7 @@ MonoBehaviour:
   airSpeedMult: 0.05
   runSpeedMult: 2
   straightenSpeed: 50
+  swinging: 0
   sameButtonRunDash: 1
   buttonPressTime: 0.5
   jumpForce: 6

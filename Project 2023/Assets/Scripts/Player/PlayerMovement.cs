@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public static bool moving;
     public static bool running = true;
 
+    public bool swinging;
+
     public bool sameButtonRunDash;
     public float buttonPressTime;
     float runPressTime;
@@ -136,6 +138,7 @@ public class PlayerMovement : MonoBehaviour
 
     void MovePlayer()
     {
+        if (swinging) return;
         rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
         if (dashing && Time.time < dashStartTime + dashTime)
         {
@@ -472,7 +475,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Drag()
     {
-        if (onGround || dashing)
+        if (swinging)
+            rigidbody.drag = 0;
+        else if (onGround || dashing)
             rigidbody.drag = groundDrag;
         else
             rigidbody.drag = groundDrag * airSpeedMult;
@@ -599,6 +604,7 @@ public class PlayerMovement : MonoBehaviour
         transform.position = savePoint;
         transform.rotation = Quaternion.identity;
         running = true;
+        swinging = false;
         onWall = false;
         detectWall = null;
         ignoreWall = null;
@@ -627,7 +633,15 @@ public class PlayerMovement : MonoBehaviour
             Restart();
         }
     }
-    
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("DeadZone"))
+        {
+            Restart();
+        }
+    }
+
     public Vector3 getDashDirection(){
         return dashDirection;
     }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.177579, g: 0.22232251, b: 0.30451912, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1882,7 +1882,9 @@ MonoBehaviour:
   rendererData: {fileID: 11400000, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
   featureName: Desaturate
   transitionPeriod: 8
+  CanStop: 0
   TimeIsStopped: 0
+  allParticle: []
 --- !u!114 &487232724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1898,8 +1900,6 @@ MonoBehaviour:
   rendererData: {fileID: 11400000, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
   featureName: TimeShift
   transitionPeriod: 1
-  PastSky: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
-  PresentSky: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   distortFactor: 0
   distortCenter: {x: 0.5, y: 0.5}
   NoiseTexture: {fileID: 2800000, guid: 7f200914f1b73714182072d0aa0872ff, type: 3}
@@ -2065,7 +2065,16 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   AddColor: {r: 0.9811321, g: 0.9436211, b: 0.6247775, a: 1}
+  CanChange: 0
   PastBool: 0
+  pastlight: {fileID: 0}
+  pastVolume: {fileID: 0}
+  PastSky: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  PastFogColor: {r: 0, g: 0, b: 0, a: 0}
+  presentlight: {fileID: 0}
+  presentVolume: {fileID: 0}
+  PresentSky: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  PresentFogColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &487232725
 Transform:
   m_ObjectHideFlags: 0
@@ -8637,6 +8646,11 @@ PrefabInstance:
       propertyPath: portals
       value: 
       objectReference: {fileID: 767111048}
+    - target: {fileID: 7106264252635626541, guid: 5f51da62728310641944eb314f107748,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f51da62728310641944eb314f107748, type: 3}
 --- !u!1001 &1979283441807950319
