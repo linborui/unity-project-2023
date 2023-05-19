@@ -37,8 +37,11 @@ public class StageAudio : MonoBehaviour
     {
         if ((PrePastbool != timeShiftingController.PastBool && (timeShiftingController.PastBool == 0 || timeShiftingController.PastBool == 2))
             || preStage != stage) {
+
             audioManager.StopAudio(preAudioName);
-            audioManager.PlayAudio("TimeShift");
+
+            if(preStage == stage)
+                audioManager.PlayAudio("TimeShift");
 
             PrePastbool = timeShiftingController.PastBool;
             if (PrePastbool == 0) preAudioName = "Stage" + stage + "Present";                //pastOrpresent = "Present";
