@@ -41,13 +41,11 @@ public class DesaturateController : MonoBehaviour {
             {
                 if (!transitioning)
                 {
-                    StartTransition();
-                    StopTime();
+                    PauseTime();
                 }
                 else
                 {
-                    ContinueTime();
-                    ResetTransition();
+                    ResumeTime();
                 }
             }
             else if (transitioning)
@@ -63,6 +61,18 @@ public class DesaturateController : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void PauseTime()
+    {
+        StartTransition();
+        StopTime();
+    }
+
+    public void ResumeTime()
+    {
+        ContinueTime();
+        ResetTransition();
     }
 
 

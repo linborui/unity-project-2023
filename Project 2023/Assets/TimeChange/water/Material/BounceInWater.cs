@@ -73,15 +73,12 @@ public class BounceInWater : MonoBehaviour
 
              Vector3 diff = transform.position - prePos;
         
-             Debug.Log(playerenter);
              if (playerenter)
              {
                  //Vector3 diff = transform.position - prePos;
                  PlayerPos.position += diff;
-                 Debug.Log("PlayerPos: " + PlayerPos.position);
              }
         
-             Debug.Log("Dis: " + diff);
              prePos = transform.position;
 
 
