@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Luminosity.IO;
 public class TerraformingCamera : MonoBehaviour
 {
 	Vector3 _hitPoint;
@@ -20,10 +20,10 @@ public class TerraformingCamera : MonoBehaviour
     }
 
 	private void LateUpdate() {
-		if (Input.GetMouseButton(0)) {
+		if(InputManager.GetButtonDown("PortalIn")) {
 			Terraform(true);
 		}
-		else if (Input.GetMouseButton(1)) {
+		else if (InputManager.GetButtonDown("PortalOut")) {
 			Terraform(false);
 		}
 		times ++ ;

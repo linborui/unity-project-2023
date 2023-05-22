@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MarchingShader: {fileID: 7200000, guid: 69106abfae53e454f85c24e116a34bdd, type: 3}
+  Control: 0
   MeshFilter: {fileID: 4738332729581474106}
   MeshCollider: {fileID: 4738332729581474111}
-  Size: 16
   NoiseGenerator: {fileID: 0}
 --- !u!64 &4738332729581474111
 MeshCollider:
@@ -131,3 +131,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseShader: {fileID: 7200000, guid: 7b48c57ec1ff3b34c919dcdd80d13227, type: 3}
   size: 11.5
+  circle: 0
