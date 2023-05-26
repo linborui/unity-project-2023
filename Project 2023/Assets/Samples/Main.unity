@@ -4275,7 +4275,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 506961454}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a4339d406b39a64aa1c8c2f58871f8a, type: 3}
   m_Name: 
@@ -5711,42 +5711,6 @@ MonoBehaviour:
       m_description: 
       m_bindings:
       - m_positive: 99
-        m_negative: 0
-        m_deadZoneType: 0
-        m_deadZone: 0
-        m_gravity: 1
-        m_sensitivity: 1
-        m_scale: 1
-        m_snap: 0
-        m_invert: 0
-        m_type: 0
-        m_axis: 0
-        m_joystick: 0
-        m_gamepadButton: 0
-        m_gamepadAxis: 0
-        m_gamepadIndex: 0
-    - m_name: Grow
-      m_description: 
-      m_bindings:
-      - m_positive: 103
-        m_negative: 0
-        m_deadZoneType: 0
-        m_deadZone: 0
-        m_gravity: 1
-        m_sensitivity: 1
-        m_scale: 1
-        m_snap: 0
-        m_invert: 0
-        m_type: 0
-        m_axis: 0
-        m_joystick: 0
-        m_gamepadButton: 0
-        m_gamepadAxis: 0
-        m_gamepadIndex: 0
-    - m_name: Eclipse
-      m_description: 
-      m_bindings:
-      - m_positive: 102
         m_negative: 0
         m_deadZoneType: 0
         m_deadZone: 0
