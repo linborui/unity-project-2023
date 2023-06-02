@@ -8,15 +8,13 @@ public enum Occupation
     Taxi_Driver,
     Software_Engineer,
     Drug_Dealer,
-    Hardware_Hacker
+    Hardware_Hacker,
+    Astronaut,
 }
 
 public enum Talent
 {
-    Painting,
-    Dancing,
-    Magic,
-    Brain_Control
+    GuidePlayer,
 }
 
 public enum Personality
@@ -25,7 +23,8 @@ public enum Personality
     Social,
     Political,
     Opportunist,
-    Artistic
+    Artistic,
+    Speechless,
 }
 
 public class NpcInfo : MonoBehaviour

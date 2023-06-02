@@ -8,7 +8,7 @@ using System.Linq;
 public class VoiceRecognizer : MonoBehaviour
 {
     public DesaturateController dc;
-
+    public OpenAI.Whisper whisper;
     KeywordRecognizer keywordRecognizer;
     Dictionary<string,Action> keywords = new Dictionary<string, Action>();
 
@@ -18,7 +18,7 @@ public class VoiceRecognizer : MonoBehaviour
         //Create keywords for keyword recognizer
         keywords.Add("Stop", dc.PauseTime);
         keywords.Add("Resume", dc.ResumeTime);
-
+        keywords.Add("HI",whisper.VoiceControlStartRecord);
         keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray(),ConfidenceLevel.Low);
         keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
         keywordRecognizer.Start();

@@ -4,13 +4,13 @@ using UnityEngine.UI;
 using System.Threading;
 using System.Collections.Generic;
 using UnityEngine.Events;
-
+using Luminosity.IO;
 namespace OpenAI
 {
     public class ChatTest : MonoBehaviour
     {
         [SerializeField] private InputField inputField;
-        [SerializeField] private Button button;
+       // [SerializeField] private Button button;
         [SerializeField] private ScrollRect scroll;
         
         [SerializeField] private RectTransform sent;
@@ -49,12 +49,12 @@ namespace OpenAI
                     "The following info is the info about the game world: \n" +
                     worldInfo.GetPrompt() +
                     "The following info is the info about the NPC: \n" +
-                    npcInfo.GetPrompt()
+                    npcInfo.GetPrompt() 
             };
             
             messages.Add(message);
             
-            button.onClick.AddListener(SendReply);
+            //button.onClick.AddListener(SendReply);
         }
         
         private RectTransform AppendMessage(ChatMessage message)
@@ -82,13 +82,14 @@ namespace OpenAI
             return item;
         }
 
-        private void SendReply()
+        public void SendReply()
         {
             SendReply(inputField.text);
         }
 
         public void SendReply(string input)
         {
+            input = "HI, My name is CIndy Can you tell me a story";
             var message = new ChatMessage()
             {
                 Role = "user",
@@ -165,6 +166,11 @@ namespace OpenAI
         {
             npcDialog.Recover();
             messages.Clear();
+        }
+        void Update(){
+             if(InputManager.GetButtonDown("Send")){
+                SendReply();
+            }
         }
     }
 }
