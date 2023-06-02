@@ -40,14 +40,15 @@ public class player_weapon : MonoBehaviour
 {
     public GameObject particle;
     public GameObject Base, Tip;
+    public Player_interface status;
+    public bool sweaping = false, swapeDone = false;
     private Delauny_Triangulation DT;
     private Vector3 _base, _tip;
     private Vector3 pos;
     private Vector3 moveVel;
-    private float prevX, prevY;
-    private bool sweaping = false, swapeDone = false;
-    private Quaternion desDeg;
     private Vector3 sweapNormal;
+    private float prevX, prevY;
+    private Quaternion desDeg;
     public void OnTriggerEnter(Collider other)
     {
         if(other.GetComponentInParent<sliceable>() == null || other.GetComponentInParent<sliceable>().life_time < 1 || !other.GetComponentInParent<sliceable>().act) return;
@@ -90,6 +91,10 @@ public class player_weapon : MonoBehaviour
         float xAxis = InputManager.mousePosition.x;
         float yAxis = InputManager.mousePosition.y;
         float zAxis = 0.4f;
+
+        if(status.iFrame > 0) 
+            swapeDone = false;
+
         if(InputManager.GetButton("Slash")){
             transform.localPosition = new Vector3(Mathf.Min(Mathf.Max(xAxis, 0), Screen.width) / Screen.width - 0.5f, Mathf.Min(Mathf.Max(yAxis, 0), Screen.height) / Screen.height - 0.5f, zAxis);
             if(!swapeDone){
@@ -108,9 +113,11 @@ public class player_weapon : MonoBehaviour
             //Debug.DrawRay(transform.position, sweapNormal, Color.blue);
             //Debug.Log(desDeg.eulerAngles);
             if(transform.localRotation != desDeg){
+                GetComponent<BoxCollider>().enabled = true;
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 25f * Time.deltaTime);
                 particle.SetActive(true);
             }else{
+                GetComponent<BoxCollider>().enabled = false;
                 swapeDone = false;
                 sweaping = false;
                 particle.SetActive(false);
@@ -140,17 +147,6 @@ public class player_weapon : MonoBehaviour
         return Vector3.Cross(side1, side2);
     }
 
-    /*private uint Lshift(uint a, int n){
-        int nn = 32 - n;
-        return (a << n) | (a >> nn);
-    }
-
-    private uint hash(Vector3 a){
-        uint x = unchecked((uint)(a.x*1000));
-        uint y = unchecked((uint)(a.y*1000));
-        uint z = unchecked((uint)(a.z*1000));
-        return Lshift(x, 20) ^ Lshift(y, 10) ^ Lshift(z, 0);
-    }*/
     private string hash(Vector3 a){
         string s = a.x.ToString("F3")+" "+ a.y.ToString("F3") + " " + a.z.ToString("F3");
         return s;
@@ -347,8 +343,10 @@ public class player_weapon : MonoBehaviour
             childtime.IsStopped = parenttime.IsStopped;
 
             obj.AddComponent<sliceable>();
+            obj.AddComponent<life_time>();
             obj.AddComponent<MeshFilter>();
             obj.AddComponent<MeshRenderer>();
+
             Material[] origin_met;
 
             if(origin.GetComponent<MeshRenderer>() != null) origin_met = origin.GetComponentInChildren<MeshRenderer>().materials;

@@ -12,6 +12,7 @@ using Luminosity.IO;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Player_interface player;
     public float moveSpeed;
     public float airSpeedMult;
     public float runSpeedMult;
@@ -105,6 +106,8 @@ public class PlayerMovement : MonoBehaviour
         //非玩家傳送則不需要改變相機
         //isPlayer = true;
         //isTransport= false;
+
+        player = transform.GetComponent<Player_interface>();
 
         float mass = rigidbody.mass;
         moveSpeed *= mass;
@@ -211,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
                 if (onGround && !crouching && runPressTime > 0 && Time.time >= runPressTime + buttonPressTime)
                 {
                     running = !running;
-                    Debug.Log("Player Movement: run " + running);
+                    //Debug.Log("Player Movement: run " + running);
                     if (sliding)
                     {
                         SlideReset();
@@ -434,8 +437,8 @@ public class PlayerMovement : MonoBehaviour
                 {
                     pos = rotation * new Vector3((r - 0.1f) * side, h + i * r, 0f);
                     igPos = igRot * pos;
-                    Debug.DrawRay(transform.position + pos, transform.right * side * 0.2f, Color.green, 0.5f);
-                    Debug.DrawRay(transform.position + igPos, igRot * transform.right * side * 0.2f, Color.red, 0.5f);
+                    //Debug.DrawRay(transform.position + pos, transform.right * side * 0.2f, Color.green, 0.5f);
+                    //Debug.DrawRay(transform.position + igPos, igRot * transform.right * side * 0.2f, Color.red, 0.5f);
                     if (Physics.Raycast(transform.position + igPos, igRot * transform.right * side, 0.2f, ignoreLayer, QueryTriggerInteraction.Ignore))
                     {
                         wallSide = 0;
@@ -578,6 +581,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
+        if(player.Stamina < 30) return;
+        player.costStamina(30);
+
         Camera cam = Camera.main;
         ignoreWall = detectWall;
         canDash = false;

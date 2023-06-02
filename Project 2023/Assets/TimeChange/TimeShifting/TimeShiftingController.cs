@@ -83,7 +83,6 @@ public class TimeShiftingController : MonoBehaviour {
         mat = blitFeature.Material;
         mat.SetTexture("_NoiseTex", NoiseTexture);
         baseColor = new Color(1, 1, 1, 1);
-        CanChange = false;
     }
 
     private void Update() {

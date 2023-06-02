@@ -26,7 +26,6 @@ public class DesaturateController : MonoBehaviour {
 
     private void Start()
     {
-        CanStop = false;
         feature = rendererData.rendererFeatures.Where((f) => f.name == featureName).FirstOrDefault();
         var blitFeature = feature as BlitMaterialFeature;
         mat = blitFeature.Material;
