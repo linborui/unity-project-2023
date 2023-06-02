@@ -7,7 +7,6 @@ using Luminosity.IO;
 
 [RequireComponent(typeof(Transform))]
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
 
 public class PlayerMovement : MonoBehaviour
@@ -72,10 +71,10 @@ public class PlayerMovement : MonoBehaviour
     private MotionBlur mb;
     bool canDash;
     float dashStartTime;
+    float maxSp;
     Vector3 dashDirection;
 
     new Rigidbody rigidbody;
-    Animator animator;
     CapsuleCollider capsuleCollider;
 
     Vector3 savePoint;
@@ -94,7 +93,6 @@ public class PlayerMovement : MonoBehaviour
 
         rigidbody = GetComponent<Rigidbody>();
         rigidbody.freezeRotation = true;
-        animator = GetComponent<Animator>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         colliderHeight = capsuleCollider.height;
         jumpCount = 0;
@@ -113,6 +111,8 @@ public class PlayerMovement : MonoBehaviour
         moveSpeed *= mass;
         jumpForce *= mass;
         dashSpeed *= mass;
+
+        maxSp = moveSpeed;
     }
 
     void Update()
@@ -122,9 +122,6 @@ public class PlayerMovement : MonoBehaviour
         Input();
         speedControl();
         Drag();
-        AnimatorUpdate();
-        //Add in Port
-        // Attack();
     }
 
     void FixedUpdate()
@@ -188,6 +185,13 @@ public class PlayerMovement : MonoBehaviour
         verticalInput = InputManager.GetAxisRaw("Vertical");
         horizontalInput = InputManager.GetAxisRaw("Horizontal");
 
+        if(InputManager.GetButton("Heal"))
+        {
+            player.Healing();
+            moveSpeed = maxSp / 4;
+        }else{
+            moveSpeed = maxSp;
+        }
         if (verticalInput == 0 && horizontalInput == 0)
         {
             moving = false;
@@ -466,14 +470,6 @@ public class PlayerMovement : MonoBehaviour
         }
         wallSide = 0;
         return false;
-    }
-
-    void AnimatorUpdate()
-    {
-        animator.SetBool("OnGround", onGround);
-        animator.SetBool("Move", moving);
-        animator.SetBool("Run", running);
-        animator.SetBool("Jump", jumping);
     }
 
     void Drag()
