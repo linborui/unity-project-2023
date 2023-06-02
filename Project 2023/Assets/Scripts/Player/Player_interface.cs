@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 
 public class Player_interface : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Player_interface : MonoBehaviour
     public float toxicDmg = 0;
     public bool dead = false;
     public bool UI = false;
+    public Material mat;
+
     public Image Health;
     public Image Energy;
 
@@ -31,6 +34,7 @@ public class Player_interface : MonoBehaviour
     {
         Stamina -= val;
     }
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -7,27 +7,7 @@ public class Skeleton_agent : Training_scripts
 {
     public player_weapon Player_weapon;
     public Agent_weapon Agent_weapon;
-
-    void Start() {
-        GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Player");
-        float closestDistance = Mathf.Infinity;
-
-        foreach (GameObject player in objectsWithTag)
-        {
-            float distance = Vector3.Distance(transform.position, player.transform.position);
-
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                Player = player;
-            }
-        }
-        Player_status = Player.GetComponentInChildren<Player_interface>();
-        
-        Player_weapon = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<player_weapon>();
-        if(isAgent) Agent_weapon = Player.GetComponentInChildren<Agent_weapon>();
-    }
-
+    
     public override void Initialize()
     {
         GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Player");

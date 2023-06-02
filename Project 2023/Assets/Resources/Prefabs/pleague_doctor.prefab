@@ -2829,6 +2829,7 @@ GameObject:
   - component: {fileID: 2365954417003370167}
   - component: {fileID: 8073227833813552926}
   - component: {fileID: 5552745164208701071}
+  - component: {fileID: 4907225236046166701}
   m_Layer: 0
   m_Name: pleague_doctor
   m_TagString: Enemy
@@ -2975,11 +2976,27 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+  Reset: 0
+  isAgent: 0
   Ai_scripts: {fileID: 6954370169370610435}
   Player: {fileID: 0}
   Player_status: {fileID: 0}
-  Reset: 0
   Player_weapon: {fileID: 0}
+  Agent_weapon: {fileID: 0}
+--- !u!114 &4907225236046166701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801177021414297049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906cf3fd207e5450784f73a2d4b57b4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidBody: {fileID: 2458983336713601494}
+  isPlayer: 0
 --- !u!1 &8849935306466903209
 GameObject:
   m_ObjectHideFlags: 0
@@ -3296,6 +3313,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8f32becf66ba9d45ad4c2b3cbc04f68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &2458983336713601494 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 6621831785528556223, guid: 2702b2dd369768a43a39e6c76dc602f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 8774534613444508521}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5735247952306015011 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3914429748746793034, guid: 2702b2dd369768a43a39e6c76dc602f1,

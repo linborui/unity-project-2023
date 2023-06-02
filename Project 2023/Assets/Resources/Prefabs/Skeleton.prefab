@@ -1590,6 +1590,7 @@ GameObject:
   - component: {fileID: 2933994511345871175}
   - component: {fileID: 8008333297673951441}
   - component: {fileID: 1209344684}
+  - component: {fileID: 1538865063}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Enemy
@@ -1734,12 +1735,27 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+  Reset: 0
+  isAgent: 0
   Ai_scripts: {fileID: 3050576069606671649}
   Player: {fileID: 0}
   Player_status: {fileID: 0}
-  Reset: 0
   Player_weapon: {fileID: 0}
-  Player_control: {fileID: 0}
+  Agent_weapon: {fileID: 0}
+--- !u!114 &1538865063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4015116227042356105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906cf3fd207e5450784f73a2d4b57b4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidBody: {fileID: 881734327}
+  isPlayer: 0
 --- !u!1 &4107244394149510425
 GameObject:
   m_ObjectHideFlags: 0
