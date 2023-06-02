@@ -123,8 +123,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6544527061954728619}
   - {fileID: 7392410129054230488}
+  - {fileID: 6544527061954728619}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 6729468980666913788}
   - component: {fileID: 7197578328349281462}
   - component: {fileID: 3633703607618375983}
+  - component: {fileID: 8741780735498023640}
   m_Layer: 3
   m_Name: Weapon
   m_TagString: Weapon
@@ -242,9 +243,23 @@ MonoBehaviour:
   particle: {fileID: 8729577191491090748}
   Base: {fileID: 76223364698486067}
   Tip: {fileID: 2378302467287441067}
-  status: {fileID: 7059193665618345966}
+  status: {fileID: 2621271659449623547}
   sweaping: 0
   swapeDone: 0
+--- !u!114 &8741780735498023640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583225417614313514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4193d3fee8d10694c89da795eb19b206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnemy: 0
+  dmg: 30
 --- !u!1 &753431998473766385
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,13 +939,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2867450016342659631}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.84, z: 0}
+  m_LocalPosition: {x: 0, y: 1.8399999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8085251567591147985}
   m_Father: {fileID: 451023295792604548}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2867450015165050292
 Camera:
@@ -1083,7 +1098,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2867450016342659631}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7350327fd0abfdf458690d6fbe1d021b, type: 3}
   m_Name: 
@@ -1577,10 +1592,10 @@ GameObject:
   - component: {fileID: 4472461553617035905}
   - component: {fileID: 3151526716333109666}
   - component: {fileID: 7968252035271915323}
-  - component: {fileID: 7059193665618345966}
+  - component: {fileID: 2621271659449623547}
   m_Layer: 3
   m_Name: body
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1602,7 +1617,7 @@ Transform:
   - {fileID: 5674959379909452103}
   - {fileID: 2304709231899533214}
   m_Father: {fileID: 451023295792604548}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2427492469385169838
 Animator:
@@ -1699,7 +1714,7 @@ MonoBehaviour:
   Intensity: 0.3
   Clamp: 0.05
   v: {fileID: 0}
---- !u!114 &7059193665618345966
+--- !u!114 &2621271659449623547
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1720,7 +1735,7 @@ MonoBehaviour:
   toxicFrame: 0
   toxicDmg: 0
   dead: 0
-  UI: 1
+  UI: 0
   Health: {fileID: 0}
   Energy: {fileID: 0}
 --- !u!1 &5187943220362846422

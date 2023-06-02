@@ -5,10 +5,11 @@ using Unity.MLAgents.Actuators;
 
 public class Training_scripts : Agent
 {
+    public bool Reset = false;
+    public bool isAgent = false;
     public AI Ai_scripts;
     public GameObject Player;
     public Player_interface Player_status;
-    public bool Reset = false;
     protected int LastAction = 0;
     protected float desicion_Delay;
     protected float distance;

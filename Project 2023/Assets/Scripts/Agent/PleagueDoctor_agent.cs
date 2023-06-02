@@ -5,19 +5,33 @@ using Unity.MLAgents.Actuators;
 
 public class PleagueDoctor_agent : Training_scripts
 {
-    //public Agent_weapon Player_weapon;
     public player_weapon Player_weapon;
-    //public Player_agent Player_control;
+    public Agent_weapon Agent_weapon;
 
     public override void Initialize()
     {
-        Player_status = Player.GetComponent<Player_interface>();
+        GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Player");
+        float closestDistance = Mathf.Infinity;
+
+        foreach (GameObject player in objectsWithTag)
+        {
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                Player = player;
+            }
+        }
+        Player_status = Player.GetComponentInChildren<Player_interface>();
+
+        Player_weapon = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<player_weapon>();
+        if(isAgent) Agent_weapon = Player.GetComponentInChildren<Agent_weapon>();
     }
     public override void OnEpisodeBegin()
     {
-        Player_status = Player.GetComponent<Player_interface>();
         Ai_scripts.Reset();
-        //Player_control.Reset();
+        if(isAgent) Player.GetComponent<Player_agent>().Reset();
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -35,7 +49,8 @@ public class PleagueDoctor_agent : Training_scripts
         sensor.AddObservation(Ai_scripts.Stamina);
         //13 values now
         //sensor.AddObservation(Player.transform.position); //3 value
-        sensor.AddObservation(Player_weapon.sweaping);
+        if(isAgent) sensor.AddObservation(Agent_weapon.sweaping);
+        else sensor.AddObservation(Player_weapon.sweaping);
         sensor.AddObservation(Player_status.HP);
         sensor.AddObservation(Player_status.Stamina);
         sensor.AddObservation(Player_status.iFrame);
