@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Luminosity.IO;
 
 public class TimeShiftingController : MonoBehaviour {
+    public bool ChangeEnvironment = false;
     [SerializeField] private UniversalRendererData rendererData = null;
     [SerializeField] private string featureName = null;
     [SerializeField] private float transitionPeriod = 1;
@@ -137,9 +138,13 @@ public class TimeShiftingController : MonoBehaviour {
                     cameras[i].cullingMask |= (1 << pastlayer);
                     cameras[i].cullingMask &= ~(1 << presentlayer);
                 }
+
+                if(ChangeEnvironment){
                 ChangeSky(PastSky, PastFogColor, pastlight, pastVolume);
                 presentlight.SetActive(false);
                 presentVolume.SetActive(false);
+                }
+
                 Physics.IgnoreLayerCollision(playerlayer, pastlayer, false); Physics.IgnoreLayerCollision(playerlayer, presentlayer, true);
                 PastBool = 2;
             }  //加pastlayer, 減presentlayer
@@ -155,9 +160,11 @@ public class TimeShiftingController : MonoBehaviour {
                     cameras[i].cullingMask &= ~(1 << pastlayer);
                     cameras[i].cullingMask |= (1 << presentlayer);
                 }
+                if(ChangeEnvironment){
                 ChangeSky(PresentSky, PresentFogColor, presentlight, presentVolume);
                 pastlight.SetActive(false);
                 pastVolume.SetActive(false);
+                }
                 Physics.IgnoreLayerCollision(playerlayer, pastlayer, true); Physics.IgnoreLayerCollision(playerlayer, presentlayer, false);
                 PastBool = 0;
             }//減pastlayer, 加presentlayer
