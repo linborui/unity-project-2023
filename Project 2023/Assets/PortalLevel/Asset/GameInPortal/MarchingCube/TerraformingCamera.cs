@@ -43,9 +43,9 @@ public class TerraformingCamera : MonoBehaviour
 			hitChunk.EditWeights(_hitPoint, BrushSize, add);
 		}
 	}
-	
+	/*
 	private void OnDrawGizmos() {
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawWireSphere(_hitPoint, BrushSize);
-	}
+	}*/
 }
