@@ -6,7 +6,7 @@ using TMPro;
 public class StoneManagement : MonoBehaviour
 {
     public TextMeshProUGUI stoneNum;
-    private int stonenum = 0;
+    private int stonenum = 150000;
     void Awake(){
         stoneNum.text = stonenum.ToString();
     }

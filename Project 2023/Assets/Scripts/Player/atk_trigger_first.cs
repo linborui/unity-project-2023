@@ -13,7 +13,10 @@ public class atk_trigger_first : MonoBehaviour
         if (!isEnemy && other.GetComponentInParent<AI>())
         {
             Vector3 point = other.ClosestPoint(transform.position);
-            other.GetComponentInParent<AI>().takeDamage(dmg,point);
+            if(other.GetComponentInParent<Rockman>() != null) 
+                other.GetComponentInParent<AI>().takeDamage(10 * dmg,point);
+            else
+                other.GetComponentInParent<AI>().takeDamage(dmg,point);
         }
         else if (isEnemy && other.GetComponentInParent<Player_interface>())
         {

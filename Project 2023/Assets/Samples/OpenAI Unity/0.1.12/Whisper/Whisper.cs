@@ -7,6 +7,7 @@ namespace OpenAI
 {
     public class Whisper : MonoBehaviour
     {
+        [SerializeField] private Button recordButton;
         [SerializeField] private Dropdown dropdown;
         [SerializeField] private ChatTest chatTest;
         [SerializeField] private Image progress;
@@ -25,7 +26,7 @@ namespace OpenAI
             {
                 dropdown.options.Add(new Dropdown.OptionData(device));
             }
-          
+            recordButton.onClick.AddListener(StartRecording);
             dropdown.onValueChanged.AddListener(ChangeMicrophone);
             
             var index = PlayerPrefs.GetInt("user-mic-device-index");
@@ -52,7 +53,6 @@ namespace OpenAI
                     // File = Application.persistentDataPath + "/" + fileName,
                     Model = "whisper-1",
                     Language = "en"
-                    //Language = "zh"
                 };
                 var res = await openai.CreateAudioTranscription(req);
 
@@ -63,12 +63,12 @@ namespace OpenAI
                 Debug.Log("Start recording...");
                 isRecording = true;
     
-                var index = PlayerPrefs.GetInt("user-mic-device-index");
+                var index = 0;//PlayerPrefs.GetInt("user-mic-device-index");
                 clip = Microphone.Start(dropdown.options[index].text, false, duration, 44100);
             }
         }
         
-        private void Update()                        // Record start in Next
+        private void Update()
         {
             if(InputManager.GetButtonDown("Next")){
                 StartRecording();
@@ -85,9 +85,6 @@ namespace OpenAI
                 progress.fillAmount = 0;
                 StartRecording();
             }
-        }
-        public void VoiceControlStartRecord(){
-            StartRecording();
         }
     }
 }

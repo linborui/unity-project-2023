@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RandomFlyer : MonoBehaviour,IEndGameObserver
+public class RandomFlyer : MonoBehaviour
 {
     public PortalPlaceSet Setting;
     public float speed = 10f;
@@ -37,18 +37,12 @@ public class RandomFlyer : MonoBehaviour,IEndGameObserver
         //targetHeight = Random.Range(minHeight, maxHeight);
         //targetPoint.y = targetHeight;
         targetDirection = (targetPoint - transform.position).normalized;
-
-        GameManager.Instance.AddObserver(this);
     }
     void OnEnable(){
         InvokeRepeating("Counting",1f,1f);
     }
     void Counting(){
         countsec--;
-    }
-    void OnDisable(){//銷毀時調用
-        if(!GameManager.isInitialized) return;
-        GameManager.Instance.RemoveObserver(this);
     }
     void count(){
         if (targetPoint == endPoint)

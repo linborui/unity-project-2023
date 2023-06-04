@@ -1,6 +1,6 @@
 default_settings: null
 behaviors:
-  Knight:
+  rockman:
     trainer_type: ppo
     hyperparameters:
       batch_size: 2024
@@ -21,8 +21,8 @@ behaviors:
         gamma: 0.995
         strength: 1.0
     keep_checkpoints: 10
-    max_steps: 1000000
-    checkpoint_interval: 50000
+    max_steps: 500000
+    checkpoint_interval: 250000
     time_horizon: 1000
     summary_freq: 10000
-    init_path: #.\results\rockman\rockman\checkpoint.pt
+    init_path: .\results\rockman\rockman\checkpoint.pt

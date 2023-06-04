@@ -62,6 +62,7 @@ public class PleagueDoctor_agent : Training_scripts
     public override void OnActionReceived(ActionBuffers vectorAction)
     {
         if(desicion_Delay == 0){
+            Ai_scripts.desx = Mathf.Abs(vectorAction.ContinuousActions[0]);
             if(distance < 20f) Ai_scripts.desy = vectorAction.ContinuousActions[1] >= 0 ? Mathf.Max(vectorAction.ContinuousActions[1], 0.3f) : Mathf.Min(vectorAction.ContinuousActions[1], -0.3f);
             else Ai_scripts.desy = Mathf.Abs(vectorAction.ContinuousActions[1]);
 

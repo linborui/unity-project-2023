@@ -1,0 +1,47 @@
+{
+    "rockman": {
+        "checkpoints": [
+            {
+                "steps": 249830,
+                "file_path": "results\\rockman\\rockman\\rockman-249830.onnx",
+                "reward": -182.21874186197917,
+                "creation_time": 1685885750.1738956,
+                "auxillary_file_paths": [
+                    "results\\rockman\\rockman\\rockman-249830.pt"
+                ]
+            },
+            {
+                "steps": 499986,
+                "file_path": "results\\rockman\\rockman\\rockman-499986.onnx",
+                "reward": -672.5324932861328,
+                "creation_time": 1685885927.697098,
+                "auxillary_file_paths": [
+                    "results\\rockman\\rockman\\rockman-499986.pt"
+                ]
+            },
+            {
+                "steps": 500193,
+                "file_path": "results\\rockman\\rockman\\rockman-500193.onnx",
+                "reward": -556.9897771982046,
+                "creation_time": 1685885927.8115535,
+                "auxillary_file_paths": [
+                    "results\\rockman\\rockman\\rockman-500193.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500193,
+            "file_path": "results\\rockman\\rockman.onnx",
+            "reward": -556.9897771982046,
+            "creation_time": 1685885927.8115535,
+            "auxillary_file_paths": [
+                "results\\rockman\\rockman\\rockman-500193.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu118"
+    }
+}

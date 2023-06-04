@@ -4,29 +4,34 @@ using UnityEngine.InputSystem;
 
 public class NpcDialog : MonoBehaviour
 {
-    //[SerializeField] private GameObject mainCamera;
     [SerializeField] private GameObject toActivate;
 
-    private Transform avatar;
+    //[SerializeField] private Transform standingPoint;
+
+    //private Transform avatar;
     
     private async void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("PlayerCome IN");
-           // mainCamera.SetActive(false);
-           toActivate.SetActive(true);
+            
+
+            // disable main cam, enable dialog cam
+            toActivate.SetActive(true);
+            Debug.Log("Activate");
             // dısplay cursor
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+            //Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.None;
         }
     }
 
     public void Recover()
     {
+        //avatar.GetComponent<PlayerInput>().enabled = true;
+
         toActivate.SetActive(false);
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 }

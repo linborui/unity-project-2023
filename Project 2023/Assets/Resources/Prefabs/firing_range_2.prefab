@@ -52,10 +52,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   judge: {fileID: 3669580694367315849}
-  ai: {fileID: 0}
+  ai: {fileID: 7478711867724004256}
   judge_status: {fileID: 9015396082672145581}
-  ai_status: {fileID: 0}
-  scripts: {fileID: 0}
+  ai_status: {fileID: 1306683028}
+  scripts: {fileID: 1306683032}
   period: 60
   ai_hp: 0
   judge_hp: 0
@@ -546,6 +546,121 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &5219592452450928938
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6360791701727597697}
+    m_Modifications:
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3433448806426489482, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: m_Name
+      value: Rockman
+      objectReference: {fileID: 0}
+    - target: {fileID: 5219592451589124018, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: Player
+      value: 
+      objectReference: {fileID: 3669580694367315849}
+    - target: {fileID: 5219592451589124018, guid: 7347c17cb1eb42841a6633dc24b937a6,
+        type: 3}
+      propertyPath: Player_status
+      value: 
+      objectReference: {fileID: 9015396082672145581}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7347c17cb1eb42841a6633dc24b937a6, type: 3}
+--- !u!114 &1306683028 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5219592451589124030, guid: 7347c17cb1eb42841a6633dc24b937a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5219592452450928938}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478711867724004256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c4b3b39c06a3344e87251f4972f60ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1306683032 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5219592451589124018, guid: 7347c17cb1eb42841a6633dc24b937a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5219592452450928938}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478711867724004256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24e6eb7e30dee64f8d53c5dbbdc94be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &7478711867724004256 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3433448806426489482, guid: 7347c17cb1eb42841a6633dc24b937a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5219592452450928938}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7478711867724004258 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3433448806426489480, guid: 7347c17cb1eb42841a6633dc24b937a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5219592452450928938}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6360791701629319116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -556,7 +671,7 @@ PrefabInstance:
     - target: {fileID: 1450736411, guid: 485b77b7123ec6c4d97ca8a32b73aa29, type: 3}
       propertyPath: Aim
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7478711867724004256}
     - target: {fileID: 1450736411, guid: 485b77b7123ec6c4d97ca8a32b73aa29, type: 3}
       propertyPath: Off
       value: 0
@@ -698,211 +813,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 645ac75d5389a0846a9a806768f562fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &7478711866648747224
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 6360791701727597697}
-    m_Modifications:
-    - target: {fileID: 1077356408, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_Name
-      value: Rockman
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356409, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: e20f0a7f55093764ca5c39b313d981e4, type: 2}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 10.309251
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -6.3876576
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c6cfc32748fb5004aa11a1be074b5c58, type: 3}
---- !u!1 &7478711867724004256 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1077356408, guid: c6cfc32748fb5004aa11a1be074b5c58,
-    type: 3}
-  m_PrefabInstance: {fileID: 7478711866648747224}
-  m_PrefabAsset: {fileID: 0}
---- !u!143 &1306683033
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7478711867724004256}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1306683028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7478711867724004256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c4b3b39c06a3344e87251f4972f60ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHP: 100
-  HP: 100
-  MaxStamina: 100
-  Stamina: 100
-  StaminaSp: 10
-  sp: 1.5
-  desx: 0
-  desy: 0
-  player_dis: 0
-  smoothTime: 0.1
-  percent: 0
-  iFrame: 0
-  state: 0
-  atkState: -1
-  acting: 0
-  deathWay: 2
-  dead_rand: 0
-  awareness: 0
-  react: 0
-  dodge: 0
-  parry: 0
-  spin: 1
-  dead: 0
-  dis: {x: 0, y: 0}
-  fsm: {fileID: 7478711867724004257}
-  controller: {fileID: 1306683033}
-  bloodEffect: {fileID: 0}
-  Aim: {fileID: 0}
-  targetAngle: 0
-  L: {fileID: 0}
-  R: {fileID: 0}
---- !u!114 &1306683029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7478711867724004256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BrainParameters:
-    VectorObservationSize: 20
-    NumStackedVectorObservations: 5
-    m_ActionSpec:
-      m_NumContinuousActions: 3
-      BranchSizes: 
-    VectorActionSize: 03000000
-    VectorActionDescriptions: []
-    VectorActionSpaceType: 1
-    hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
-  m_InferenceDevice: 1
-  m_BehaviorType: 0
-  m_BehaviorName: rockman
-  TeamId: 0
-  m_UseChildSensors: 1
-  m_UseChildActuators: 1
-  m_DeterministicInference: 0
-  m_ObservableAttributeHandling: 0
---- !u!114 &1306683031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7478711867724004256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DecisionPeriod: 5
-  TakeActionsBetweenDecisions: 1
---- !u!114 &1306683032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7478711867724004256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d24e6eb7e30dee64f8d53c5dbbdc94be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
-  Reset: 0
-  isAgent: 0
-  Ai_scripts: {fileID: 1306683028}
-  Player: {fileID: 0}
-  Player_status: {fileID: 0}
-  Player_weapon: {fileID: 0}
-  Agent_weapon: {fileID: 0}
---- !u!95 &7478711867724004257 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1077356409, guid: c6cfc32748fb5004aa11a1be074b5c58,
-    type: 3}
-  m_PrefabInstance: {fileID: 7478711866648747224}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7478711867724004258 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1077356410, guid: c6cfc32748fb5004aa11a1be074b5c58,
-    type: 3}
-  m_PrefabInstance: {fileID: 7478711866648747224}
-  m_PrefabAsset: {fileID: 0}

@@ -14,7 +14,7 @@ public class TextToSpeech : MonoBehaviour
     
     public async void MakeAudioRequest(string message)
     {
-        var credentials = new BasicAWSCredentials("APIKEY", "APIKEY");
+        var credentials = new BasicAWSCredentials("AKIAX2BUZSNMOSUCYO2X", "hOkAGYVUsYbpB0cWuUuiGik8RZrlFR8P7PiPmNoA");
         var client = new AmazonPollyClient(credentials, RegionEndpoint.EUCentral1);
 
         var request = new SynthesizeSpeechRequest()

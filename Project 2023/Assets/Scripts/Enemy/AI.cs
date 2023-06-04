@@ -10,6 +10,7 @@ public class AI : MonoBehaviour
     public float Stamina = 0;
     public float StaminaSp = 10f;
     public float sp = 1.5f;
+    public float awareDis = 30f;
     [Range(-1, 1)]
     public float desx, desy;
     public float player_dis;
@@ -105,10 +106,13 @@ public class AI : MonoBehaviour
     {
         Vel =new Vector3(0, 0, 0);
         dis = new Vector2(Aim.transform.position.x - transform.position.x, Aim.transform.position.z - transform.position.z);
-        player_dis = Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
         percent = fsm.GetCurrentAnimatorStateInfo(0).normalizedTime % 1;
-
-        if(HP <= 0) {
+        player_dis = Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
+        float angleDiff = Mathf.Abs(transform.eulerAngles.y - Vector3.SignedAngle(Aim.transform.position - transform.position, transform.forward, Vector3.up)) % 180;
+        //Debug.Log("angleDiff: " + angleDiff);
+        if (angleDiff < 60 && player_dis < awareDis)
+            awareness = true;
+        if (HP <= 0) {
             dead = true;
         }else if(HP <= 30){
             GetComponentInChildren<sliceable>().act = true;
