@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1685826327",
+        "python_version": "3.9.10 (tags/v3.9.10:f2f3f53, Jan 17 2022, 15:14:21) [MSC v.1929 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python39\\Scripts\\mlagents-learn .\\Assets\\Train_datas\\rockman\\rockman.yaml --run-id=rockman --force",
+        "mlagents_version": "0.30.0",
+        "mlagents_envs_version": "0.30.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.0.1+cu118",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1685826389"
+    },
+    "total": 61.511463899999995,
+    "count": 1,
+    "self": 0.003019399999992345,
+    "children": {
+        "run_training.setup": {
+            "total": 0.07148719999999997,
+            "count": 1,
+            "self": 0.07148719999999997
+        },
+        "TrainerController.start_learning": {
+            "total": 61.4369573,
+            "count": 1,
+            "self": 7.090000000431473e-05,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 61.4368717,
+                    "count": 1,
+                    "self": 61.4368717
+                },
+                "TrainerController._save_models": {
+                    "total": 1.4700000001255376e-05,
+                    "count": 1,
+                    "self": 1.4700000001255376e-05
+                }
+            }
+        }
+    }
+}

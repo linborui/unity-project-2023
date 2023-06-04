@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: cast0
+  m_Name: cast
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -358,13 +358,13 @@ AnimatorStateMachine:
     m_Position: {x: 490, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7121926904571422252}
-    m_Position: {x: 240, y: -70, z: 0}
+    m_Position: {x: 120, y: -70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4026459153462565311}
-    m_Position: {x: 240, y: -20, z: 0}
+    m_Position: {x: 130, y: -10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5495137122578471982}
-    m_Position: {x: 240, y: -120, z: 0}
+    m_Position: {x: 20, y: -120, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

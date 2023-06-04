@@ -74,23 +74,21 @@ public class Rockman_agent : Training_scripts
         distance =  Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
         
         if(Ai_scripts.iFrame == 0){
-            int action = Mathf.Clamp((int)Mathf.Round(vectorAction.ContinuousActions[2] * 10), 0, 5);
+            int action = Mathf.Clamp((int)Mathf.Round(vectorAction.ContinuousActions[2] * 10), 0, 4);
 
-            if(distance > 20f) {
-                action = 0;
+            if(distance > 20f) { //距離大於20 就會是負的
+                action = 0;                 // movement
                 AddReward(-distance);
             }
 
-            if(distance <= 2 && action > 1 && action < 3)
+            if(distance <= 2 && action ==2) //拳頭
                 AddReward(20);
-            if(distance < 6 && action == 5)
+            if(distance < 6 && action == 1) //吼叫
+                AddReward(20); 
+            if(distance > 3 && action == 3) //丟石頭
                 AddReward(20);
-            if(distance > 3 && action == 4)
-                AddReward(20);
-            if(Player_weapon.sweaping && action == 1)
-                AddReward(60);
 
-            if(distance > 6 && action > 1 && action < 4) action = 4;
+            if(distance > 6 && action > 1 && action < 4) action = 3;
 
             Ai_scripts.state = action;
         } 
