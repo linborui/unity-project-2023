@@ -581,7 +581,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
-        if (player.Stamina < 30) return;
+        if(player.Stamina < 30) return;
         player.costStamina(30);
 
         Camera cam = Camera.main;
