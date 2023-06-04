@@ -1,0 +1,47 @@
+{
+    "pleague_doctor": {
+        "checkpoints": [
+            {
+                "steps": 249838,
+                "file_path": "results\\pleague_doctor\\pleague_doctor\\pleague_doctor-249838.onnx",
+                "reward": 12475.275499131945,
+                "creation_time": 1685561081.0429788,
+                "auxillary_file_paths": [
+                    "results\\pleague_doctor\\pleague_doctor\\pleague_doctor-249838.pt"
+                ]
+            },
+            {
+                "steps": 499948,
+                "file_path": "results\\pleague_doctor\\pleague_doctor\\pleague_doctor-499948.onnx",
+                "reward": 25114.614471435547,
+                "creation_time": 1685561666.8956783,
+                "auxillary_file_paths": [
+                    "results\\pleague_doctor\\pleague_doctor\\pleague_doctor-499948.pt"
+                ]
+            },
+            {
+                "steps": 500948,
+                "file_path": "results\\pleague_doctor\\pleague_doctor\\pleague_doctor-500948.onnx",
+                "reward": 25114.614471435547,
+                "creation_time": 1685561667.042688,
+                "auxillary_file_paths": [
+                    "results\\pleague_doctor\\pleague_doctor\\pleague_doctor-500948.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500948,
+            "file_path": "results\\pleague_doctor\\pleague_doctor.onnx",
+            "reward": 25114.614471435547,
+            "creation_time": 1685561667.042688,
+            "auxillary_file_paths": [
+                "results\\pleague_doctor\\pleague_doctor\\pleague_doctor-500948.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu118"
+    }
+}

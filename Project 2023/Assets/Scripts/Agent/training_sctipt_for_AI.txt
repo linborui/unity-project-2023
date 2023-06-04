@@ -1,0 +1,90 @@
+using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
+
+public class Training_scripts : Agent
+{
+    public AI Ai_scripts;
+    public GameObject Player;
+    public Player_interface Player_status;
+    public Player_agent Player_control;
+    public Agent_weapon Player_weapon;
+    public bool Reset = false;
+    protected int LastAction = 0;
+    protected float desicion_Delay;
+    private float distance;
+    private bool plus = false;
+    public override void Initialize()
+    {
+        Player_status = Player.GetComponent<Player_interface>();
+        Player_weapon = Player.GetComponentInChildren<Agent_weapon>();
+    }
+    public override void OnEpisodeBegin()
+    {
+        Player_status = Player.GetComponent<Player_interface>();
+        Player_weapon = Player.GetComponentInChildren<Agent_weapon>();
+        Ai_scripts.Reset();
+        Player_control.Reset();
+    }
+    public void SetPoint(int point)
+    {
+        AddReward(point);
+
+        if(Reset) {
+            Reset = false;
+            EndEpisode();
+        }
+    }
+
+    public bool not_atking(){
+        return !Ai_scripts.fsm.GetCurrentAnimatorStateInfo(0).IsName("cast0") && !Ai_scripts.fsm.GetCurrentAnimatorStateInfo(0).IsName("cast1") && !Ai_scripts.fsm.GetCurrentAnimatorStateInfo(0).IsName("sweap") && !Ai_scripts.fsm.GetCurrentAnimatorStateInfo(0).IsName("stab");
+    }
+
+    public override void CollectObservations(VectorSensor sensor)
+    {        
+        sensor.AddObservation(transform.position); //3 value
+        sensor.AddObservation(transform.eulerAngles.y);
+        sensor.AddObservation(Ai_scripts.forward.distance);
+        sensor.AddObservation(Ai_scripts.left.distance);
+        sensor.AddObservation(Ai_scripts.right.distance);
+        sensor.AddObservation(Ai_scripts.back.distance);
+        sensor.AddObservation(Ai_scripts.acting);
+        sensor.AddObservation(Ai_scripts.iFrame);
+        sensor.AddObservation(Ai_scripts.percent);
+        sensor.AddObservation(Ai_scripts.HP);
+        sensor.AddObservation(Ai_scripts.Stamina);
+        //13 values now
+        //sensor.AddObservation(Player.transform.position); //3 value
+        sensor.AddObservation(Player_weapon.sweaping);
+        sensor.AddObservation(Player_status.HP);
+        sensor.AddObservation(Player_status.Stamina);
+        sensor.AddObservation(Player_status.iFrame);
+        sensor.AddObservation(Player_status.toxicFrame);
+        sensor.AddObservation(desicion_Delay);
+        sensor.AddObservation(distance);
+        //20 values now
+    }
+    public override void OnActionReceived(ActionBuffers vectorAction)
+    {
+        if(desicion_Delay == 0){
+            Ai_scripts.desx = vectorAction.ContinuousActions[0] >= 0 ? Mathf.Max(vectorAction.ContinuousActions[0], 0.5f) : Mathf.Min(vectorAction.ContinuousActions[0], -0.3f);
+            Ai_scripts.desy = vectorAction.ContinuousActions[1] >= 0 ? Mathf.Max(vectorAction.ContinuousActions[1], 0.5f) : Mathf.Min(vectorAction.ContinuousActions[1], -0.3f);
+            desicion_Delay = desicion_Delay = Random.Range(0.15f, 0.5f);;
+        }
+
+        desicion_Delay = Mathf.Max(desicion_Delay - Time.deltaTime, 0);
+
+        Vector2 dis = new Vector2(Player.transform.position.x - transform.position.x, Player.transform.position.z - transform.position.z);
+        distance =  Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
+        
+        if(Ai_scripts.iFrame == 0 && not_atking()){
+            int action = Mathf.Clamp((int)Mathf.Round(vectorAction.ContinuousActions[2] * 10), 0, 5);
+            Ai_scripts.state = action;
+        } 
+    }
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        base.Heuristic(actionsOut);
+    }
+}

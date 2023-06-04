@@ -23,6 +23,8 @@ public class ObjectControl : MonoBehaviour
     Vector3 destination;
     DStarLite3d dStarLiteRoute;
     Queue<Vector3> objectPath;
+    bool hasPath;
+    LineRenderer lineRenderer;
 
     List<GameObject> collectedItems;
 
@@ -36,6 +38,7 @@ public class ObjectControl : MonoBehaviour
         objectState = 0;
         objectPath = null;
         collectedItems = new List<GameObject>();
+        lineRenderer = GetComponent<LineRenderer>();
         timeManager = GameObject.FindGameObjectWithTag("TimeManager");
         pastlayer = LayerMask.NameToLayer("Past");
         presentlayer = LayerMask.NameToLayer("Present");
@@ -47,11 +50,6 @@ public class ObjectControl : MonoBehaviour
         GetInput();
     }
 
-    void FixedUpdate()
-    {
-        OnHand();
-    }
-
     void GetInput()
     {
         if (InputManager.GetButtonDown("Skill") && Time.time > controlTime + controlCD)
@@ -60,8 +58,26 @@ public class ObjectControl : MonoBehaviour
             FindPath();
             if (objectState == 2)
             {
+                DrawPath();
+                controledObject.transform.SetParent(cam.transform);
+                controledObject.GetComponent<Collider>().enabled = false;
+                controledObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 controledObject.GetComponent<Rigidbody>().useGravity = false;
                 controledObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+                if(controledObject.GetComponent<Cast_magic>() != null)
+                    controledObject.GetComponent<Cast_magic>().enabled = false;
+                if(controledObject.GetComponent<atk_trigger>() == null)
+                    controledObject.AddComponent<atk_trigger>();
+                atk_trigger a = controledObject.GetComponent<atk_trigger>();
+                a.isEnemy = false;
+                a.dmg = 0;
+
+                MeshCollider atk_collider = controledObject.AddComponent<MeshCollider>();
+                atk_collider.sharedMesh = controledObject.GetComponent<MeshFilter>().sharedMesh;
+                atk_collider.convex = true;
+                atk_collider.isTrigger = true;
+
                 objectState = 3;
                 controlTime = Time.time;
             }
@@ -70,6 +86,7 @@ public class ObjectControl : MonoBehaviour
                 ThrowObject();
                 controlTime = Time.time;
             }
+            Debug.Log("ObjectControl: state " + objectState);
         }
     }
 
@@ -127,10 +144,25 @@ public class ObjectControl : MonoBehaviour
 
         destination = cam.transform.position + cam.transform.rotation * controlPosition;
         var diff = destination - controledObject.transform.position;
+        int layer = controledObject.layer;
+        controledObject.layer = 8;
         dStarLiteRoute = new DStarLite3d(controledObject, pathUnit, pathPartition, diff.magnitude * 1.2f);
         objectPath = dStarLiteRoute.FindPath(controledObject.GetComponent<Renderer>().bounds.center, destination);
-        if (objectPath != null)
-            objectState = 2;
+        controledObject.layer = layer;
+        hasPath = (objectPath != null);
+        objectState = 2;
+    }
+
+    void DrawPath() {
+        if (objectState != 2 || !hasPath)
+            return;
+
+        List<Vector3> path = objectPath.ToList();
+        lineRenderer.positionCount = path.Count;
+        for (int i = 0; i < path.Count; i++)
+        {
+            lineRenderer.SetPosition(i, path[i]);
+        }
     }
 
     void MoveObject()
@@ -171,47 +203,61 @@ public class ObjectControl : MonoBehaviour
         controledObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         diff = destination - controledObject.transform.position;
         speed = moveSpeed * deltaTime * Mathf.Max(diff.magnitude, 1.1f);
-        Vector3 currPos = controledObject.transform.position;
-        while (speed > 0)
+        if (hasPath)
         {
-            if (objectPath.Count == 0)
+            Vector3 currPos = controledObject.transform.position;
+            while (speed > 0)
             {
-                diff = destination - currPos;
+                if (objectPath.Count == 0)
+                {
+                    diff = destination - currPos;
+                    if (diff.magnitude > speed)
+                    {
+                        currPos += diff.normalized * speed;
+                        controledObject.transform.position = currPos;
+                        break;
+                    }
+                    controledObject.transform.position = destination;
+                    OnHand();
+                    break;
+                }
+                diff = objectPath.Peek() - currPos;
+                if (diff.magnitude > (destination - currPos).magnitude)
+                {
+                    objectPath.Clear();
+                    continue;
+                }
                 if (diff.magnitude > speed)
                 {
                     currPos += diff.normalized * speed;
                     controledObject.transform.position = currPos;
                     break;
                 }
-                controledObject.transform.position = destination;
-                objectState = 4;
-                break;
+                speed -= diff.magnitude;
+                currPos = objectPath.Dequeue();
             }
-            diff = objectPath.Peek() - currPos;
-            if (diff.magnitude > (destination - currPos).magnitude)
-            {
-                objectPath.Clear();
-                continue;
-            }
+        }
+        else
+        {
             if (diff.magnitude > speed)
             {
-                currPos += diff.normalized * speed;
-                controledObject.transform.position = currPos;
-                break;
+                controledObject.transform.position += diff.normalized * speed;
             }
-            speed -= diff.magnitude;
-            currPos = objectPath.Dequeue();
+            else
+            {
+                controledObject.transform.position = destination;
+                OnHand();
+            }
         }
         controledObject.transform.rotation = Quaternion.Slerp(controledObject.transform.rotation, cam.transform.rotation, 3f * Time.deltaTime);
     }
 
     void OnHand()
     {
-        if (objectState != 4)
-            return;
-
-        controledObject.transform.position = cam.transform.position + cam.transform.rotation * controlPosition;
         controledObject.transform.rotation = cam.transform.rotation;
+        controledObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        lineRenderer.positionCount = 0;
+        objectState = 4;
     }
 
     void ThrowObject()
@@ -226,6 +272,10 @@ public class ObjectControl : MonoBehaviour
         controledObject.GetComponent<Collider>().enabled = true;
         controledObject.GetComponent<Rigidbody>().useGravity = true;
         controledObject.GetComponent<Rigidbody>().velocity += Throw * throwSpeed;
+        atk_trigger a = controledObject.GetComponent<atk_trigger>();
+        a.dmg = 20;
+
+        controledObject.transform.SetParent(null);
         controledObject = null;
         objectState = 0;
     }

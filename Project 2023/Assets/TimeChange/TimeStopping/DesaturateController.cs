@@ -26,7 +26,6 @@ public class DesaturateController : MonoBehaviour {
 
     private void Start()
     {
-        CanStop = false;
         feature = rendererData.rendererFeatures.Where((f) => f.name == featureName).FirstOrDefault();
         var blitFeature = feature as BlitMaterialFeature;
         mat = blitFeature.Material;
@@ -41,13 +40,11 @@ public class DesaturateController : MonoBehaviour {
             {
                 if (!transitioning)
                 {
-                    StartTransition();
-                    StopTime();
+                    PauseTime();
                 }
                 else
                 {
-                    ContinueTime();
-                    ResetTransition();
+                    ResumeTime();
                 }
             }
             else if (transitioning)
@@ -63,6 +60,18 @@ public class DesaturateController : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void PauseTime()
+    {
+        StartTransition();
+        StopTime();
+    }
+
+    public void ResumeTime()
+    {
+        ContinueTime();
+        ResetTransition();
     }
 
 

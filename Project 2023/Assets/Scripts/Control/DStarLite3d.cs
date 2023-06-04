@@ -32,11 +32,8 @@ public class DStarLite3d
 
     private readonly Func<Vector3, Vector3, bool> IsNodeValid;
 
-    HashSet<GameObject> hits;
-
     public DStarLite3d(GameObject gameObject, float unit = DefaultUnit, int partition = DefaultPartition, float maxDistance = DefaultMax)
     {
-        hits = new HashSet<GameObject>();
         timeManager = GameObject.FindGameObjectWithTag("TimeManager");
         this.controlObject = gameObject;
         this.objectSize = gameObject.GetComponent<Renderer>().bounds.size;
@@ -64,7 +61,7 @@ public class DStarLite3d
         pastlayer = LayerMask.NameToLayer("Past");
         presentlayer = LayerMask.NameToLayer("Present");
 
-        Debug.Log("DStarLite: unit: " + this.unit + " size: " + objectSize);
+        //Debug.Log("DStarLite: unit: " + this.unit + " size: " + objectSize);
     }
 
     public Queue<Vector3> FindPath(Vector3 start, Vector3 goal)
@@ -74,7 +71,7 @@ public class DStarLite3d
         this.goal = Vector3Round(goal);
         UpdateDirections();
 
-        Debug.Log("DStarLite: Start: " + this.start.ToString() + " Goal: " + this.goal.ToString());
+        //Debug.Log("DStarLite: Start: " + this.start.ToString() + " Goal: " + this.goal.ToString());
 
         current = goal;
 
@@ -137,7 +134,7 @@ public class DStarLite3d
             }
         }
 
-        Debug.Log("DStarLite: Start: " + this.start.ToString() + " rhs " + rhsScore[this.start] + " g: " + gScore[this.start]);
+        //Debug.Log("DStarLite: Start: " + this.start.ToString() + " rhs " + rhsScore[this.start] + " g: " + gScore[this.start]);
 
         if (float.IsPositiveInfinity(gScore[this.start]))
             return null;
@@ -265,25 +262,16 @@ public class DStarLite3d
         RaycastHit hit;
         if (Physics.Raycast(origin, dir, out hit, dir.magnitude, ignoreLayer, QueryTriggerInteraction.Ignore))
         {
-            if (!hits.Contains(hit.transform.gameObject))
-            {
-                hits.Add(hit.transform.gameObject);
-                Debug.Log("DStarLite: obstacle: " + hit.transform.gameObject.ToString() + " layer: " + hit.transform.gameObject.layer.ToString());
-            }
             return false;
         }
         for (int x = -1; x < 2; x += 2)
             for (int y = -1; y < 2; y += 2)
                 for (int z = -1; z < 2; z += 2)
                 {
-                    var vertex = Vector3.Scale(objectSize, new Vector3(x, y, z)) * 0.5f;
+                    var d = new Vector3(x, y, z);
+                    var vertex = Vector3.Scale(objectSize, d) * 0.5f - d * 0.02f;
                     if (Physics.Raycast(origin + vertex, dir, out hit, dir.magnitude, ignoreLayer, QueryTriggerInteraction.Ignore))
                     {
-                        if (!hits.Contains(hit.transform.gameObject))
-                        {
-                            hits.Add(hit.transform.gameObject);
-                            Debug.Log("DStarLite: obstacle: " + hit.transform.gameObject.ToString() + " layer: " + hit.transform.gameObject.layer.ToString());
-                        }
                         return false;
                     }
                 }
@@ -302,7 +290,7 @@ public class DStarLite3d
     private int GetIgnoreLayer()
     {
         int pastBool = timeManager.GetComponent<TimeShiftingController>().PastBool;
-        int ignoreLayer = (1 << 2) | (1 << 3) | (1 << controlObject.layer);
+        int ignoreLayer = (1 << 2) | (1 << 3) | (1 << 8);
         if (pastBool == 0)
             ignoreLayer |= (1 << pastlayer);
         else if (pastBool == 3)

@@ -7,11 +7,12 @@ using Luminosity.IO;
 
 [RequireComponent(typeof(Transform))]
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
 
 public class PlayerMovement : MonoBehaviour
 {
+    public static bool disableMovement = false;
+    public Player_interface player;
     public float moveSpeed;
     public float airSpeedMult;
     public float runSpeedMult;
@@ -71,10 +72,10 @@ public class PlayerMovement : MonoBehaviour
     private MotionBlur mb;
     bool canDash;
     float dashStartTime;
+    float maxSp;
     Vector3 dashDirection;
 
     new Rigidbody rigidbody;
-    Animator animator;
     CapsuleCollider capsuleCollider;
 
     Vector3 savePoint;
@@ -93,7 +94,6 @@ public class PlayerMovement : MonoBehaviour
 
         rigidbody = GetComponent<Rigidbody>();
         rigidbody.freezeRotation = true;
-        animator = GetComponent<Animator>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         colliderHeight = capsuleCollider.height;
         jumpCount = 0;
@@ -106,31 +106,35 @@ public class PlayerMovement : MonoBehaviour
         //isPlayer = true;
         //isTransport= false;
 
+        player = transform.GetComponent<Player_interface>();
+
         float mass = rigidbody.mass;
         moveSpeed *= mass;
         jumpForce *= mass;
         dashSpeed *= mass;
+
+        maxSp = moveSpeed;
     }
 
     void Update()
     {
+        if (disableMovement) return;
         //if(Death()) return;
         DetectAround();
         Input();
         speedControl();
         Drag();
-        AnimatorUpdate();
-        //Add in Port
-        // Attack();
     }
 
     void FixedUpdate()
     {
+        if (disableMovement) return;
         MovePlayer();
         Straighten();
     }
 
-    void setMotionBlur(float intensity, float clamp){
+    void setMotionBlur(float intensity, float clamp)
+    {
         v.profile.TryGet<MotionBlur>(out mb);
         mb.intensity.Override(intensity);
         mb.clamp.Override(clamp);
@@ -185,6 +189,13 @@ public class PlayerMovement : MonoBehaviour
         verticalInput = InputManager.GetAxisRaw("Vertical");
         horizontalInput = InputManager.GetAxisRaw("Horizontal");
 
+        if(InputManager.GetButton("Heal"))
+        {
+            player.Healing();
+            moveSpeed = maxSp / 4;
+        }else{
+            moveSpeed = maxSp;
+        }
         if (verticalInput == 0 && horizontalInput == 0)
         {
             moving = false;
@@ -211,7 +222,7 @@ public class PlayerMovement : MonoBehaviour
                 if (onGround && !crouching && runPressTime > 0 && Time.time >= runPressTime + buttonPressTime)
                 {
                     running = !running;
-                    Debug.Log("Player Movement: run " + running);
+                    //Debug.Log("Player Movement: run " + running);
                     if (sliding)
                     {
                         SlideReset();
@@ -427,15 +438,15 @@ public class PlayerMovement : MonoBehaviour
             float r, h;
             r = capsuleCollider.radius;
             h = colliderHeight / 2;
-            foreach(int side in new int[]{ 1, -1})
+            foreach (int side in new int[] { 1, -1 })
             {
                 igRot = Quaternion.Euler(0f, backIgnoreWallDegree * side, 0f);
                 for (int i = -1; i < 2; i++)
                 {
                     pos = rotation * new Vector3((r - 0.1f) * side, h + i * r, 0f);
                     igPos = igRot * pos;
-                    Debug.DrawRay(transform.position + pos, transform.right * side * 0.2f, Color.green, 0.5f);
-                    Debug.DrawRay(transform.position + igPos, igRot * transform.right * side * 0.2f, Color.red, 0.5f);
+                    //Debug.DrawRay(transform.position + pos, transform.right * side * 0.2f, Color.green, 0.5f);
+                    //Debug.DrawRay(transform.position + igPos, igRot * transform.right * side * 0.2f, Color.red, 0.5f);
                     if (Physics.Raycast(transform.position + igPos, igRot * transform.right * side, 0.2f, ignoreLayer, QueryTriggerInteraction.Ignore))
                     {
                         wallSide = 0;
@@ -463,14 +474,6 @@ public class PlayerMovement : MonoBehaviour
         }
         wallSide = 0;
         return false;
-    }
-
-    void AnimatorUpdate()
-    {
-        animator.SetBool("OnGround", onGround);
-        animator.SetBool("Move", moving);
-        animator.SetBool("Run", running);
-        animator.SetBool("Jump", jumping);
     }
 
     void Drag()
@@ -578,6 +581,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
+        if (player.Stamina < 30) return;
+        player.costStamina(30);
+
         Camera cam = Camera.main;
         ignoreWall = detectWall;
         canDash = false;
@@ -642,10 +648,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public Vector3 getDashDirection(){
+    public Vector3 getDashDirection()
+    {
         return dashDirection;
     }
-    public void setDashDirection(Vector3 direst){
+    public void setDashDirection(Vector3 direst)
+    {
         dashDirection = direst;
     }
     // Add in Portal Level
@@ -666,7 +674,7 @@ public class PlayerMovement : MonoBehaviour
     //         }
     //     }
     // }
-    
+
     // IEnumerator MoveToAttackTarget(){
     //     transform.LookAt(attackTarget.transform);
     //     while(Vector3.Distance(attackTarget.transform.position,transform.position) > characterStates.attackData.attackRange)
@@ -682,7 +690,7 @@ public class PlayerMovement : MonoBehaviour
     //         //重設冷卻時間
     //         lastAttackTime = characterStates.attackData.coolDown;
     //     }*/
-   
+
     // }
     // //Animation Hit
     // void Hit(){
@@ -697,11 +705,11 @@ public class PlayerMovement : MonoBehaviour
     //             }
     //         }
     //         */
- 
+
     //             //獲得攻擊目標身上的狀態
     //             var targetStates = attackTarget.GetComponent<CharacterStates>();
     //             targetStates.TakeDamage(characterStates,targetStates);
-            
+
     //     }
     // }
     // bool Death(){
