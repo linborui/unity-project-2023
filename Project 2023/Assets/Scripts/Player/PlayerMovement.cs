@@ -146,12 +146,12 @@ public class PlayerMovement : MonoBehaviour
         rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
         if (dashing && Time.time < dashStartTime + dashTime)
         {
-            setMotionBlur(1f, 1f);
+            // setMotionBlur(1f, 1f);
             moveForce = dashDirection * dashSpeed;
         }
         else
         {
-            setMotionBlur(Intensity, Clamp);
+            // setMotionBlur(Intensity, Clamp);
             if (dashing)
             {
                 ignoreWall = null;

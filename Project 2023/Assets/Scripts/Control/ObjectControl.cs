@@ -86,7 +86,7 @@ public class ObjectControl : MonoBehaviour
                 ThrowObject();
                 controlTime = Time.time;
             }
-            Debug.Log("ObjectControl: state " + objectState);
+            // Debug.Log("ObjectControl: state " + objectState);
         }
     }
 
@@ -193,7 +193,7 @@ public class ObjectControl : MonoBehaviour
         {
             GameObject item = removedItems.Dequeue();
             collectedItems.Remove(item);
-            Debug.Log("Collect " + item);
+            // Debug.Log("Collect " + item);
             Destroy(item);
         }
 
