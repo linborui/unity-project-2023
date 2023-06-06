@@ -49,14 +49,6 @@ public class Rock : MonoBehaviour
             case RockStates.HitPlayer:
                 if(other.gameObject.CompareTag("Player"))
                 {
-                    //TODO:彈開
-                    /*
-                    other.gameObject.GetComponent<NavMeshAgent>().isStopped = true;
-                    other.gameObject.GetComponent<NavMeshAgent>().velocity = direction * force;
-                    
-                    other.GameObject.GetComponent<Animator>().SetTrigger("Dizzy");
-                    */
-                    other.gameObject.GetComponent<CharacterStates>().TakeDamage(damage,other.gameObject.GetComponent<CharacterStates>());
                     rockStates = RockStates.HitNothing;
                 }
                 break;
@@ -65,7 +57,6 @@ public class Rock : MonoBehaviour
                 {
                     var otherStates = other.gameObject.GetComponent<CharacterStates>();
                     otherStates.TakeDamage(damage,otherStates);
-                    //Destroy(gameObject);
                 }
                 break;
         }

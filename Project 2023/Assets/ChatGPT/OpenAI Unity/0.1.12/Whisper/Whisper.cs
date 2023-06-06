@@ -11,7 +11,7 @@ namespace OpenAI
         [SerializeField] private Dropdown dropdown;
         [SerializeField] private ChatTest chatTest;
         [SerializeField] private Image progress;
-        
+        public bool CanRecord = false;
         private readonly string fileName = "output.wav";
         private readonly int duration = 5;
         
@@ -70,7 +70,7 @@ namespace OpenAI
         
         private void Update()
         {
-            if(InputManager.GetButtonDown("Record")){
+            if(InputManager.GetButtonDown("Record") && CanRecord){
                 StartRecording();
             }
             if (isRecording)

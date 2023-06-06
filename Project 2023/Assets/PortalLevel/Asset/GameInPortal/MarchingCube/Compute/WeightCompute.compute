@@ -25,7 +25,7 @@ void GenerateNoise(uint3 id : SV_DispatchThreadID)
 		if( (pos.x-(_ChunkSize-1)/2.0f) * (pos.x-(_ChunkSize-1)/2.0f) +
 		    (pos.y-(_ChunkSize-1)/2.0f) * (pos.y-(_ChunkSize-1)/2.0f) +
 		    (pos.z-(_ChunkSize-1)/2.0f) * (pos.z-(_ChunkSize-1)/2.0f) > 
-			(_ChunkSize - 1) * (_ChunkSize - 1) /4 )
+			(_Size - 1) * (_Size - 1) /4 )
 			ground = -1;
 		else
 			ground = 1;

@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using OpenAI;
 public class NpcDialog : MonoBehaviour
 {
     [SerializeField] private GameObject toActivate;
-
+    [SerializeField] private Whisper whisper;
     //[SerializeField] private Transform standingPoint;
 
     //private Transform avatar;
@@ -14,17 +14,18 @@ public class NpcDialog : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            
-
-            // disable main cam, enable dialog cam
+            whisper.CanRecord = true;
             toActivate.SetActive(true);
-            Debug.Log("Activate");
-            // dısplay cursor
-            //Cursor.visible = true;
-            //Cursor.lockState = CursorLockMode.None;
         }
     }
-
+    private async void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            whisper.CanRecord = false;
+            toActivate.SetActive(false);
+        }
+    }
     public void Recover()
     {
         //avatar.GetComponent<PlayerInput>().enabled = true;

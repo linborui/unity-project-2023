@@ -7,12 +7,18 @@ public class PortalPlaceSet : MonoBehaviour
     [Header("Portal")]
     public Portal FixedPortalIn; // 0
     public Portal FixedPortalOut;// 1
-    [Header("Placement")]
+    [Header("NPC")]
+    public GameObject NPC;
+    [Header("Portal Placement")]
     public Transform _A;
     public Transform _B;
     public Transform _C;
     public Transform _D;
     public Transform _E;
+    [Header("NPC Placement")]
+    public Transform Level1_Placement;
+    public Transform Forest_Placement;
+    public Transform Level2_Placement;
     [HideInInspector]
     public int state;
     public GameObject timer;
@@ -38,10 +44,12 @@ public class PortalPlaceSet : MonoBehaviour
             timer.SetActive(false);
             FixedPortalOut.transform.position = _B.position;
             FixedPortalOut.transform.rotation = _B.rotation;
+            NPC.transform.position = Level1_Placement.transform.position;
         }
         else if(state == 3){
             timer.SetActive(true);
             timer.GetComponent<TimerControl>().CountStart();
+            NPC.transform.position = Forest_Placement.transform.position;
             if(first == true)
             {
                 FixedPortalOut.transform.position = _C.position;
@@ -54,6 +62,7 @@ public class PortalPlaceSet : MonoBehaviour
             }
         }
         else if(state == 1){
+            NPC.transform.position = Level2_Placement.transform.position;
             timer.SetActive(false);
             portalplacement.portalInNum = inPortal_In_state2;
             portalplacement.portalOutNum = outPortal_In_state2;
@@ -66,6 +75,7 @@ public class PortalPlaceSet : MonoBehaviour
             timer.SetActive(true);
             timer.GetComponent<TimerControl>().CountStart();
             _container.AppendGameObject = null;
+            NPC.transform.position = Level2_Placement.transform.position;
             if(first == true)
             {
                 FixedPortalOut.transform.position = _A.position;

@@ -106,24 +106,41 @@ public class PortalTraveller : MonoBehaviour {
         {
             return;
         }
-        if(graphicsClone.activeSelf && inPairPortal.IsPlaced && outPairPortal.IsPlaced)
-        {
-            var inTransform = inPairPortal.transform;
-            var outTransform = outPairPortal.transform;
+        if(!isPlayer){
+            if(graphicsClone.activeSelf && inPairPortal.IsPlaced && outPairPortal.IsPlaced)
+            {
+                var inTransform = inPairPortal.transform;
+                var outTransform = outPairPortal.transform;
 
-            // Update position of clone.
-            Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
-            relativePos = halfTurn * relativePos;
-            graphicsClone.transform.position = outTransform.TransformPoint(relativePos);
+                // Update position of clone.
+                Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
+                relativePos = halfTurn * relativePos;
+                graphicsClone.transform.position = outTransform.TransformPoint(relativePos);
 
-            // Update rotation of clone.
-            Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
-            relativeRot = halfTurn * relativeRot;
-            graphicsClone.transform.rotation = outTransform.rotation * relativeRot;
+                // Update rotation of clone.
+                Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
+                relativeRot = halfTurn * relativeRot;
+                graphicsClone.transform.rotation = outTransform.rotation * relativeRot;
+            }
+            else
+            {
+                graphicsClone.transform.position = new Vector3(-1000.0f, 1000.0f, -1000.0f);
+            }
         }
-        else
-        {
-            graphicsClone.transform.position = new Vector3(-1000.0f, 1000.0f, -1000.0f);
+        else{
+            if(inPairPortal.IsPlaced && outPairPortal.IsPlaced)
+            {
+                var inTransform = inPairPortal.transform;
+                var outTransform = outPairPortal.transform;
+
+                // Update position of clone.
+                Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
+                relativePos = halfTurn * relativePos;
+
+                // Update rotation of clone.
+                Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
+                relativeRot = halfTurn * relativeRot;
+            }
         }
     }
     public void SetIsInPortal(Portal inPortal, Portal outPortal, Collider wallCollider)

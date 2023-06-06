@@ -26,7 +26,6 @@ public class Success : MonoBehaviour
             }
             if(state == 2){
                 setting.UpdateState(4);
-                //SuccessDescription.GetComponent<TextMeshProUGUI>().text = setting.GetDescription();
                 SuccessDescription2.SetActive(true);
             }
         }
