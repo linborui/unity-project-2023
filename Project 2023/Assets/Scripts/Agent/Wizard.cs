@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Wizard : AI
 {
-    public Cast_magic R;
+    //public Cast_magic R;
     bool repeatAtk = false;
 
     // Update is called once per frame

@@ -81,14 +81,21 @@ public class Wizard_agent : Training_scripts
                 action = 0;                 // movement
                 AddReward(-distance);
             }
-
-            if(distance <= 2 && action ==1) //刺 stab
+            if(distance >1 && distance <15f)
+            {
+                if(action == 0)
+                    AddReward(10);
+                else{
+                    AddReward(-100);
+                }
+            }
+            if(distance <= 1 && action ==1) //刺 stab
                 AddReward(20);
-            if(distance < 6 && action == 2) //揮 sweap
+            if(distance < 1 && action == 2) //揮 sweap
                 AddReward(20); 
   
 
-            if(distance > 6 && action > 1 && action < 4) action = 2;
+            //if(distance > 6 && action > 1 && action < 4) action = 2;
 
             Ai_scripts.state = action;
         } 

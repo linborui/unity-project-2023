@@ -123,7 +123,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3433448806426489482}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 10.3, y: 0.5, z: -0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -168,6 +168,7 @@ MonoBehaviour:
   Stamina: 100
   StaminaSp: 10
   sp: 1.5
+  awareDis: 30
   desx: 0
   desy: 0
   player_dis: 0
@@ -179,14 +180,14 @@ MonoBehaviour:
   acting: 0
   deathWay: 2
   dead_rand: 0
-  awareness: 1
+  awareness: 0
   react: 0
   dodge: 0
   parry: 0
   spin: 1
   dead: 0
   dis: {x: 0, y: 0}
-  fsm: {fileID: 0}
+  fsm: {fileID: 556333089249180729}
   controller: {fileID: 5219592451589124019}
   bloodEffect: {fileID: 7257592036791174222, guid: 85e2cd3bd2056654088108fbe0474f46,
     type: 3}
@@ -255,7 +256,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   Reset: 0
-  isAgent: 1
+  isAgent: 0
   Ai_scripts: {fileID: 5219592451589124030}
   Player: {fileID: 0}
   Player_status: {fileID: 0}
