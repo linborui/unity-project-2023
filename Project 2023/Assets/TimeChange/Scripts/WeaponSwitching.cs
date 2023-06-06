@@ -20,12 +20,14 @@ public class WeaponSwitching : MonoBehaviour
         SelectWeapon();
         pm = player.GetComponent<PlayerMovement>();
         im = image.GetComponent<Image>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         int previousSelectedWeapon = selectedWeapon;
+
         if (!pm.swinging)
         {
             if (InputManager.GetAxisRaw("ChangeWeapon") > 0f)

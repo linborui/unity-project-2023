@@ -15,6 +15,7 @@ public class PlayerCam : MonoBehaviour
 
     public GameObject crosshair;
 
+    public bool changeHeight = false;
     float cameraHeight;
     float cameraDistance;
     float currHeight;
@@ -32,7 +33,11 @@ public class PlayerCam : MonoBehaviour
         tf = body.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
+        if (!changeHeight)
+            cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
+        else
+            cameraHeight = transform.localPosition.y;
+
         if (state == 0)
         {
             cameraDistance = 2.0f;
@@ -175,6 +180,7 @@ public class PlayerCam : MonoBehaviour
             if (!PlayerMovement.isTransport)
             {
                 float distance = cameraDistance;
+                if(!changeHeight)
                 cameraHeight = body.GetComponent<CapsuleCollider>().height - 0.1f;
 
                 if (PlayerMovement.sliding)
