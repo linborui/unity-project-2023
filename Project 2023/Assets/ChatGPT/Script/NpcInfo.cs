@@ -5,16 +5,14 @@ using UnityEngine;
 public enum Occupation
 {
     Electrician,
-    Taxi_Driver,
-    Software_Engineer,
-    Drug_Dealer,
+    future_man,
     Hardware_Hacker
 }
 
 public enum Talent
 {
     Painting,
-    Dancing,
+    Thinking,
     Magic,
     Brain_Control
 }
@@ -22,7 +20,7 @@ public enum Talent
 public enum Personality
 {
     Cynical,
-    Social,
+    Speechless,
     Political,
     Opportunist,
     Artistic

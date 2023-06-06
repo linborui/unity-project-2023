@@ -70,7 +70,7 @@ namespace OpenAI
         
         private void Update()
         {
-            if(InputManager.GetButtonDown("Next")){
+            if(InputManager.GetButtonDown("Record")){
                 StartRecording();
             }
             if (isRecording)

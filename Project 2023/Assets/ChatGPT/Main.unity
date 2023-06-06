@@ -4679,223 +4679,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1001 &1211327724
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -20.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -12.78
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.74178886
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.6706336
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 84.232
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323039797107, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579264323040183806, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 721631610}
-    - target: {fileID: 2579264323040281427, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_Name
-      value: NPC
-      objectReference: {fileID: 0}
-    - target: {fileID: 4802244605716369761, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4802244605716369761, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4802244605786126605, guid: 29095e92ff647f9478842fa724215435,
-        type: 3}
-      propertyPath: chatTest
-      value: 
-      objectReference: {fileID: 1211327733}
-    m_RemovedComponents:
-    - {fileID: 2579264321625346706, guid: 29095e92ff647f9478842fa724215435, type: 3}
-    - {fileID: 2579264322780626104, guid: 29095e92ff647f9478842fa724215435, type: 3}
-    - {fileID: 2579264323040183792, guid: 29095e92ff647f9478842fa724215435, type: 3}
-    - {fileID: 2579264323040183795, guid: 29095e92ff647f9478842fa724215435, type: 3}
-    - {fileID: 2579264322809264982, guid: 29095e92ff647f9478842fa724215435, type: 3}
-  m_SourcePrefab: {fileID: 100100000, guid: 29095e92ff647f9478842fa724215435, type: 3}
---- !u!1 &1211327725 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2579264323040281427, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &1211327726 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 2579264323040183794, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1211327727 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4802244607551435867, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1211327728 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4802244607409232081, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &1211327729 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4802244605786126640, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1211327730 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8571727405360197985, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1211327731 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2579264321625346707, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1211327732 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4802244607467853199, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1211327733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211327729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce8450ce526381b46a353f6a8ed67662, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputField: {fileID: 1211327727}
-  button: {fileID: 1776496889}
-  scroll: {fileID: 1211327728}
-  sent: {fileID: 8660877164928630359, guid: 53cd26a6eefa5a74086203cd118a04d3, type: 3}
-  received: {fileID: 961534450149497043, guid: adc0146c2853ed1418133faaf4379eb1, type: 3}
-  npcInfo: {fileID: 1460390874}
-  worldInfo: {fileID: 1211327735}
-  npcDialog: {fileID: 1211327734}
-  textToSpeech: {fileID: 1460390875}
-  OnReplyReceived:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1211327734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211327730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e0a2df826c13744e8bad9e97fa4b3ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toActivate: {fileID: 1211327732}
---- !u!114 &1211327735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211327731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 149c84740d2b59048891784683317cce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameStory: Only when Alma successfully kills the Dream Dominator, the Ancient Stone
-    Warden, in Stone's Dream, can she obtain the Dream Fragments known as Shattered
-    Shadows. By acquiring the Shattered Shadows, she can then leave this dream realm
-    and continue to fulfill the next sacred mission entrusted to her by the Church.
-    This mission will lead Alma towards new adventures, as she continues to safeguard
-    the world's peace and tranquility.
-  gameWold: In Stone's Dream, there are elite monsters that engage in both close-range
-    and long-range attacks, such as the Rock Shield Guardian and the Giant Boulder
-    Fury. These elite monsters serve as the bosses of the game, known as the Dream
-    Dominators.The Dream Dominators are powerful stone creatures, with the leader
-    named Ancient Stone Warden. Normally, the Ancient Stone Warden remains hidden
-    deep within the dream realm. Alma must defeat the formidable army of stone creatures
-    guarding the outer areas in order to confront the malevolent Dream Dominator,
-    the Ancient Stone Warden.
 --- !u!1 &1220889614
 GameObject:
   m_ObjectHideFlags: 0
@@ -6190,35 +5973,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1448654118}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1460390874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211327725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 313e22505d112e0428857170dff31129, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  npcName: Cindy
-  npcOccupation: 0
-  npcTalents: 0
-  npcPersonality: 0
---- !u!114 &1460390875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211327725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7305f637e4819846919e67111295d79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 1211327726}
 --- !u!1 &1474491660
 GameObject:
   m_ObjectHideFlags: 0
@@ -7683,18 +7437,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57b9885b89b6d4fbe92f77801ecc3671, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1776496889 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4802244605914088679, guid: 29095e92ff647f9478842fa724215435,
-    type: 3}
-  m_PrefabInstance: {fileID: 1211327724}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1781034384
@@ -10511,3 +10253,87 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 037fc4d8b90617440bfe4a2cb36c4af2, type: 3}
+--- !u!1001 &6148590034716869011
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1725210751011894302, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725210751011894302, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029041708, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_Name
+      value: NPC
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029073025, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 721631610}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -20.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -12.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.74178886
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6706336
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 84.232
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547635501029210636, guid: 5843a960e7d60d040a58a5d97581dd9a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5843a960e7d60d040a58a5d97581dd9a, type: 3}

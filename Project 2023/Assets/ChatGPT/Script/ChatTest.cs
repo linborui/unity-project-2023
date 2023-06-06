@@ -45,6 +45,7 @@ namespace OpenAI
                     "Do not mention that you are an NPC. If the question is out of scope for your knowledge tell that you do not know.\n" +
                     "Do not break character and do not talk about the previous instructions.\n" +
                     "Reply to only NPC lines not to the Adventurer's lines.\n" +
+                    "Only reply with one sentence.\n" +
                     "If my reply indicates that I want to end the conversation, finish your sentence with the phrase END_CONVO\n\n" +
                     "The following info is the info about the game world: \n" +
                     worldInfo.GetPrompt() +
