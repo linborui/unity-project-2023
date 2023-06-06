@@ -81,7 +81,10 @@ public class AI : MonoBehaviour
         blood.GetComponent<ParticleSystem>().Play();
         react = true;
         iFrame = 1f;
-        HP -= val;
+        if(!awareness) {
+            awareness = true;
+            HP -= 2 * val;
+        }else HP -= val;
     }
 
     public void Facing()
@@ -114,12 +117,12 @@ public class AI : MonoBehaviour
             awareness = true;
         if (HP <= 0) {
             dead = true;
-        }else if(HP <= 30){
+        }else if(HP <= 30 && GetComponentInChildren<sliceable>()){
             GetComponentInChildren<sliceable>().act = true;
         }
     }
 
-    public bool IfDead()
+    public virtual bool IfDead()
     {
         if(dead == true){
             react = false;

@@ -6,6 +6,54 @@ public class Skeleton : AI
 {
     bool repeatAtk = false;
 
+    public override bool IfDead()
+    {
+        if(dead == true){
+            react = false;
+            dodge = false;
+            parry = false;
+            state = 0;
+            acting = 0;
+            atkState = -1;
+            
+            //When testing you need to comment under forloop statement
+            foreach (Transform child in weapons)
+            {
+                if(ObjectControl.controledObject == null || !child.Equals(ObjectControl.controledObject.transform)){
+                    child.transform.SetParent(null);
+                    
+                    child.GetComponent<atk_trigger>().enabled = false;
+                    child.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                }
+            }
+            weapons.Clear();
+            if(transform.GetComponent<life_time>() == null) this.gameObject.AddComponent<life_time>();
+
+            GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Player");
+
+            Transform[] childs = transform.GetComponentsInChildren<Transform>();
+            foreach (Transform child in childs)
+                if (child.CompareTag("Bones")){
+                    child.transform.SetParent(null);
+                    child.gameObject.AddComponent<life_time>();
+                    child.gameObject.AddComponent<sliceable>();
+                }
+            foreach (Transform child in childs)
+                if (child.CompareTag("Bones")){
+                    Mesh bone = new Mesh();
+                    child.GetComponent<SkinnedMeshRenderer>().BakeMesh(bone);
+                    child.GetComponent<SkinnedMeshRenderer>().sharedMesh = bone;
+                    child.GetComponent<MeshCollider>().sharedMesh = bone;
+                    child.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                    child.GetComponent<Rigidbody>().AddForce((transform.position - Aim.transform.position).normalized * 5, ForceMode.Impulse);
+            }
+            Object.Destroy(this.gameObject);
+            return true;
+        }else{
+            return false;
+        }     
+    }
+
     // Update is called once per frame
     void Update()
     {

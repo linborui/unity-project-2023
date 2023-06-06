@@ -7,7 +7,7 @@ public class LaunchProjectile : MonoBehaviour
     public Transform launchPoint;
     public GameObject projectile;
     public StoneManagement countStone;
-    private float launchVelocity = 100f;
+    private float launchVelocity = 50f;
     int countSec = 4;
     void OnEnable(){
         InvokeRepeating("Counting",1f,0.3f);
