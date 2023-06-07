@@ -41,6 +41,7 @@ public class Portal : MonoBehaviour {
     void HandleTravellers () {
         for (int i = 0; i < trackedTravellers.Count; i++) {
             PortalTraveller traveller = trackedTravellers[i]; 
+            if(traveller == null) continue;
             Transform travellerT = traveller.transform;
             Vector3 offsetFromPortal = travellerT.position - transform.position;
             int portalSide = System.Math.Sign (Vector3.Dot (offsetFromPortal, transform.forward));

@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c5200028c04ddcc4fb70ca5902db2a21, type: 2}
+  - {fileID: 2100000, guid: 00b93c16c79d54d49be15307acce2204, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,5 +130,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NoiseShader: {fileID: 7200000, guid: 7b48c57ec1ff3b34c919dcdd80d13227, type: 3}
-  size: 5
+  size: 20
   circle: 1
