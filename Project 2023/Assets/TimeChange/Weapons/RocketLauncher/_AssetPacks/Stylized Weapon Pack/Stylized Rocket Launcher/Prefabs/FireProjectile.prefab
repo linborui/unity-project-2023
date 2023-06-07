@@ -4875,7 +4875,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6b21f09aab528149a9735708e5b2377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPrefab: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
+  hitPrefab: {fileID: 358637981425055526, guid: 8eb503696b886e04faff8fc0f480d473,
+    type: 3}
   firePrefab: {fileID: 1975959190090480, guid: eca000ab44c908d4dab395f654753038, type: 3}
 --- !u!54 &1188763566108560447
 Rigidbody:

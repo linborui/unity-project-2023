@@ -6,8 +6,14 @@ public class Bullet : MonoBehaviour
 {
     public GameObject hitPrefab;
     public GameObject firePrefab;
+    private AudioManager Audio;
 
     private bool collided;
+
+    private void Start()
+    {
+        Audio = FindObjectOfType<AudioManager>();
+    }
 
 
     private void OnCollisionEnter(Collision collision)
