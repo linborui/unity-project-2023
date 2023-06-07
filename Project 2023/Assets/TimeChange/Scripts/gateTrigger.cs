@@ -20,23 +20,7 @@ public class gateTrigger : MonoBehaviour
         HasStopped = false;
     }
 
-  // private void Update()
-  // {
-  //     if (desaturateController.TimeIsStopped && LDoor.speed!=0 && RDoor.speed!=0)
-  //     {
-  //         preSpeedL = LDoor.speed;
-  //         preSpeedR = RDoor.speed;
-  //
-  //         LDoor.speed = 0;
-  //         RDoor.speed = 0;
-  //         HasStopped = true;
-  //     }
-  //     else if (!desaturateController.TimeIsStopped && LDoor.speed != 0 && RDoor.speed != 0) {
-  //         LDoor.speed = preSpeedL;
-  //         RDoor.speed = preSpeedR;
-  //         HasStopped = false;
-  //     }
-  // }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!desaturateController.TimeIsStopped)

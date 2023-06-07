@@ -65,7 +65,7 @@ public class Pleague_doctor : AI
                         if (percent > 0.2 && percent < 0.8) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(x * sp , 0, -sp); spin = false;}
                         else if(percent > 0.8) dodge = false;
                         break;
-                    case 2:
+                    case 2: //sweap
                         if (percent < 0.2) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, 0.2f); spin = true;}
                         else if (percent > 0.2 && percent < 0.4) {Vel = Vector3.zero; spin =  false;}
                         else if (percent > 0.4 && percent < 0.6) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, 0.2f); spin = true;}

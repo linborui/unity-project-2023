@@ -1,0 +1,47 @@
+{
+    "verzerite": {
+        "checkpoints": [
+            {
+                "steps": 124924,
+                "file_path": "results\\verzerite\\verzerite\\verzerite-124924.onnx",
+                "reward": 59438.665736607145,
+                "creation_time": 1686097815.563044,
+                "auxillary_file_paths": [
+                    "results\\verzerite\\verzerite\\verzerite-124924.pt"
+                ]
+            },
+            {
+                "steps": 249810,
+                "file_path": "results\\verzerite\\verzerite\\verzerite-249810.onnx",
+                "reward": 60459.97377232143,
+                "creation_time": 1686098012.8266118,
+                "auxillary_file_paths": [
+                    "results\\verzerite\\verzerite\\verzerite-249810.pt"
+                ]
+            },
+            {
+                "steps": 251016,
+                "file_path": "results\\verzerite\\verzerite\\verzerite-251016.onnx",
+                "reward": 60378.6806640625,
+                "creation_time": 1686098013.0813053,
+                "auxillary_file_paths": [
+                    "results\\verzerite\\verzerite\\verzerite-251016.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 251016,
+            "file_path": "results\\verzerite\\verzerite.onnx",
+            "reward": 60378.6806640625,
+            "creation_time": 1686098013.0813053,
+            "auxillary_file_paths": [
+                "results\\verzerite\\verzerite\\verzerite-251016.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu118"
+    }
+}

@@ -17,7 +17,7 @@ GameObject:
   m_Layer: 0
   m_Name: Chunk
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -28,7 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4738332729581474110}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ca8346e46bead4043bf176f373c365d8, type: 2}
+  - {fileID: 2100000, guid: c5200028c04ddcc4fb70ca5902db2a21, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
   Control: 0
   MeshFilter: {fileID: 4738332729581474106}
   MeshCollider: {fileID: 4738332729581474111}
-  NoiseGenerator: {fileID: 0}
+  NoiseGenerator: {fileID: 7347498634967893841}
 --- !u!64 &4738332729581474111
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -130,5 +130,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NoiseShader: {fileID: 7200000, guid: 7b48c57ec1ff3b34c919dcdd80d13227, type: 3}
-  size: 11.5
-  circle: 0
+  size: 5
+  circle: 1

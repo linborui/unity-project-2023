@@ -151,7 +151,7 @@ public class Chunk : MonoBehaviour
     }
 
     void ReleaseBuffers() {
-        _trianglesBuffer.Release();
+        //_trianglesBuffer.Release();
         _trianglesCountBuffer.Release();
         _weightsBuffer.Release();
     }

@@ -9,7 +9,7 @@ public class Object : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.GetComponent<WeightGenerator>().size = 2;
+        transform.GetComponent<WeightGenerator>().size = 10;
         InvokeRepeating("ChangeSize", 1f, 1f);
     }
     void ChangeSize()

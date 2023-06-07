@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Projectile_object : MonoBehaviour
 {
+    public bool noBreak = false;
     public float Vel = 10f;
     public float dmg = 30f;
     public float smoothTime = 0.001f;    
@@ -17,7 +18,7 @@ public class Projectile_object : MonoBehaviour
         Vector3 point = other.ClosestPoint(transform.position);
         other.GetComponentInParent<Player_interface>().takeDamage(dmg, point);
         
-        Object.Destroy(this.gameObject);
+        if(!noBreak) Object.Destroy(this.gameObject);
     }
 
     void Start()

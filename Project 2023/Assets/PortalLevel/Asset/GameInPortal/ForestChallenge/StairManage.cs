@@ -29,7 +29,7 @@ public class StairManage : MonoBehaviour
         System.Array.Sort(Casts, delegate(DirectCast x, DirectCast y) { return x.index.CompareTo(y.index); });
     }
     // Start is called before the first frame update
-    void OnCollisionEnter(Collision collision)
+    void OnTirggerEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Player"){
             //set the first chunk to be awake

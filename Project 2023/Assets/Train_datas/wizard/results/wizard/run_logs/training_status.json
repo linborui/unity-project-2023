@@ -1,0 +1,65 @@
+{
+    "wizard": {
+        "checkpoints": [
+            {
+                "steps": 124991,
+                "file_path": "results\\wizard\\wizard\\wizard-124991.onnx",
+                "reward": -7081.253567504883,
+                "creation_time": 1686050733.91364,
+                "auxillary_file_paths": [
+                    "results\\wizard\\wizard\\wizard-124991.pt"
+                ]
+            },
+            {
+                "steps": 249699,
+                "file_path": "results\\wizard\\wizard\\wizard-249699.onnx",
+                "reward": -780.4739827906832,
+                "creation_time": 1686050842.3218098,
+                "auxillary_file_paths": [
+                    "results\\wizard\\wizard\\wizard-249699.pt"
+                ]
+            },
+            {
+                "steps": 374818,
+                "file_path": "results\\wizard\\wizard\\wizard-374818.onnx",
+                "reward": 860.7183263301849,
+                "creation_time": 1686050930.8049297,
+                "auxillary_file_paths": [
+                    "results\\wizard\\wizard\\wizard-374818.pt"
+                ]
+            },
+            {
+                "steps": 499939,
+                "file_path": "results\\wizard\\wizard\\wizard-499939.onnx",
+                "reward": 2113.511794881618,
+                "creation_time": 1686051019.3535416,
+                "auxillary_file_paths": [
+                    "results\\wizard\\wizard\\wizard-499939.pt"
+                ]
+            },
+            {
+                "steps": 500039,
+                "file_path": "results\\wizard\\wizard\\wizard-500039.onnx",
+                "reward": 2131.8721122340153,
+                "creation_time": 1686051019.461608,
+                "auxillary_file_paths": [
+                    "results\\wizard\\wizard\\wizard-500039.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500039,
+            "file_path": "results\\wizard\\wizard.onnx",
+            "reward": 2131.8721122340153,
+            "creation_time": 1686051019.461608,
+            "auxillary_file_paths": [
+                "results\\wizard\\wizard\\wizard-500039.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu118"
+    }
+}

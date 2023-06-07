@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
 using System.Linq;
-
+using Luminosity.IO;
 public class VoiceRecognizer : MonoBehaviour
 {
     public DesaturateController dc;
@@ -18,13 +18,17 @@ public class VoiceRecognizer : MonoBehaviour
         //Create keywords for keyword recognizer
         keywords.Add("Stop", dc.PauseTime);
         keywords.Add("Resume", dc.ResumeTime);
-        keywords.Add("HI",whisper.VoiceControlStartRecord);
+       // keywords.Add("HI",whisper.VoiceControlStartRecord);
         keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray(),ConfidenceLevel.Low);
         keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
         keywordRecognizer.Start();
     }
 
-
+    void Update(){
+        if(InputManager.GetButtonDown("Next")){
+          //  whisper.VoiceControlStartRecord();
+        }
+    }
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
         Action keywordAction;

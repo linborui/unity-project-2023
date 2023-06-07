@@ -92,26 +92,20 @@ public class player_weapon : MonoBehaviour
         float yAxis = InputManager.mousePosition.y;
         float zAxis = 0.4f;
 
-        if(status.iFrame > 0) 
-            swapeDone = false;
-
         if(InputManager.GetButton("Slash")){
             transform.localPosition = new Vector3(Mathf.Min(Mathf.Max(xAxis, 0), Screen.width) / Screen.width - 0.5f, Mathf.Min(Mathf.Max(yAxis, 0), Screen.height) / Screen.height - 0.5f, zAxis);
             if(!swapeDone){
                 float vx = xAxis - prevX, vy = yAxis - prevY;
                 float v = Mathf.Sqrt(vx * vx + vy * vy) * Time.deltaTime;
-                if(v > 0.3f){
+                if(v > 0.3f && status.iFrame == 0){
                     sweapNormal = Vector3.Cross(new Vector3( vx, vy, 0), new Vector3( 0, 0, 1)).normalized;
                     transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(vx, -vy) * 180 / Mathf.PI);
                     desDeg = Quaternion.AngleAxis(-179, sweapNormal) * transform.localRotation;
                     sweaping = true;
-                }else if(sweaping) swapeDone = true;
-                
+                }else if(sweaping) swapeDone = true; 
             }
         }
-        if(swapeDone) {
-            //Debug.DrawRay(transform.position, sweapNormal, Color.blue);
-            //Debug.Log(desDeg.eulerAngles);
+        if(swapeDone && status.iFrame == 0) {
             if(transform.localRotation != desDeg){
                 GetComponent<BoxCollider>().enabled = true;
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, desDeg, 25f * Time.deltaTime);
@@ -123,8 +117,9 @@ public class player_weapon : MonoBehaviour
                 particle.SetActive(false);
             }
         }
-        else if(!InputManager.GetButton("Slash"))
+        else if(!InputManager.GetButton("Slash") || status.iFrame > 0)
         {
+            GetComponent<BoxCollider>().enabled = false;
             transform.localPosition = Vector3.SmoothDamp(transform.localPosition, new Vector3(0.3f, -0.1f, zAxis),ref moveVel, 0.1f);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(0f, 0f, 0f), 6f * Time.deltaTime);
         }
@@ -544,7 +539,7 @@ public class player_weapon : MonoBehaviour
         groupNumber = Mathf.Max(disjointSet_split(positive, objs), groupNumber);
         groupNumber = Mathf.Max(disjointSet_split(negative, objs),groupNumber);
 
-        Debug.Log("group_num: " + groupNumber);
+        //Debug.Log("group_num: " + groupNumber);
 
         objs.Sort((a, b) => {
             int aVN = a.vertices.Count;

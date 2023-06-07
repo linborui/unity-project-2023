@@ -2889,6 +2889,7 @@ MonoBehaviour:
   Stamina: 100
   StaminaSp: 5
   sp: 2
+  awareDis: 30
   desx: 0
   desy: 0
   player_dis: 0
@@ -2900,7 +2901,7 @@ MonoBehaviour:
   acting: 0
   deathWay: 2
   dead_rand: 0
-  awareness: 1
+  awareness: 0
   react: 0
   dodge: 0
   parry: 0

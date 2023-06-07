@@ -10,8 +10,11 @@ public class AI : MonoBehaviour
     public float Stamina = 0;
     public float StaminaSp = 10f;
     public float sp = 1.5f;
+    public float awareDis = 30f;
     [Range(-1, 1)]
     public float desx, desy;
+    [Range(-1, 1)]
+    public float dash_x, dash_y;
     public float player_dis;
     public float smoothTime = 0.1f;
     public float percent = 0;
@@ -72,15 +75,18 @@ public class AI : MonoBehaviour
         }
     }
 
-    public void takeDamage(float val,Vector3 pos)
+    public virtual void takeDamage(float val,Vector3 pos)
     {
         if (iFrame > 0 || dodge == true || dead == true) return;
         //audioSource.PlayOneShot(audios[Random.Range(0,audios.Length)]);
         GameObject blood = Instantiate(bloodEffect, pos, Quaternion.identity);
         blood.GetComponent<ParticleSystem>().Play();
         react = true;
-        iFrame = 1f;
-        HP -= val;
+        iFrame = 0.5f;
+        if(!awareness) {
+            awareness = true;
+            HP -= 2 * val;
+        }else HP -= val;
     }
 
     public void Facing()
@@ -105,17 +111,22 @@ public class AI : MonoBehaviour
     {
         Vel =new Vector3(0, 0, 0);
         dis = new Vector2(Aim.transform.position.x - transform.position.x, Aim.transform.position.z - transform.position.z);
-        player_dis = Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
         percent = fsm.GetCurrentAnimatorStateInfo(0).normalizedTime % 1;
+        player_dis = Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
+        float angleDiff = Mathf.Abs(transform.eulerAngles.y - Vector3.SignedAngle(Aim.transform.position - transform.position, transform.forward, Vector3.up)) % 180;
+        
+        //Debug.Log(player_dis);
 
-        if(HP <= 0) {
+        if (angleDiff < 60 && player_dis < awareDis)
+            awareness = true;
+        if (HP <= 0) {
             dead = true;
-        }else if(HP <= 30){
+        }else if(HP <= 30 && GetComponentInChildren<sliceable>()){
             GetComponentInChildren<sliceable>().act = true;
         }
     }
 
-    public bool IfDead()
+    public virtual bool IfDead()
     {
         if(dead == true){
             react = false;
@@ -145,7 +156,7 @@ public class AI : MonoBehaviour
         }     
     }
 
-    public void SetAnimation()
+    public virtual void SetAnimation()
     {
         fsm.SetFloat("x", x);
         fsm.SetFloat("y", y);

@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class EnableObject : MonoBehaviour
 {
-    public GameObject enableObj;
+    public List <GameObject> enableObj;
+    public List <GameObject> disableObj;
     public int Stage = 0;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == 3) {
-            if(enableObj != null)
-                enableObj.SetActive(true);
-            if (Stage != 0)
+            foreach (GameObject obj in enableObj)
             {
-                StageAudio stA = FindObjectOfType<StageAudio>();
+                obj.SetActive(true);
+            }
+            foreach (GameObject obj in disableObj)
+            {
+                obj.SetActive(false);
+            }
+
+            StageAudio stA = FindObjectOfType<StageAudio>();
+            if (Stage != stA.stage)
+            {
                 stA.stage = Stage;
             }
         }

@@ -11,6 +11,7 @@ using Luminosity.IO;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public static bool disableMovement = false;
     public Player_interface player;
     public float moveSpeed;
     public float airSpeedMult;
@@ -117,6 +118,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (disableMovement) return;
         //if(Death()) return;
         DetectAround();
         Input();
@@ -126,11 +128,13 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (disableMovement) return;
         MovePlayer();
         Straighten();
     }
 
-    void setMotionBlur(float intensity, float clamp){
+    void setMotionBlur(float intensity, float clamp)
+    {
         v.profile.TryGet<MotionBlur>(out mb);
         mb.intensity.Override(intensity);
         mb.clamp.Override(clamp);
@@ -142,12 +146,12 @@ public class PlayerMovement : MonoBehaviour
         rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
         if (dashing && Time.time < dashStartTime + dashTime)
         {
-            setMotionBlur(1f, 1f);
+            // setMotionBlur(1f, 1f);
             moveForce = dashDirection * dashSpeed;
         }
         else
         {
-            setMotionBlur(Intensity, Clamp);
+            // setMotionBlur(Intensity, Clamp);
             if (dashing)
             {
                 ignoreWall = null;
@@ -434,7 +438,7 @@ public class PlayerMovement : MonoBehaviour
             float r, h;
             r = capsuleCollider.radius;
             h = colliderHeight / 2;
-            foreach(int side in new int[]{ 1, -1})
+            foreach (int side in new int[] { 1, -1 })
             {
                 igRot = Quaternion.Euler(0f, backIgnoreWallDegree * side, 0f);
                 for (int i = -1; i < 2; i++)
@@ -599,7 +603,7 @@ public class PlayerMovement : MonoBehaviour
         rigidbody.useGravity = false;
     }
 
-    void Restart()
+    public void Restart()
     {
         topBlock = false;
         rigidbody.velocity = Vector3.zero;
@@ -644,10 +648,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public Vector3 getDashDirection(){
+    public Vector3 getDashDirection()
+    {
         return dashDirection;
     }
-    public void setDashDirection(Vector3 direst){
+    public void setDashDirection(Vector3 direst)
+    {
         dashDirection = direst;
     }
     // Add in Portal Level
@@ -668,7 +674,7 @@ public class PlayerMovement : MonoBehaviour
     //         }
     //     }
     // }
-    
+
     // IEnumerator MoveToAttackTarget(){
     //     transform.LookAt(attackTarget.transform);
     //     while(Vector3.Distance(attackTarget.transform.position,transform.position) > characterStates.attackData.attackRange)
@@ -684,7 +690,7 @@ public class PlayerMovement : MonoBehaviour
     //         //重設冷卻時間
     //         lastAttackTime = characterStates.attackData.coolDown;
     //     }*/
-   
+
     // }
     // //Animation Hit
     // void Hit(){
@@ -699,11 +705,11 @@ public class PlayerMovement : MonoBehaviour
     //             }
     //         }
     //         */
- 
+
     //             //獲得攻擊目標身上的狀態
     //             var targetStates = attackTarget.GetComponent<CharacterStates>();
     //             targetStates.TakeDamage(characterStates,targetStates);
-            
+
     //     }
     // }
     // bool Death(){

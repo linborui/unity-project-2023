@@ -517,7 +517,38 @@ VisualEffect:
     m_AnimationCurve:
       m_Array: []
     m_Gradient:
-      m_Array: []
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 1, g: 0.9060749, b: 0, a: 0}
+          key1: {r: 0.60784316, g: 0.13824345, b: 0, a: 1}
+          key2: {r: 1, g: 0, b: 0, a: 0.52288026}
+          key3: {r: 0, g: 0, b: 0, a: 0.031827837}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 40863
+          ctime2: 53199
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 6554
+          atime2: 25058
+          atime3: 51464
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 3
+          m_NumAlphaKeys: 4
+        m_Name: Color over life
+        m_Overridden: 1
     m_NamedObject:
       m_Array: []
     m_Bool:

@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class ProceduralIvy : MonoBehaviour {
     public GameObject IvyObject;
     public Transform cam;
-    [Space]
-    public float recycleInterval = 30;
+    public float swingmass = 30;
+
     [Space]
     public int branches = 3;
     public int maxPointsForBranch = 20;
@@ -16,13 +16,6 @@ public class ProceduralIvy : MonoBehaviour {
     public float branchRadius = 0.02f;
     [Space]
     public Material branchMaterial;
-    //   public Material leafMaterial;
-    //   public Material flowerMaterial;
-        [Space]
-    //    public Blossom leafPrefab;
-    //    public Blossom flowerPrefab;
-        [Space]
-     //   public bool wantBlossoms;
     
     int ivyCount = 0;
     int ignoreLayer;
@@ -45,7 +38,8 @@ public class ProceduralIvy : MonoBehaviour {
     public float predictionSphereCastRadius;
   //  public Transform predictionPoint;
     [Header("OdmGear")]
-    public Rigidbody rb;
+    private Rigidbody rb;
+    private float RBmass;
     public float horizontalThrustForce;
     public float forwardThrustForce;
     public float extendCableSpeed;
@@ -61,7 +55,9 @@ public class ProceduralIvy : MonoBehaviour {
           ignoreLayer = ~((1 << 2) | (1 << 3) | (1 << 4)| (1 << 6));
           tmCon = GameObject.FindGameObjectWithTag("TimeManager").GetComponent<TimeShiftingController>();
           rb = player.GetComponent<Rigidbody>();
+          RBmass = rb.mass;
           im = image.GetComponent<Image>();
+
     }
 
     void Update() {
@@ -122,21 +118,16 @@ public class ProceduralIvy : MonoBehaviour {
         {
             predictionHit = raycastHit;
         }
-        //realHitPoint = raycastHit.point;
 
         // Option 2 - Indirect (predicted) Hit
         else if (sphereCastHit.point != Vector3.zero)
         {
             predictionHit = sphereCastHit;
         }
-        //realHitPoint = sphereCastHit.point;
 
         // Option 3 - Miss
         else
             predictionHit.point = Vector3.zero;
-     //     im.color = Color.white;
-        //    realHitPoint = Vector3.zero;
-
 
         if (predictionHit.point != Vector3.zero)
         {
@@ -163,6 +154,8 @@ public class ProceduralIvy : MonoBehaviour {
         }
         else if(predictionHit.transform.gameObject.tag == "Grappleable")
         {
+            Debug.Log(predictionHit.transform.gameObject);
+            rb.mass = swingmass;
             audioManager.PlayAudio("connectVine");
             // deactivate active grapple
             playerMovement.swinging = true;
@@ -199,6 +192,7 @@ public class ProceduralIvy : MonoBehaviour {
     }
     private void OdmGearMovement()
     {
+
         // right
         if (Input.GetKey(KeyCode.D)) rb.AddForce(cam.right * horizontalThrustForce * Time.deltaTime);
         // left
@@ -210,6 +204,7 @@ public class ProceduralIvy : MonoBehaviour {
         // shorten cable
         if (Input.GetKey(KeyCode.Space))
         {
+            
             Vector3 directionToPoint = swingPoint - transform.position;
             rb.AddForce(directionToPoint.normalized * forwardThrustForce * Time.deltaTime);
 
@@ -223,13 +218,14 @@ public class ProceduralIvy : MonoBehaviour {
         {
             float extendedDistanceFromPoint = Vector3.Distance(transform.position, swingPoint) + extendCableSpeed;
 
-            joint.maxDistance = extendedDistanceFromPoint * 0.5f;
-            joint.minDistance = extendedDistanceFromPoint * 0.35f;
+            joint.maxDistance = extendedDistanceFromPoint * 0.7f;
+            joint.minDistance = extendedDistanceFromPoint * 0.4f;
         }
     }
 
     void StopGrapple()
   {
+        rb.mass = RBmass;
         moving = false;
         playerMovement.swinging = false;
         playerMovement.moveSpeed = o_MoveSpeed;

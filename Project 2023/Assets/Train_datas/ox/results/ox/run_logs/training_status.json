@@ -1,0 +1,65 @@
+{
+    "ox": {
+        "checkpoints": [
+            {
+                "steps": 124988,
+                "file_path": "results\\ox\\ox\\ox-124988.onnx",
+                "reward": 1041.760189658717,
+                "creation_time": 1686113735.9359524,
+                "auxillary_file_paths": [
+                    "results\\ox\\ox\\ox-124988.pt"
+                ]
+            },
+            {
+                "steps": 249931,
+                "file_path": "results\\ox\\ox\\ox-249931.onnx",
+                "reward": 799.233040247208,
+                "creation_time": 1686113840.9926898,
+                "auxillary_file_paths": [
+                    "results\\ox\\ox\\ox-249931.pt"
+                ]
+            },
+            {
+                "steps": 374912,
+                "file_path": "results\\ox\\ox\\ox-374912.onnx",
+                "reward": 314.0179251876532,
+                "creation_time": 1686113948.044587,
+                "auxillary_file_paths": [
+                    "results\\ox\\ox\\ox-374912.pt"
+                ]
+            },
+            {
+                "steps": 499770,
+                "file_path": "results\\ox\\ox\\ox-499770.onnx",
+                "reward": 1327.9549318078446,
+                "creation_time": 1686114053.3160655,
+                "auxillary_file_paths": [
+                    "results\\ox\\ox\\ox-499770.pt"
+                ]
+            },
+            {
+                "steps": 500156,
+                "file_path": "results\\ox\\ox\\ox-500156.onnx",
+                "reward": 1278.874307993296,
+                "creation_time": 1686114053.4559882,
+                "auxillary_file_paths": [
+                    "results\\ox\\ox\\ox-500156.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500156,
+            "file_path": "results\\ox\\ox.onnx",
+            "reward": 1278.874307993296,
+            "creation_time": 1686114053.4559882,
+            "auxillary_file_paths": [
+                "results\\ox\\ox\\ox-500156.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu118"
+    }
+}

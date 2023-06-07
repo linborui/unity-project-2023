@@ -24,7 +24,6 @@ public class ObjectControl : MonoBehaviour
     DStarLite3d dStarLiteRoute;
     Queue<Vector3> objectPath;
     bool hasPath;
-    Transform objectParent;
     LineRenderer lineRenderer;
 
     List<GameObject> collectedItems;
@@ -59,8 +58,7 @@ public class ObjectControl : MonoBehaviour
             FindPath();
             if (objectState == 2)
             {
-                //DrawPath();
-                objectParent = controledObject.transform.parent;
+                DrawPath();
                 controledObject.transform.SetParent(cam.transform);
                 controledObject.GetComponent<Collider>().enabled = false;
                 controledObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
@@ -88,7 +86,7 @@ public class ObjectControl : MonoBehaviour
                 ThrowObject();
                 controlTime = Time.time;
             }
-            Debug.Log("ObjectControl: state " + objectState);
+            // Debug.Log("ObjectControl: state " + objectState);
         }
     }
 
@@ -195,7 +193,7 @@ public class ObjectControl : MonoBehaviour
         {
             GameObject item = removedItems.Dequeue();
             collectedItems.Remove(item);
-            Debug.Log("Collect " + item);
+            // Debug.Log("Collect " + item);
             Destroy(item);
         }
 
@@ -258,7 +256,7 @@ public class ObjectControl : MonoBehaviour
     {
         controledObject.transform.rotation = cam.transform.rotation;
         controledObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        // lineRenderer.positionCount = 0;
+        lineRenderer.positionCount = 0;
         objectState = 4;
     }
 

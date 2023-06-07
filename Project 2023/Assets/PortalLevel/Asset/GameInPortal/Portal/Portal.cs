@@ -48,14 +48,17 @@ public class Portal : MonoBehaviour {
                 var positionOld = travellerT.position;
                 var rotOld = travellerT.rotation;
                 traveller.Teleport (transform, linkedPortal.transform);
-                traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
+
+                if(!traveller.GetComponent<PortalTraveller>().isPlayer) 
+                    traveller.graphicsClone.transform.SetPositionAndRotation (positionOld, rotOld);
                 linkedPortal.OnTravellerEnterPortal (traveller);
                 trackedTravellers.RemoveAt (i);
                 i--;
             } 
             else {
                 Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
-                traveller.graphicsClone.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
+                if(!traveller.GetComponent<PortalTraveller>().isPlayer)
+                    traveller.graphicsClone.transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
                 traveller.previousOffsetFromPortal = portalSide;
             }
         }
@@ -143,21 +146,22 @@ public class Portal : MonoBehaviour {
         
         var offsetFromPortalToCam = portalCamPos - transform.position;
         foreach (var linkedTraveller in linkedPortal.trackedTravellers) {
+            if(!linkedTraveller.GetComponent<PortalTraveller>().isPlayer){
+                var travellerPos = linkedTraveller.graphicsClone.transform.position;
+                var clonePos = linkedTraveller.graphicsClone.transform.position;
             
-            var travellerPos = linkedTraveller.graphicsClone.transform.position;
-            var clonePos = linkedTraveller.graphicsClone.transform.position;
-
-            bool cloneOnSameSideAsCam = linkedPortal.SideOfPortal (travellerPos) != SideOfPortal (portalCamPos);
-            if (cloneOnSameSideAsCam) {
-                linkedTraveller.SetSliceOffsetDst (hideDst, true);
-            } else {
-                linkedTraveller.SetSliceOffsetDst (showDst, true);
-            }
-            bool camSameSideAsTraveller = linkedPortal.SameSideOfPortal (linkedTraveller.transform.position, portalCamPos);
-            if (camSameSideAsTraveller) {
-                linkedTraveller.SetSliceOffsetDst (screenThickness, false);
-            } else {
-                linkedTraveller.SetSliceOffsetDst (-screenThickness, false);
+                bool cloneOnSameSideAsCam = linkedPortal.SideOfPortal (travellerPos) != SideOfPortal (portalCamPos);
+                if (cloneOnSameSideAsCam) {
+                    linkedTraveller.SetSliceOffsetDst (hideDst, true);
+                } else {
+                    linkedTraveller.SetSliceOffsetDst (showDst, true);
+                }
+                bool camSameSideAsTraveller = linkedPortal.SameSideOfPortal (linkedTraveller.transform.position, portalCamPos);
+                if (camSameSideAsTraveller) {
+                    linkedTraveller.SetSliceOffsetDst (screenThickness, false);
+                } else {
+                    linkedTraveller.SetSliceOffsetDst (-screenThickness, false);
+                }
             }
         }
     }
@@ -215,14 +219,16 @@ public class Portal : MonoBehaviour {
         }
 
         // Apply parameters
-        for (int i = 0; i < traveller.originalMaterials.Length; i++) {
-            traveller.originalMaterials[i].SetVector ("sliceCentre", slicePos);
-            traveller.originalMaterials[i].SetVector ("sliceNormal", sliceNormal);
-            traveller.originalMaterials[i].SetFloat ("sliceOffsetDst", sliceOffsetDst);
+        if(!traveller.GetComponent<PortalTraveller>().isPlayer){
+            for (int i = 0; i < traveller.originalMaterials.Length; i++) {
+                traveller.originalMaterials[i].SetVector ("sliceCentre", slicePos);
+                traveller.originalMaterials[i].SetVector ("sliceNormal", sliceNormal);
+                traveller.originalMaterials[i].SetFloat ("sliceOffsetDst", sliceOffsetDst);
 
-            traveller.cloneMaterials[i].SetVector ("sliceCentre", cloneSlicePos);
-            traveller.cloneMaterials[i].SetVector ("sliceNormal", cloneSliceNormal);
-            traveller.cloneMaterials[i].SetFloat ("sliceOffsetDst", cloneSliceOffsetDst);
+                traveller.cloneMaterials[i].SetVector ("sliceCentre", cloneSlicePos);
+                traveller.cloneMaterials[i].SetVector ("sliceNormal", cloneSliceNormal);
+                traveller.cloneMaterials[i].SetFloat ("sliceOffsetDst", cloneSliceOffsetDst);
+            }
         }
     }
     
@@ -245,7 +251,8 @@ public class Portal : MonoBehaviour {
 
     void OnTravellerEnterPortal (PortalTraveller traveller) {
         if (!trackedTravellers.Contains (traveller)) {
-            traveller.graphicsClone.SetActive (true);
+            if(traveller.GetComponent<PortalTraveller>().isPlayer==false)
+                traveller.graphicsClone.SetActive (true);
             traveller.previousOffsetFromPortal = System.Math.Sign (Vector3.Dot((traveller.transform.position - transform.position) , transform.forward));
             LastportalSide = System.Math.Sign(transform.InverseTransformPoint(traveller.transform.position).z);
             traveller.SetIsInPortal(this, linkedPortal, null);

@@ -21,6 +21,7 @@ public class PortalTraveller : MonoBehaviour {
     public bool isPlayer = false;
     private static readonly Quaternion halfTurn = Quaternion.Euler(0.0f, 180.0f, 0.0f);
     public virtual void Teleport (Transform fromPortal, Transform toPortal){ 
+        Debug.Log("Teleport happen");
         if(!isPlayer){
             Matrix4x4 m = toPortal.localToWorldMatrix * fromPortal.worldToLocalMatrix * transform.localToWorldMatrix;
             transform.SetPositionAndRotation (m.GetColumn (3), m.rotation);
@@ -43,18 +44,22 @@ public class PortalTraveller : MonoBehaviour {
         }
     }
     public virtual void ExitPortalThreshold () {
-        graphicsClone.SetActive (false);
-        for (int i = 0; i < originalMaterials.Length; i++) {
-            originalMaterials[i].SetVector ("sliceNormal", Vector3.zero);
+        if(!isPlayer){
+            graphicsClone.SetActive (false);
+            for (int i = 0; i < originalMaterials.Length; i++) {
+                originalMaterials[i].SetVector ("sliceNormal", Vector3.zero);
+            }
         }
     }
     public void SetSliceOffsetDst (float dst, bool clone) {
-        for (int i = 0; i < originalMaterials.Length; i++) {
-            if (clone){
-                cloneMaterials[i].SetFloat ("sliceOffsetDst", dst);
-            } 
-            else{
-                originalMaterials[i].SetFloat ("sliceOffsetDst", dst);
+        if(!isPlayer){
+            for (int i = 0; i < originalMaterials.Length; i++) {
+                if (clone){
+                    cloneMaterials[i].SetFloat ("sliceOffsetDst", dst);
+                } 
+                else{
+                    originalMaterials[i].SetFloat ("sliceOffsetDst", dst);
+                }
             }
         }
     }
@@ -72,26 +77,27 @@ public class PortalTraveller : MonoBehaviour {
     
     protected virtual void Awake()
     {
-        graphicsClone = new GameObject();
-        graphicsClone.SetActive(false);
-        MeshRenderer met = graphicsClone.AddComponent<MeshRenderer>();//.materials;
-        MeshFilter mesh = graphicsClone.AddComponent<MeshFilter>();
-        graphicsClone.transform.localScale = transform.localScale;
-
         rigidBody = GetComponent<Rigidbody>();
-        collider = GetComponent<Collider>();
-        if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
-            met.material = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
-            Mesh bakedMesh = new Mesh();
-            this.GetComponentInChildren<SkinnedMeshRenderer>().BakeMesh(bakedMesh);
-            mesh.sharedMesh = bakedMesh;
+        if(!isPlayer){
+            graphicsClone = new GameObject();
+            graphicsClone.SetActive(false);
+            MeshRenderer met = graphicsClone.AddComponent<MeshRenderer>();//.materials;
+            MeshFilter mesh = graphicsClone.AddComponent<MeshFilter>();
+            graphicsClone.transform.localScale = transform.localScale;
+            collider = GetComponent<Collider>();
+            if(this.GetComponentInChildren<SkinnedMeshRenderer>()){
+                met.material = this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
+                Mesh bakedMesh = new Mesh();
+                this.GetComponentInChildren<SkinnedMeshRenderer>().BakeMesh(bakedMesh);
+                mesh.sharedMesh = bakedMesh;
+            }
+            else{
+                met.sharedMaterial = this.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+                mesh.sharedMesh = this.GetComponentInChildren<MeshFilter>().sharedMesh;
+            }
+            originalMaterials = GetMaterials (graphicsClone);
+            cloneMaterials = GetMaterials (graphicsClone);
         }
-        else{
-            met.sharedMaterial = this.GetComponentInChildren<MeshRenderer>().sharedMaterial;
-            mesh.sharedMesh = this.GetComponentInChildren<MeshFilter>().sharedMesh;
-        }
-        originalMaterials = GetMaterials (graphicsClone);
-        cloneMaterials = GetMaterials (graphicsClone);
     }
 
     private void LateUpdate()
@@ -100,42 +106,62 @@ public class PortalTraveller : MonoBehaviour {
         {
             return;
         }
-        if(graphicsClone.activeSelf && inPairPortal.IsPlaced && outPairPortal.IsPlaced)
-        {
-            var inTransform = inPairPortal.transform;
-            var outTransform = outPairPortal.transform;
+        if(!isPlayer){
+            if(graphicsClone.activeSelf && inPairPortal.IsPlaced && outPairPortal.IsPlaced)
+            {
+                var inTransform = inPairPortal.transform;
+                var outTransform = outPairPortal.transform;
 
-            // Update position of clone.
-            Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
-            relativePos = halfTurn * relativePos;
-            graphicsClone.transform.position = outTransform.TransformPoint(relativePos);
+                // Update position of clone.
+                Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
+                relativePos = halfTurn * relativePos;
+                graphicsClone.transform.position = outTransform.TransformPoint(relativePos);
 
-            // Update rotation of clone.
-            Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
-            relativeRot = halfTurn * relativeRot;
-            graphicsClone.transform.rotation = outTransform.rotation * relativeRot;
+                // Update rotation of clone.
+                Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
+                relativeRot = halfTurn * relativeRot;
+                graphicsClone.transform.rotation = outTransform.rotation * relativeRot;
+            }
+            else
+            {
+                graphicsClone.transform.position = new Vector3(-1000.0f, 1000.0f, -1000.0f);
+            }
         }
-        else
-        {
-            graphicsClone.transform.position = new Vector3(-1000.0f, 1000.0f, -1000.0f);
+        else{
+            if(inPairPortal.IsPlaced && outPairPortal.IsPlaced)
+            {
+                var inTransform = inPairPortal.transform;
+                var outTransform = outPairPortal.transform;
+
+                // Update position of clone.
+                Vector3 relativePos = inTransform.InverseTransformPoint(transform.position);
+                relativePos = halfTurn * relativePos;
+
+                // Update rotation of clone.
+                Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * transform.rotation;
+                relativeRot = halfTurn * relativeRot;
+            }
         }
     }
     public void SetIsInPortal(Portal inPortal, Portal outPortal, Collider wallCollider)
     {
         this.inPortal = inPortal;
         this.outPortal = outPortal;
-        graphicsClone.SetActive(false);
+        if(!isPlayer)
+            graphicsClone.SetActive(false);
     }
     public void ExitPortal()
     {
-        graphicsClone.SetActive(false);     
+        if(!isPlayer)
+            graphicsClone.SetActive(false);     
     }
     public void SetIsInPairPortal(PortalForPair inPortal, PortalForPair outPortal, Collider wallCollider)
     {
         this.inPairPortal = inPortal;
         this.outPairPortal = outPortal;
         Physics.IgnoreCollision(collider, wallCollider);
-        graphicsClone.SetActive(false);
+        if(!isPlayer)
+            graphicsClone.SetActive(false);
         ++inPortalCount;
     }
     public void ExitPairPortal(Collider wallCollider)
@@ -145,7 +171,8 @@ public class PortalTraveller : MonoBehaviour {
 
         if (inPortalCount == 0)
         {
-            graphicsClone.SetActive(false);
+            if(!isPlayer)
+                graphicsClone.SetActive(false);
         }
     }
 

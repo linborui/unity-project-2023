@@ -34,29 +34,42 @@ public class PortalPlacement : MonoBehaviour
     }
     private void Update()
     {
-        if(InputManager.GetButtonDown("PortalIn") && portalInNum > 0)
+        if(InputManager.GetButtonDown("PortalIn"))
         {
-            FirePortal(0, transform.position, transform.forward, 500.0f);
-            if(wasPlaced){
-                portalInNum -= 1;
-                wasPlaced=false;
-            }
+            PlaceIn();
         }
         else if (InputManager.GetButtonDown("PortalOut") && portalOutNum > 0)
         {
-            FirePortal(1, transform.position, transform.forward, 500.0f);
-            if(wasPlaced){
-                portalOutNum -= 1;
-                wasPlaced=false;
-            }
-            else{
-                Debug.Log("Can't place portal");
-            }
+            PlaceOut();
         }
         PortalIn.text = portalInNum.ToString();
         PortalOut.text = portalOutNum.ToString();
     }
-
+    public void PlaceIn()
+    {
+        if (portalInNum > 0)//InputManager.GetButtonDown("PortalIn")
+        {
+            FirePortal(0, transform.position, transform.forward, 500.0f);
+            if (wasPlaced)
+            {
+                portalInNum -= 1;
+                wasPlaced = false;
+            }
+        }
+        PortalIn.text = portalInNum.ToString();
+    }
+    public void PlaceOut() { 
+        if (portalOutNum > 0)
+        {
+            FirePortal(1, transform.position, transform.forward, 500.0f);
+            if (wasPlaced)
+            {
+                portalOutNum -= 1;
+                wasPlaced = false;
+            }
+        }
+        PortalOut.text = portalOutNum.ToString();
+    }
     private void FirePortal(int portalID, Vector3 pos, Vector3 dir, float distance)
     {
         RaycastHit hit;
