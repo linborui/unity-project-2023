@@ -1,0 +1,65 @@
+{
+    "miniskeleton": {
+        "checkpoints": [
+            {
+                "steps": 124900,
+                "file_path": "results\\miniskeleton\\miniskeleton\\miniskeleton-124900.onnx",
+                "reward": 32769.64501953125,
+                "creation_time": 1686090424.0766742,
+                "auxillary_file_paths": [
+                    "results\\miniskeleton\\miniskeleton\\miniskeleton-124900.pt"
+                ]
+            },
+            {
+                "steps": 249913,
+                "file_path": "results\\miniskeleton\\miniskeleton\\miniskeleton-249913.onnx",
+                "reward": 52361.47240048363,
+                "creation_time": 1686090522.6376264,
+                "auxillary_file_paths": [
+                    "results\\miniskeleton\\miniskeleton\\miniskeleton-249913.pt"
+                ]
+            },
+            {
+                "steps": 374964,
+                "file_path": "results\\miniskeleton\\miniskeleton\\miniskeleton-374964.onnx",
+                "reward": 22457.058076746325,
+                "creation_time": 1686090620.8444903,
+                "auxillary_file_paths": [
+                    "results\\miniskeleton\\miniskeleton\\miniskeleton-374964.pt"
+                ]
+            },
+            {
+                "steps": 499819,
+                "file_path": "results\\miniskeleton\\miniskeleton\\miniskeleton-499819.onnx",
+                "reward": 54528.94109933035,
+                "creation_time": 1686090714.222214,
+                "auxillary_file_paths": [
+                    "results\\miniskeleton\\miniskeleton\\miniskeleton-499819.pt"
+                ]
+            },
+            {
+                "steps": 500545,
+                "file_path": "results\\miniskeleton\\miniskeleton\\miniskeleton-500545.onnx",
+                "reward": 60982.31339518229,
+                "creation_time": 1686090714.3724494,
+                "auxillary_file_paths": [
+                    "results\\miniskeleton\\miniskeleton\\miniskeleton-500545.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500545,
+            "file_path": "results\\miniskeleton\\miniskeleton.onnx",
+            "reward": 60982.31339518229,
+            "creation_time": 1686090714.3724494,
+            "auxillary_file_paths": [
+                "results\\miniskeleton\\miniskeleton\\miniskeleton-500545.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu118"
+    }
+}

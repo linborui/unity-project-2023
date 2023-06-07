@@ -75,7 +75,7 @@ public class Wizard_agent : Training_scripts
         distance =  Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
         
         if(Ai_scripts.iFrame == 0){
-            int action = Mathf.Clamp((int)Mathf.Round(vectorAction.ContinuousActions[2] * 10), 0, 4);
+            int action = Mathf.Clamp((int)Mathf.Round(vectorAction.ContinuousActions[2] * 10), 0, 3);
 
             if(distance > 15f) { //距離大於20 就會是負的
                 action = 0;                 // movement

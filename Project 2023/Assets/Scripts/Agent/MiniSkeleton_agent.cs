@@ -79,23 +79,18 @@ public class MiniSkeleton_agent : Training_scripts
 
             if(distance > 15f) { //距離大於20 就會是負的
                 action = 0;                 // movement
-                AddReward(-distance);
+                AddReward(5*distance);
             }
-            if(distance >1 && distance <15f)
-            {
-                if(action == 0)
-                    AddReward(10);
-                else{
-                    AddReward(-100);
-                }
-            }
-            if(distance <= 1 && action ==1) //刺 stab
-                AddReward(20);
-            if(distance < 1 && action == 2) //揮 sweap
+            
+            if(distance <= 3 && action ==1) //劈 strile
+                AddReward(40);
+            if(distance < 3 && action == 2) //踢 kick
+                AddReward(20); 
+            if(distance < 3 && action == 3) //踢 kick
+                AddReward(20); 
+            if(distance < 3 && action == 4) //踢 kick
                 AddReward(20); 
   
-
-            //if(distance > 6 && action > 1 && action < 4) action = 2;
 
             Ai_scripts.state = action;
         } 

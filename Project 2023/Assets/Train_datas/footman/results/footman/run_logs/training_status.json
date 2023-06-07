@@ -1,0 +1,65 @@
+{
+    "footman": {
+        "checkpoints": [
+            {
+                "steps": 124989,
+                "file_path": "results\\footman\\footman\\footman-124989.onnx",
+                "reward": 106.51411869840801,
+                "creation_time": 1686118096.4912007,
+                "auxillary_file_paths": [
+                    "results\\footman\\footman\\footman-124989.pt"
+                ]
+            },
+            {
+                "steps": 249961,
+                "file_path": "results\\footman\\footman\\footman-249961.onnx",
+                "reward": -408.84120289872334,
+                "creation_time": 1686118221.4326768,
+                "auxillary_file_paths": [
+                    "results\\footman\\footman\\footman-249961.pt"
+                ]
+            },
+            {
+                "steps": 374815,
+                "file_path": "results\\footman\\footman\\footman-374815.onnx",
+                "reward": 71.81248294605928,
+                "creation_time": 1686118345.7384803,
+                "auxillary_file_paths": [
+                    "results\\footman\\footman\\footman-374815.pt"
+                ]
+            },
+            {
+                "steps": 499969,
+                "file_path": "results\\footman\\footman\\footman-499969.onnx",
+                "reward": 66.20566704644098,
+                "creation_time": 1686118471.4481914,
+                "auxillary_file_paths": [
+                    "results\\footman\\footman\\footman-499969.pt"
+                ]
+            },
+            {
+                "steps": 500139,
+                "file_path": "results\\footman\\footman\\footman-500139.onnx",
+                "reward": 66.97466851968682,
+                "creation_time": 1686118471.6124687,
+                "auxillary_file_paths": [
+                    "results\\footman\\footman\\footman-500139.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500139,
+            "file_path": "results\\footman\\footman.onnx",
+            "reward": 66.97466851968682,
+            "creation_time": 1686118471.6124687,
+            "auxillary_file_paths": [
+                "results\\footman\\footman\\footman-500139.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu118"
+    }
+}
