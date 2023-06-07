@@ -22,11 +22,26 @@ public class Bullet : MonoBehaviour
                 Instantiate(hitPrefab, pos,rot);
             }
 
-            if (firePrefab!=null && collision.gameObject.tag == "Burn")
+            if (firePrefab!=null)
             {
-                GameObject fire =  Instantiate(firePrefab, pos,Quaternion.identity);
-                fire.transform.SetParent(collision.transform);
-                collision.gameObject.GetComponentInParent<Burn>().currentHitTimes += 1;
+                if (collision.gameObject.tag == "Burn"){
+                    GameObject fire = Instantiate(firePrefab, pos, Quaternion.identity);
+                    fire.transform.SetParent(collision.transform);
+                    collision.gameObject.GetComponentInParent<Burn>().currentHitTimes += 1;
+                }
+                else if(collision.gameObject.tag == "Grave")
+                {
+                    if(collision.gameObject.GetComponent<GraveBoss>().attack)
+                    {
+                        GameObject fire = Instantiate(firePrefab, pos, Quaternion.identity);
+                        fire.transform.SetParent(collision.transform);
+
+                        collision.gameObject.GetComponent<GraveBoss>().currentHitTimes += 1;
+                    }
+
+                }
+
+ 
             }
 
             collided = true;

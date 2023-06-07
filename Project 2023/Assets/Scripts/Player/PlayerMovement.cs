@@ -603,7 +603,7 @@ public class PlayerMovement : MonoBehaviour
         rigidbody.useGravity = false;
     }
 
-    void Restart()
+    public void Restart()
     {
         topBlock = false;
         rigidbody.velocity = Vector3.zero;

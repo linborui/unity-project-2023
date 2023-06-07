@@ -10,16 +10,14 @@ public class DesaturateController : MonoBehaviour {
     [SerializeField] private UniversalRendererData rendererData = null;
     [SerializeField] private string featureName = null;
     [SerializeField] private float transitionPeriod = 1;
-
-
-    public bool CanStop;
+    ScriptableRendererFeature feature;
+    Material mat;
     private bool transitioning;
     private float startTime;
     private float fullscreenintensity;
-    ScriptableRendererFeature feature;
-    Material mat;
-    public bool TimeIsStopped;
 
+    public bool CanStop;
+    public bool TimeIsStopped;
     [Space]
     public List<ParticleSystem> allParticle;
 

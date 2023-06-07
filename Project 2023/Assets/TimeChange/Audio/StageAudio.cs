@@ -8,18 +8,9 @@ public class StageAudio : MonoBehaviour
     public int stage = 1;
     public AudioManager audioManager;
     public TimeShiftingController timeShiftingController;
-   // public float fadeInTime;
-   // public float fadeOutTime;
-
     private int PrePastbool;
     private int preStage;
-    //private string pastOrpresent;
     public string preAudioName;
-   // public Sound NowBGM;
-
-  // private bool fadeInTransition;
-  // private bool fadeOutTransition;
-  // private float timer = 0;
 
     // Start is called before the first frame update
     void Start()

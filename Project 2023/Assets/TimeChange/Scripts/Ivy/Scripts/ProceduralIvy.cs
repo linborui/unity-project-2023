@@ -118,21 +118,16 @@ public class ProceduralIvy : MonoBehaviour {
         {
             predictionHit = raycastHit;
         }
-        //realHitPoint = raycastHit.point;
 
         // Option 2 - Indirect (predicted) Hit
         else if (sphereCastHit.point != Vector3.zero)
         {
             predictionHit = sphereCastHit;
         }
-        //realHitPoint = sphereCastHit.point;
 
         // Option 3 - Miss
         else
             predictionHit.point = Vector3.zero;
-     //     im.color = Color.white;
-        //    realHitPoint = Vector3.zero;
-
 
         if (predictionHit.point != Vector3.zero)
         {
@@ -159,6 +154,7 @@ public class ProceduralIvy : MonoBehaviour {
         }
         else if(predictionHit.transform.gameObject.tag == "Grappleable")
         {
+            Debug.Log(predictionHit.transform.gameObject);
             rb.mass = swingmass;
             audioManager.PlayAudio("connectVine");
             // deactivate active grapple
