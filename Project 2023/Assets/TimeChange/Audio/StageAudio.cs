@@ -17,9 +17,7 @@ public class StageAudio : MonoBehaviour
     {
         PrePastbool = timeShiftingController.PastBool;
         preStage = stage;
-      //  pastOrpresent = "Past";
         preAudioName = "Stage" + stage + "Past";
-        //     preAudio = audioManager.FindSoundSource("Stage" + stage + pastOrpresent);
         audioManager.PlayAudio(preAudioName);
     }
 
