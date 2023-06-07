@@ -8,8 +8,10 @@ public class AfterDefeatVillage : MonoBehaviour
     private bool change = false;
 
     public AI enemy;
-    public GameObject AfterDefeat;
     public TimeShiftingController TimeShift;
+    public GameObject AfterDefeat;
+    public GameObject Fire;
+    public Transform Buildings;
 
     // Update is called once per frame
     void Update()
@@ -24,10 +26,12 @@ public class AfterDefeatVillage : MonoBehaviour
             }
         }
 
-        if (change)
+        if (change && TimeShift.PastBool == 0)
         {
             this.gameObject.tag = "IvyGenerateable";
-            AfterDefeat.active = true;
+            AfterDefeat.SetActive(true);
+            Destroy(Fire);
+            ChangeObjectLayer(Buildings, 0);
             this.enabled = false;
         }
     }
@@ -42,6 +46,20 @@ public class AfterDefeatVillage : MonoBehaviour
             EnemyDead = true;
             }
 
+    }
+
+    private void ChangeObjectLayer(Transform parent, int targetLayer)
+    {
+        // 更改當前物件的層
+        parent.gameObject.layer = targetLayer;
+
+        // 遍歷所有子物件
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            Transform child = parent.GetChild(i);
+
+            child.gameObject.layer = targetLayer;
+        }
     }
 
 }

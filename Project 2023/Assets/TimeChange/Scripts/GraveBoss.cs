@@ -5,6 +5,7 @@ using UnityEngine;
 public class GraveBoss : MonoBehaviour
 {
     public MoveSnakeStatue snakeStatue;
+    public GameObject player;
 
     [Header("Enemy")]
     public float generateEnemy = 2;
@@ -27,15 +28,25 @@ public class GraveBoss : MonoBehaviour
     private float timer = 0f;
     public bool attack = false;
     private float enemyNum = 0;
+    private PlayerRelife relife;
 
     private void Start()
     {
         GeneratingEnemy();
+        relife = player.GetComponent<PlayerRelife>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (relife.Back)
+        {
+            currentHitTimes = 0;
+        }
+
+
+
+
         timer += Time.deltaTime;
         enemyNum = CountEnemy.childCount;
 
@@ -78,6 +89,7 @@ public class GraveBoss : MonoBehaviour
         randomPosition.x = Mathf.Abs(randomPosition.x);
         randomPosition += this.transform.position;
         enemyPrefab.transform.localScale = new Vector3(1.8f, 1.8f, 1.8f);
+        enemyPrefab.GetComponent<Training_scripts>().Player = player;
 
         GameObject e = Instantiate(enemyPrefab, randomPosition, Quaternion.identity);
         e.transform.SetParent(CountEnemy);
