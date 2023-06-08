@@ -188,7 +188,6 @@ GameObject:
   - component: {fileID: 5219592451589124031}
   - component: {fileID: 5219592451589124029}
   - component: {fileID: 5219592451589124018}
-  - component: {fileID: 650779982}
   m_Layer: 0
   m_Name: Rockman
   m_TagString: Untagged
@@ -209,7 +208,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3433448806625388029}
-  - {fileID: 796822301}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -224,13 +222,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 5
+  m_Radius: 2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!114 &5219592451589124030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,8 +241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4b3b39c06a3344e87251f4972f60ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHP: 250
-  HP: 250
+  MaxHP: 2500
+  HP: 2500
   MaxStamina: 100
   Stamina: 100
   StaminaSp: 10
@@ -348,20 +346,6 @@ MonoBehaviour:
   Player_status: {fileID: 0}
   Player_weapon: {fileID: 0}
   Agent_weapon: {fileID: 0}
---- !u!136 &650779982
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3433448806426489482}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 3
-  m_Height: 4
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.9, z: 0}
 --- !u!1 &3433448806483517716
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,7 +614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scale: {x: 1, y: 1, z: 1}
-  act: 1
+  act: 0
   life_time: 3
 --- !u!1 &3433448806647615374
 GameObject:

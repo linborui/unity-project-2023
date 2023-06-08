@@ -15,6 +15,8 @@ public class Projectile_object : MonoBehaviour
     // Start is called before the first frame update
     public void OnTriggerEnter(Collider other)
     {
+        if(other.GetComponentInParent<AI>()) return;
+
         Vector3 point = other.ClosestPoint(transform.position);
         other.GetComponentInParent<Player_interface>().takeDamage(dmg, point);
         if(!noBreak) Object.Destroy(this.gameObject);
@@ -37,8 +39,10 @@ public class Projectile_object : MonoBehaviour
         }
 
         targetAngle = new Vector3(Aim.position.x, Aim.position.y + 1, Aim.position.z) - transform.position;
-        transform.rotation = Quaternion.LookRotation(targetAngle);
-        if(isRig) transform.GetComponent<Rigidbody>().AddForce(transform.rotation * Vector3.forward.normalized * Vel, ForceMode.Impulse);
+        if(isRig) {
+            transform.rotation = Quaternion.LookRotation(targetAngle);
+            transform.GetComponent<Rigidbody>().AddForce(transform.rotation * Vector3.forward.normalized * Vel, ForceMode.Impulse);
+        }
         transform.rotation = angle;
     }
 
