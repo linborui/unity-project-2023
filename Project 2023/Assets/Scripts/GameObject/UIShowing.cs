@@ -5,13 +5,21 @@ using Luminosity.IO;
 
 public class UIShowing : MonoBehaviour
 {
+    public Player_interface player;
+    float delayTime = 0.1f;
+    float timer = 0;
+
     void Start()
     {
         PlayerMovement.disableMovement = true;
+        timer = Time.time;
     }
 
     void Update()
     {
+        if (Time.time - timer < delayTime)
+            return;
+
         if (InputManager.GetButtonDown("Interact"))
             Hide();
         else if (InputManager.GetButtonDown("Submit"))
@@ -20,9 +28,13 @@ public class UIShowing : MonoBehaviour
             Hide();
     }
 
+    public void show()
+    {
+        gameObject.SetActive(true);
+    }
+
     public void Hide()
     {
-        PlayerMovement.disableMovement = false;
         gameObject.SetActive(false);
     }
 }

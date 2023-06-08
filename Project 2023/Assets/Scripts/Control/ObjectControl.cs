@@ -26,6 +26,7 @@ public class ObjectControl : MonoBehaviour
     Queue<Vector3> objectPath;
     bool hasPath;
     LineRenderer lineRenderer;
+    List<Collider> objectColliders;
 
     List<GameObject> collectedItems;
 
@@ -66,7 +67,18 @@ public class ObjectControl : MonoBehaviour
             {
                 DrawPath();
                 controledObject.transform.SetParent(cam.transform);
-                controledObject.GetComponent<Collider>().enabled = false;
+                objectColliders = controledObject.GetComponents<Collider>().ToList();
+                for (int i = 0; i < objectColliders.Count; i++)
+                {
+                    if (objectColliders[i].isTrigger)
+                    {
+                        objectColliders.RemoveAt(i);
+                        i--;
+                    }
+                    else {
+                        objectColliders[i].enabled = false;
+                    }
+                }
                 controledObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 controledObject.GetComponent<Rigidbody>().useGravity = false;
                 controledObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -276,7 +288,9 @@ public class ObjectControl : MonoBehaviour
             var v = (hit.point - controledObject.transform.position).normalized;
             Throw = Quaternion.AngleAxis(-throwAngle, cam.transform.right) * v;
         }
-        controledObject.GetComponent<Collider>().enabled = true;
+        foreach (Collider c in objectColliders) {
+            c.enabled = true;
+        }
         controledObject.GetComponent<Rigidbody>().useGravity = true;
         controledObject.GetComponent<Rigidbody>().velocity += Throw * throwSpeed;
         atk_trigger a = controledObject.GetComponent<atk_trigger>();

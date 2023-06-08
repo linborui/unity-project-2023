@@ -14,7 +14,7 @@ public class CastleGateOpen : MonoBehaviour
             }
         }
         if (cnt > 1) return;
-        Debug.Log("All magic circles are activated");
+        // Debug.Log("All magic circles are activated");
         GetComponent<Animator>().SetBool("open", true);
     }
 }

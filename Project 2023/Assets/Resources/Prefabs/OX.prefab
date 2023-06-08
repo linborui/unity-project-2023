@@ -4071,6 +4071,8 @@ MonoBehaviour:
   awareDis: 30
   desx: 0
   desy: 0
+  dash_x: 0
+  dash_y: 0
   player_dis: 0
   smoothTime: 0.1
   percent: 0
@@ -4115,7 +4117,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 419e66714802ebd4a8a3ba39416552fd, type: 3}
   m_InferenceDevice: 1
   m_BehaviorType: 0
   m_BehaviorName: ox

@@ -6,36 +6,6 @@ public class OrkAssasin : AI
 {
     bool repeatAtk = false;
 
-    public override bool IfDead()
-    {
-        if(dead == true){
-            react = false;
-            dodge = false;
-            parry = false;
-            state = 0;
-            acting = 0;
-            atkState = -1;
-            
-            //When testing you need to comment under forloop statement
-            foreach (Transform child in weapons)
-            {
-                if(ObjectControl.controledObject == null || !child.Equals(ObjectControl.controledObject.transform)){
-                    child.transform.SetParent(null);
-                    
-                    child.GetComponent<atk_trigger>().enabled = false;
-                    child.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-                }
-            }
-            weapons.Clear();
-            if(transform.GetComponent<life_time>() == null) this.gameObject.AddComponent<life_time>();
-
-            Object.Destroy(this.gameObject);
-            return true;
-        }else{
-            return false;
-        }     
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -115,7 +85,7 @@ public class OrkAssasin : AI
                         if (percent >= 0.3f && percent < 0.7f) { Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0, 3, 2 * sp); }
                         break;
                     case 6:
-                        if (percent < 0.7f) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, -1f * sp); spin = false;}
+                        if (percent < 0.7f) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, -2f * sp); spin = false;}
                         break;
                 }
             }

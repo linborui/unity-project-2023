@@ -14,7 +14,7 @@ public class AudioController : MonoBehaviour
     }
 
     public void changeAudio(string newAudioName) {
-        Debug.Log("change audio to " + newAudioName);
+        // Debug.Log("change audio to " + newAudioName);
         if (audioName == newAudioName) return;
         audioManager.StopAudio(audioName);
         audioName = newAudioName;

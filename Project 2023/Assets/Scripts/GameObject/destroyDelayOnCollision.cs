@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class destroyOnCollision : MonoBehaviour
+public class destroyDelayOnCollision : MonoBehaviour
 {
+    public float delayTime;
     void Start()
     {
         
@@ -14,11 +15,17 @@ public class destroyOnCollision : MonoBehaviour
         
     }
 
+    void Destroy()
+    {
+        gameObject.SetActive(false);
+    }
+
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Weapon"))
         {
-            gameObject.SetActive(false);
+            Invoke("Destroy", delayTime);
         }
     }
 
@@ -26,7 +33,8 @@ public class destroyOnCollision : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Weapon"))
         {
-            gameObject.SetActive(false);
+            Invoke("Destroy", delayTime);
         }
     }
+    
 }
