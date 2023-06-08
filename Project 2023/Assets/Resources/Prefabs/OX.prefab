@@ -4067,7 +4067,7 @@ MonoBehaviour:
   MaxStamina: 100
   Stamina: 100
   StaminaSp: 10
-  sp: 1.5
+  sp: 4
   awareDis: 30
   desx: 0
   desy: 0
@@ -4143,7 +4143,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   Reset: 0
-  isAgent: 1
+  isAgent: 0
   Ai_scripts: {fileID: 7003840614767119556}
   Player: {fileID: 0}
   Player_status: {fileID: 0}

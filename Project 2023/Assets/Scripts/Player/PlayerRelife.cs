@@ -37,6 +37,9 @@ public class PlayerRelife : MonoBehaviour
     public bool Back = false;
     private float timer = 0;
 
+    public void OnTriggerEnter(Collider other) {
+        if(other.tag == "Dead") playerInterface.dead = true;
+    }
     private void Start()
     {
         TimeStopController = FindObjectOfType<DesaturateController>();

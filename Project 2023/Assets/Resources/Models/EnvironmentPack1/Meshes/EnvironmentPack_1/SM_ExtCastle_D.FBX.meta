@@ -3,7 +3,22 @@ guid: e98996cb7cfee3c4c858bffc3e2909c3
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Courtyard_Surbase
+    second: {fileID: 2100000, guid: cd248d0f3ec62f54f8590cdd700e7a06, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Scaffolding
+    second: {fileID: 2100000, guid: 55bab6086585a69458df13bd5d03f1c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_StoneWall_03
+    second: {fileID: 2100000, guid: 6ea6538ea19043a40a731f001a5038c7, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

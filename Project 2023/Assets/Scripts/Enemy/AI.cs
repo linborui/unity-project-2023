@@ -56,6 +56,7 @@ public class AI : MonoBehaviour
         atkState = -1;
         acting = 0;
 
+        awareness = false;
         repeat = false;
         dodge = false;
         parry = false;

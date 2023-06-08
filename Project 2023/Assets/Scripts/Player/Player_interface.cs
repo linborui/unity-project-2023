@@ -38,7 +38,7 @@ public class Player_interface : MonoBehaviour
     
     public void Healing()
     {
-        if(Stamina > 1)
+        if(Stamina > 10)
             healFrame = 0.25f;
     }
 
