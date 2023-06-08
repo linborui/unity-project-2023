@@ -7349,6 +7349,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SWSword
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8093efb080b8e3746bd1a8f728ea71d1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Weapon
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8093efb080b8e3746bd1a8f728ea71d1, type: 3}
 --- !u!4 &5018761603577280462 stripped

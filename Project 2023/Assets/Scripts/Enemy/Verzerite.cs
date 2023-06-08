@@ -160,9 +160,7 @@ public class Verzerite : AI
                     case 3:
                         spin = false;
                         Vel = Vector3.zero;
-                        if (percent < 0.25) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, sp);}
-                        else if(percent >= 0.25 && percent < 0.4) {spin = true;}
-                        else if(percent >= 0.4 && percent < 0.9) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, sp);}
+                        if (percent < 0.5) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, 2f * sp); spin = true;}
                         break;
                     case 4:
                         spin = false;
@@ -202,7 +200,7 @@ public class Verzerite : AI
                     case 9:
                         Vel = Vector3.zero;
                         spin =  false;
-                        if (percent >= 0.27f && percent < 0.57f) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, sp);}
+                        if (percent >= 0.27f && percent < 0.57f) {Vel = Quaternion.LookRotation(transform.forward) * new Vector3(0 , 0, 1.5f * sp);}
                         break;
                     case 10:
                         Vel = Vector3.zero;

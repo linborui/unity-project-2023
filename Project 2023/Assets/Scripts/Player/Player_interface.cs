@@ -72,7 +72,7 @@ public class Player_interface : MonoBehaviour
                 HP += Mathf.Min(2f * Stamina, 5f) * Time.deltaTime;
                 Stamina = Mathf.Max(Stamina - 4f * StaminaSp * Time.deltaTime, 0);
             }else{
-                HP += Mathf.Min(4f * Stamina, 10f) * Time.deltaTime;
+                HP += 20f * Time.deltaTime;
                 Stamina = Mathf.Max(Stamina - 2f * StaminaSp * Time.deltaTime, 0);
             }
         }
