@@ -113,9 +113,7 @@ public class AI : MonoBehaviour
         dis = new Vector2(Aim.transform.position.x - transform.position.x, Aim.transform.position.z - transform.position.z);
         percent = fsm.GetCurrentAnimatorStateInfo(0).normalizedTime % 1;
         player_dis = Mathf.Sqrt(dis.x * dis.x + dis.y * dis.y);
-        float angleDiff = Mathf.Abs(transform.eulerAngles.y - Vector3.SignedAngle(Aim.transform.position - transform.position, transform.forward, Vector3.up)) % 180;
-        
-        //Debug.Log(player_dis);
+        float angleDiff = Mathf.Abs(Vector3.SignedAngle(Aim.transform.position - transform.position, transform.forward, Vector3.up)) % 180;
 
         if (angleDiff < 60 && player_dis < awareDis)
             awareness = true;

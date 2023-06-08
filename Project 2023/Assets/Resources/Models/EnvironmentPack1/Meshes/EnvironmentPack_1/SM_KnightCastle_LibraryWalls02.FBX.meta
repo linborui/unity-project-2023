@@ -3,7 +3,27 @@ guid: 54cbddf34dd5075438644733f921d14e
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_KnightCastle_DockRoom_Ceiling_02
+    second: {fileID: 2100000, guid: d77fab6bae62b6246b1f15620df91a8d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_KnightCastle_DockRoom_Pillar_02
+    second: {fileID: 2100000, guid: c3a5377615c2dea438eceac79f328149, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_KnightCastle_DockRoom_Surbase
+    second: {fileID: 2100000, guid: 22703c4e9b8a0e64095c8794c32e98ed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_KnightCastle_DockRoom_Wall
+    second: {fileID: 2100000, guid: 22703c4e9b8a0e64095c8794c32e98ed, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

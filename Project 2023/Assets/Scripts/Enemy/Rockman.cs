@@ -5,7 +5,31 @@ using UnityEngine;
 public class Rockman : AI
 {
     public Cast_magic R;
+    public float MaxPoise = 200;
+    public float Poise = 200;
+    public float PoiseSP = 10;
     bool repeatAtk = false;
+
+    public override void takeDamage(float val,Vector3 pos)
+    {
+        if (iFrame > 0 || dodge == true || dead == true) return;
+
+        GameObject blood = Instantiate(bloodEffect, pos, Quaternion.identity);
+        blood.GetComponent<ParticleSystem>().Play();
+
+        if(!awareness) {
+            awareness = true;
+            HP -= 2 * val;
+        }else HP -= val;
+
+        Poise -= val;
+
+        if(Poise <= 0){
+            Poise = MaxPoise;
+            react = true;
+        }
+        iFrame = 0.5f;
+    }
 
     // Update is called once per frame
     void Update()
@@ -44,6 +68,7 @@ public class Rockman : AI
                 repeatAtk = false;
                 
                 Stamina = Mathf.Min(Stamina + StaminaSp * Time.deltaTime, MaxStamina);
+                Poise = Mathf.Min(Poise + PoiseSP * Time.deltaTime, MaxPoise);
                 Vel = Quaternion.LookRotation(transform.forward) * new Vector3(x * sp , 0, y * sp);
             }else{
                 repeat = false;

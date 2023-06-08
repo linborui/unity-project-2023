@@ -15,6 +15,7 @@ public class Player_interface : MonoBehaviour
     public float iFrame = 0;
     public float toxicFrame = 0;
     public float healFrame = 0;
+    public float actingFrame = 0;
     public float toxicDmg = 0;
     public bool dead = false;
     public bool UI = false;
@@ -57,6 +58,7 @@ public class Player_interface : MonoBehaviour
         iFrame = Mathf.Max(iFrame - Time.deltaTime, 0);
         toxicFrame = Mathf.Max(toxicFrame - Time.deltaTime, 0);
         healFrame = Mathf.Max(healFrame - Time.deltaTime, 0);
+        actingFrame = Mathf.Max(actingFrame - Time.deltaTime, 0);
 
         if(healFrame == 0){
             if(toxicFrame > 0){
@@ -64,7 +66,7 @@ public class Player_interface : MonoBehaviour
                 HP -= 5 * Time.deltaTime;
             }
             else
-                Stamina = Mathf.Min(Stamina + StaminaSp * Time.deltaTime, MaxStamina);
+                if(actingFrame == 0) Stamina = Mathf.Min(Stamina + StaminaSp * Time.deltaTime, MaxStamina);
         }else{
             if(toxicFrame > 0){
                 HP += Mathf.Min(2f * Stamina, 5f) * Time.deltaTime;
@@ -76,6 +78,7 @@ public class Player_interface : MonoBehaviour
         }
 
         HP = Mathf.Min(HP, MaxHP);
+        Stamina = Mathf.Max(Stamina, 0);
 
         if(UI){
             Health.fillAmount = HP / MaxHP;

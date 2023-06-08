@@ -3,7 +3,27 @@ guid: 224bc6369440bce47b76ea1c0caebaab
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Coliseum_1
+    second: {fileID: 2100000, guid: 97b82d9ddd4037d48b8d171f6116cadc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Coliseum_2
+    second: {fileID: 2100000, guid: b039a1dbb94ae78489b0b4f67d67ddc6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Coliseum_4
+    second: {fileID: 2100000, guid: f75bd244b0934e248ad98632a2089a84, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_StoneWall_03
+    second: {fileID: 2100000, guid: 6ea6538ea19043a40a731f001a5038c7, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

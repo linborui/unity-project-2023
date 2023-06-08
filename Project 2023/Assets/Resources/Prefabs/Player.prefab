@@ -338,6 +338,7 @@ MonoBehaviour:
   heightSpeed: 2
   distanceSpeed: 1
   crosshair: {fileID: 0}
+  changeHeight: 0
   body: {fileID: 5011173078405643788}
   xRotation: 0
   yRotation: 0
@@ -354,6 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 2867450015165050292}
+  player_state: {fileID: 2621271659449623547}
   controlPosition: {x: -1, y: 0, z: 2}
   controlCD: 0.5
   controlDistance: 50
@@ -370,7 +372,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2867450016342659631}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aba2816fcdb7eec448a8a72a0fd35888, type: 3}
   m_Name: 
@@ -642,9 +644,10 @@ MonoBehaviour:
   iFrame: 0
   toxicFrame: 0
   healFrame: 0
+  actingFrame: 0
   toxicDmg: 0
   dead: 0
-  UI: 0
+  UI: 1
   Health: {fileID: 0}
   Energy: {fileID: 0}
 --- !u!1 &8729577191491090748

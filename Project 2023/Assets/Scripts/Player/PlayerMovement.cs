@@ -634,7 +634,7 @@ public class PlayerMovement : MonoBehaviour
         {
             savePoint = other.transform.position;
         }
-        else if (other.CompareTag("Dead"))
+        else if (other.CompareTag("DeadZone"))
         {
             Restart();
         }

@@ -7,6 +7,7 @@ using UnityEngine;
 public class ObjectControl : MonoBehaviour
 {
     public Camera cam;
+    public Player_interface player_state;
     public Vector3 controlPosition;
     public float controlCD;
     public float controlDistance;
@@ -46,6 +47,11 @@ public class ObjectControl : MonoBehaviour
 
     void Update()
     {
+        if(objectState >= 3) player_state.actingFrame = 0.5f;
+        if(!controledObject) {
+            lineRenderer.positionCount = 0;
+            objectState = 0;
+        }
         MoveObject();
         GetInput();
     }
@@ -78,6 +84,7 @@ public class ObjectControl : MonoBehaviour
                 atk_collider.convex = true;
                 atk_collider.isTrigger = true;
 
+                player_state.costStamina(40);
                 objectState = 3;
                 controlTime = Time.time;
             }
@@ -92,7 +99,7 @@ public class ObjectControl : MonoBehaviour
 
     void GetObject()
     {
-        if (objectState >= 3)
+        if (objectState >= 3 || player_state.Stamina < 40)
             return;
 
         int ignoreLayer = 0;

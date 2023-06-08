@@ -3,50 +3,22 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Moveable
-  - Ground
-  - TimeManager
-  - Dead
-  - Save
-  - Portal
-  - Weapon
-  - Screen
-  - Item
-  - Water
-  - Shape4D
-  - Enemy
-  - Attackable
-  - lb_bird
-  - Grappleable
-  - IvyGenerateable
-  - DeadZone
-  - Burn
-  - Boat
-<<<<<<< HEAD
-<<<<<<< HEAD
-  - Bones
-=======
-  - Grave
->>>>>>> 36b007460cd733b8fdb89bbd7d1b774f847cff35
-=======
-  - Grave
->>>>>>> 36b007460cd733b8fdb89bbd7d1b774f847cff35
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
-  - PortalLayer
   - 
   - 
-  - Present
-  - Past
-  - Wall
-  - NotWall
-  - Minimap
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

@@ -13,9 +13,11 @@ GameObject:
   - component: {fileID: 2934258735630121592}
   - component: {fileID: 1978142298613816197}
   - component: {fileID: 8474587233296578024}
-  - component: {fileID: 8787470936002470245}
   - component: {fileID: 5936973444899484535}
   - component: {fileID: -4229663205694536864}
+  - component: {fileID: 8787470936002470245}
+  - component: {fileID: -4342213695720752954}
+  - component: {fileID: 1611123241862183341}
   m_Layer: 0
   m_Name: Polyart_Rock
   m_TagString: Moveable
@@ -113,21 +115,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 2}
-  m_Center: {x: 0, y: 0, z: -0.00000047683716}
---- !u!114 &8787470936002470245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8867634658929849282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7549251c552d2834598c9f3dc8d137f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  life_timer: 10
+  m_Size: {x: 2.672903, y: 1, z: 1.7852638}
+  m_Center: {x: 0.07740857, y: 0, z: -0.0046319077}
 --- !u!54 &5936973444899484535
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -156,7 +145,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9346586fedad96c4fae8f220c088f19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noBreak: 1
-  Vel: 15
+  noBreak: 0
+  isRig: 1
+  Vel: 200
   dmg: 40
   smoothTime: 0
+--- !u!114 &8787470936002470245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8867634658929849282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7549251c552d2834598c9f3dc8d137f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life_timer: 10
+--- !u!114 &-4342213695720752954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8867634658929849282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e004d653b2e2a4b40bc8874c8a52cb05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnemy: 0
+  dmg: 30
+--- !u!114 &1611123241862183341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8867634658929849282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c1ef66e35abaa45935a4d608435dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeBeforeAffected: 0
+  flyingtime: 0
+  recordedVelocity: {x: 0, y: 0, z: 0}
+  recordedMagnitude: 0
+  IsStopped: 0
+  addingForceNormal: {x: 0, y: 0, z: 0}
