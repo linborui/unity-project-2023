@@ -491,11 +491,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217151913634846194}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.16817032, y: 0.09798068, z: 0.3246319}
-  m_Center: {x: -0.00445936, y: 0.02881632, z: -0.09174627}
+  m_Size: {x: 0.24119616, y: 0.09798069, z: 0.3956304}
+  m_Center: {x: 0.003320512, y: 0.028816251, z: -0.09518916}
 --- !u!114 &8954787818807901842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3270,11 +3270,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3907463735575854865}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.16817032, y: 0.09798068, z: 0.3246319}
-  m_Center: {x: -0.00445936, y: 0.02881632, z: -0.09174627}
+  m_Size: {x: 0.2852336, y: 0.09798068, z: 0.44102633}
+  m_Center: {x: 0.007938793, y: 0.028816322, z: -0.10493491}
 --- !u!114 &1632060339910664484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5546,6 +5546,8 @@ MonoBehaviour:
   awareDis: 30
   desx: 0
   desy: 0
+  dash_x: 0
+  dash_y: 0
   player_dis: 0
   smoothTime: 0.1
   percent: 0

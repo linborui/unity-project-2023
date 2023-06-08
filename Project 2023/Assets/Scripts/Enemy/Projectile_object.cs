@@ -53,7 +53,14 @@ public class Projectile_object : MonoBehaviour
             targetAngle = new Vector3(Aim.position.x, Aim.position.y + 1, Aim.position.z) - transform.position;
             angle = Quaternion.LookRotation(targetAngle);
             transform.rotation = Quaternion.Lerp(transform.rotation, angle, smoothTime);
-            transform.position += transform.rotation * Vector3.forward.normalized * Vel * Time.deltaTime;
+            Vector3 dis = transform.rotation * Vector3.forward.normalized * Vel * Time.deltaTime;
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, dis, out hit, dis.magnitude)){
+                if (hit.collider.gameObject.GetComponentInParent<AI>()) return;
+                if(hit.collider.gameObject.GetComponentInParent<Player_interface>()) hit.collider.gameObject.GetComponentInParent<Player_interface>().takeDamage(dmg, hit.point, transform.position);
+                if(!noBreak) Object.Destroy(this.gameObject);
+            }
+            transform.position += dis;
         }
     }
 }

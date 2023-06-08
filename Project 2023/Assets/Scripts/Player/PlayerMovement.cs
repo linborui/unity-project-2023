@@ -180,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (!onWall)
             rigidbody.AddForce(moveForce, ForceMode.Force);
-        if (onStairs)
+        if (onStairs && verticalInput > 0f)
             rigidbody.AddForce(3f *jumpForce * Vector3.up, ForceMode.Force);
     }
 

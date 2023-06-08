@@ -12,6 +12,7 @@ public class ChangeSceneInteract : MonoBehaviour
     public GameObject interactMessage;
     
     public Image radiusIndicator;
+    public SceneFade sceneFade;
 
     float pressTime = 3f;
     float indicatorTime;
@@ -36,7 +37,8 @@ public class ChangeSceneInteract : MonoBehaviour
                 if (indicatorTime >= pressTime)
                 {
                     interactMessage.SetActive(false);
-                    SceneManager.LoadScene(sceneName);
+                    sceneFade.PanelFadeIn();
+                    Invoke("LoadScene", sceneFade.fadeTime);
                 }
             }
             else
@@ -53,5 +55,10 @@ public class ChangeSceneInteract : MonoBehaviour
         {
             interactMessage.SetActive(false);
         }
+    }
+
+    public void LoadScene()
+    {
+        SceneManager.LoadScene(sceneName);
     }
 }
