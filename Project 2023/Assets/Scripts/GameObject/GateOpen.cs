@@ -48,10 +48,10 @@ public class GateOpen : MonoBehaviour
         if (opened)
             return;
 
-        interactMessage.SetActive(true);
 
         if (other.tag.Equals("Player"))
         {
+            interactMessage.SetActive(true);
             if (InputManager.GetButtonDown("Interact"))
             {
                 opened = true;
