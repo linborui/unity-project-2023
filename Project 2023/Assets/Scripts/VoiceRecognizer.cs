@@ -8,7 +8,7 @@ using Luminosity.IO;
 public class VoiceRecognizer : MonoBehaviour
 {
     public DesaturateController dc;
-    public OpenAI.Whisper whisper;
+  //  public OpenAI.Whisper whisper;
     KeywordRecognizer keywordRecognizer;
     Dictionary<string,Action> keywords = new Dictionary<string, Action>();
 
