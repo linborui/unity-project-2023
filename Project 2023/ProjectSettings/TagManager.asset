@@ -3,7 +3,28 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Moveable
+  - Ground
+  - TimeManager
+  - Dead
+  - Save
+  - Portal
+  - Weapon
+  - Screen
+  - Item
+  - Water
+  - Shape4D
+  - Enemy
+  - Attackable
+  - lb_bird
+  - Grappleable
+  - IvyGenerateable
+  - DeadZone
+  - Burn
+  - Boat
+  - Bones
+  - Grave
   layers:
   - Default
   - TransparentFX
@@ -13,12 +34,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Present
+  - Past
+  - Wall
+  - NotWall
+  - MiniMap
   - 
   - 
   - 

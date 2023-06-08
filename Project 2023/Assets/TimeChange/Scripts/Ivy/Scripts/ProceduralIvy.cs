@@ -154,7 +154,6 @@ public class ProceduralIvy : MonoBehaviour {
         }
         else if(predictionHit.transform.gameObject.tag == "Grappleable")
         {
-            Debug.Log(predictionHit.transform.gameObject);
             rb.mass = swingmass;
             audioManager.PlayAudio("connectVine");
             // deactivate active grapple

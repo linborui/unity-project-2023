@@ -36,29 +36,5 @@ public class Rock : MonoBehaviour
         direction = (target.transform.position - transform.position + Vector3.up).normalized;
         rb.AddForce(direction * force, ForceMode.Impulse);
     }
-    void OnCollisionEnter(Collision other)
-    {
-        if(other.gameObject.CompareTag("Enemy"))
-        {
-            var otherStates = other.gameObject.GetComponent<CharacterStates>();
-            otherStates.TakeDamage(damage,otherStates);
-            Destroy(gameObject);
-        }
-        switch(rockStates)
-        {
-            case RockStates.HitPlayer:
-                if(other.gameObject.CompareTag("Player"))
-                {
-                    rockStates = RockStates.HitNothing;
-                }
-                break;
-            case RockStates.HitEnemy:
-                if(other.gameObject.CompareTag("Enemy"))
-                {
-                    var otherStates = other.gameObject.GetComponent<CharacterStates>();
-                    otherStates.TakeDamage(damage,otherStates);
-                }
-                break;
-        }
-    }
+
 }

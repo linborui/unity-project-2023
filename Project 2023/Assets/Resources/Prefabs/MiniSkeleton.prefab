@@ -554,6 +554,7 @@ GameObject:
   - component: {fileID: 3924779389907501465}
   - component: {fileID: 3432157922004188802}
   - component: {fileID: 2068009413451426992}
+  - component: {fileID: 915373868}
   m_Layer: 0
   m_Name: LowPolySkeleton_SholderL
   m_TagString: Untagged
@@ -639,6 +640,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.114615895, y: 0.1305128, z: 0.18752278}
   m_Center: {x: -0.00023701423, y: -0.00007518013, z: 0.000044174492}
+--- !u!64 &915373868
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068009413451426989}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3592697986357412443, guid: 5ef67247d1c334d41bd49c9719015c6e, type: 3}
 --- !u!1 &2068009413451426990
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,7 +889,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3143995287606182231}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b5d1c4e5155d6469a4d1d95abe7b2a, type: 3}
   m_Name: 

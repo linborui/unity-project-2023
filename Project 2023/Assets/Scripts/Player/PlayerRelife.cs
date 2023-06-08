@@ -34,7 +34,7 @@ public class PlayerRelife : MonoBehaviour
     private bool transitioning = false;
     private bool Dark = false;
     private bool Stop = false;
-    private bool Back = false;
+    public bool Back = false;
     private float timer = 0;
 
     private void Start()

@@ -84,25 +84,6 @@ public class BounceInWater : MonoBehaviour
 
     }
 
-    // private void Update()
-    // {
-    //
-    //     Vector3 diff = transform.position - prePos;
-    //
-    //     Debug.Log(playerenter);
-    //     if (playerenter)
-    //     {
-    //         //Vector3 diff = transform.position - prePos;
-    //         PlayerPos.position += diff;
-    //         Debug.Log("PlayerPos: " + PlayerPos.position);
-    //     }
-    //
-    //     Debug.Log("Dis: " + diff);
-    //     prePos = transform.position;
-    // }
-
-
-
     void SwitchState(bool isUnderWater)
     {
         if (isUnderWater)
@@ -122,7 +103,6 @@ public class BounceInWater : MonoBehaviour
     {
         if (other.gameObject.layer == 3 && other.gameObject.tag == "Player")
         {
-          //    other.transform.parent.SetParent(transform);
             playerenter = true;
             prePower = floatingPower;
             floatingPower = prePower * 1.5f;
@@ -138,8 +118,7 @@ public class BounceInWater : MonoBehaviour
      
         if (other.gameObject.layer == 3 && other.gameObject.tag == "Player")
          {  
-                playerenter = false;
-        //   other.transform.parent.SetParent(null);
+            playerenter = false;
             floatingPower = prePower;
         }
         if (other.CompareTag("DeadZone"))

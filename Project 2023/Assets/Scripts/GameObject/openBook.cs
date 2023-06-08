@@ -14,7 +14,7 @@ public class openBook : MonoBehaviour
         if (InputManager.GetButtonDown("Interact"))
         {
             interactMessage.SetActive(false);
-            content.GetComponent<UIShowing>().Show();
+            content.SetActive(true);
         }
     }
 

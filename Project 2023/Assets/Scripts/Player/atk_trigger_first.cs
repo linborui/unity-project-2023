@@ -24,15 +24,5 @@ public class atk_trigger_first : MonoBehaviour
             other.GetComponentInParent<Player_interface>().takeDamage(dmg, point);
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

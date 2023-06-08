@@ -1,0 +1,47 @@
+{
+    "OrkAssasin": {
+        "checkpoints": [
+            {
+                "steps": 124576,
+                "file_path": "results\\ork_assasin\\OrkAssasin\\OrkAssasin-124576.onnx",
+                "reward": 43560.36082967123,
+                "creation_time": 1686164410.430573,
+                "auxillary_file_paths": [
+                    "results\\ork_assasin\\OrkAssasin\\OrkAssasin-124576.pt"
+                ]
+            },
+            {
+                "steps": 249461,
+                "file_path": "results\\ork_assasin\\OrkAssasin\\OrkAssasin-249461.onnx",
+                "reward": 43267.37729159268,
+                "creation_time": 1686164710.5387373,
+                "auxillary_file_paths": [
+                    "results\\ork_assasin\\OrkAssasin\\OrkAssasin-249461.pt"
+                ]
+            },
+            {
+                "steps": 250461,
+                "file_path": "results\\ork_assasin\\OrkAssasin\\OrkAssasin-250461.onnx",
+                "reward": 43267.37729159268,
+                "creation_time": 1686164710.7770677,
+                "auxillary_file_paths": [
+                    "results\\ork_assasin\\OrkAssasin\\OrkAssasin-250461.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 250461,
+            "file_path": "results\\ork_assasin\\OrkAssasin.onnx",
+            "reward": 43267.37729159268,
+            "creation_time": 1686164710.7770677,
+            "auxillary_file_paths": [
+                "results\\ork_assasin\\OrkAssasin\\OrkAssasin-250461.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.1+cu117"
+    }
+}
