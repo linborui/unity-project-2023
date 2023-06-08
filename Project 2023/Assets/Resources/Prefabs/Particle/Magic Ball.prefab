@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4174442833827382399}
   - component: {fileID: 4174442833827382398}
   - component: {fileID: 4174442833827382372}
+  - component: {fileID: 7916381397227950673}
   - component: {fileID: 4174442833827382395}
   m_Layer: 0
   m_Name: Magic Ball
@@ -148,6 +149,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &7916381397227950673
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4174442833827382397}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4174442833827382395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +174,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9346586fedad96c4fae8f220c088f19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noBreak: 0
+  isRig: 0
   Vel: 20
   dmg: 20
   smoothTime: 0.002

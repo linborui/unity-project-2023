@@ -18,7 +18,7 @@ public class Projectile_object : MonoBehaviour
         if(other.GetComponentInParent<AI>()) return;
 
         Vector3 point = other.ClosestPoint(transform.position);
-        other.GetComponentInParent<Player_interface>().takeDamage(dmg, point);
+        if(other.GetComponentInParent<Player_interface>()) other.GetComponentInParent<Player_interface>().takeDamage(dmg, point);
         if(!noBreak) Object.Destroy(this.gameObject);
     }
 
@@ -39,11 +39,11 @@ public class Projectile_object : MonoBehaviour
         }
 
         targetAngle = new Vector3(Aim.position.x, Aim.position.y + 1, Aim.position.z) - transform.position;
-        if(isRig) {
-            transform.rotation = Quaternion.LookRotation(targetAngle);
-            transform.GetComponent<Rigidbody>().AddForce(transform.rotation * Vector3.forward.normalized * Vel, ForceMode.Impulse);
-        }
+        angle = Quaternion.LookRotation(targetAngle);
         transform.rotation = angle;
+
+        if(isRig)
+            transform.GetComponent<Rigidbody>().AddForce(transform.rotation * Vector3.forward.normalized * Vel, ForceMode.Impulse);
     }
 
     // Update is called once per frame
