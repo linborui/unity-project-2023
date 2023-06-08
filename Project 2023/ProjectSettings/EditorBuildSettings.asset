@@ -8,6 +8,18 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/Level0.unity
+    guid: f7a96cce65a87e44098c72518c64d3dc
+  - enabled: 1
+    path: Assets/Scenes/Town Parkour.unity
+    guid: 76b7cc836f4915542b2851abbd02439c
+  - enabled: 1
+    path: Assets/Scenes/TimeChangeScene.unity
+    guid: 89cb17da847d01248bfd44d448cc1be5
+  - enabled: 1
+    path: Assets/Scenes/Portal.unity
+    guid: f78747221381bd94f823b32f88b435dc
   m_configObjects:
     Unity.XR.OpenVR.Settings: {fileID: 11400000, guid: a56faa98178a3274b98ac2bec51f02b0,
       type: 2}

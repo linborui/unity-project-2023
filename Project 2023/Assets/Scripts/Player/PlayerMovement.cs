@@ -78,6 +78,8 @@ public class PlayerMovement : MonoBehaviour
     new Rigidbody rigidbody;
     CapsuleCollider capsuleCollider;
 
+    bool onStairs;
+
     Vector3 savePoint;
     Camera cam;
     public static bool isTransport;
@@ -114,6 +116,7 @@ public class PlayerMovement : MonoBehaviour
         dashSpeed *= mass;
 
         maxSp = moveSpeed;
+        onStairs = false;
     }
 
     void Update()
@@ -177,6 +180,8 @@ public class PlayerMovement : MonoBehaviour
         }
         if (!onWall)
             rigidbody.AddForce(moveForce, ForceMode.Force);
+        if (onStairs)
+            rigidbody.AddForce(3f *jumpForce * Vector3.up, ForceMode.Force);
     }
 
     void Straighten()
@@ -655,6 +660,18 @@ public class PlayerMovement : MonoBehaviour
     public void setDashDirection(Vector3 direst)
     {
         dashDirection = direst;
+    }
+
+    private void OnCollisionEnter(Collision other) {
+        if (other.gameObject.CompareTag("Stairs")) {
+            onStairs = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision other) {
+        if (other.gameObject.CompareTag("Stairs")) {
+            onStairs = false;
+        }
     }
     // Add in Portal Level
     // private GameObject attackTarget;

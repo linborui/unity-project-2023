@@ -9,12 +9,11 @@ public class CastleGateOpen : MonoBehaviour
     public void detectMagicCircle() {
         int cnt = 0;
         foreach (GameObject circle in circles) {
-            if (circle.activeInHierarchy) {
+            if (circle.activeSelf) {
                 cnt++;
             }
         }
         if (cnt > 1) return;
-        // Debug.Log("All magic circles are activated");
         GetComponent<Animator>().SetBool("open", true);
     }
 }
