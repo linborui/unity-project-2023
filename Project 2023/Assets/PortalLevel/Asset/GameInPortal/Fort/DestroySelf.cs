@@ -5,7 +5,7 @@ using UnityEngine;
 public class DestroySelf : MonoBehaviour
 {
     void OnEnable(){
-        Invoke("destroy",1000f);
+        Invoke("destroy",10f);
     }
     
     void destroy(){

@@ -166,6 +166,8 @@ public class PortalTraveller : MonoBehaviour {
     }
     public void ExitPairPortal(Collider wallCollider)
     {
+        if(wallCollider == null) return;
+        if(collider == null) return;
         Physics.IgnoreCollision(collider, wallCollider, false);
         --inPortalCount;
 
