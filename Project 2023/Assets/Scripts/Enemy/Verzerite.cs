@@ -42,6 +42,11 @@ public class Verzerite : AI
         if(Poise <= 0){
             Poise = MaxPoise;
             react = true;
+            x = 0;
+            y = 0;
+            desx = 0;
+            desy = 0;
+            acting = 14;
         }
         iFrame = 0.5f;
     }
@@ -84,6 +89,7 @@ public class Verzerite : AI
             else if(fsm.GetCurrentAnimatorStateInfo(0).IsName("kick1")) acting = 11;
             else if(fsm.GetCurrentAnimatorStateInfo(0).IsName("knee")) acting = 12;
             else if(fsm.GetCurrentAnimatorStateInfo(0).IsName("pommel")) acting = 13;
+            else if(fsm.GetCurrentAnimatorStateInfo(0).IsName("react")) acting = 14;
 
             if(state != acting && acting == 0){
                 switch (state)
@@ -219,6 +225,10 @@ public class Verzerite : AI
                         if (percent < 0.53f) {spin = true;}
                         break;
                     case 13:
+                        Vel = Vector3.zero;
+                        spin =  false;
+                        break;
+                    case 14:
                         Vel = Vector3.zero;
                         spin =  false;
                         break;

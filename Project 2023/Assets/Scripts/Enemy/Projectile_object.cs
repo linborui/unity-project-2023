@@ -18,7 +18,7 @@ public class Projectile_object : MonoBehaviour
         if(other.GetComponentInParent<AI>()) return;
 
         Vector3 point = other.ClosestPoint(transform.position);
-        if(other.GetComponentInParent<Player_interface>()) other.GetComponentInParent<Player_interface>().takeDamage(dmg, point);
+        if(other.GetComponentInParent<Player_interface>()) other.GetComponentInParent<Player_interface>().takeDamage(dmg, point, transform.position);
         if(!noBreak) Object.Destroy(this.gameObject);
     }
 

@@ -7,6 +7,7 @@ using UnityEngine;
 public class ObjectControl : MonoBehaviour
 {
     public Camera cam;
+    public GameObject attractHint;
     public Player_interface player_state;
     public Vector3 controlPosition;
     public float controlCD;
@@ -53,6 +54,7 @@ public class ObjectControl : MonoBehaviour
             lineRenderer.positionCount = 0;
             objectState = 0;
         }
+        GetObject();
         MoveObject();
         GetInput();
     }
@@ -61,10 +63,10 @@ public class ObjectControl : MonoBehaviour
     {
         if (InputManager.GetButtonDown("Skill") && Time.time > controlTime + controlCD)
         {
-            GetObject();
             FindPath();
             if (objectState == 2)
             {
+                attractHint.SetActive(false);
                 DrawPath();
                 controledObject.transform.SetParent(cam.transform);
                 objectColliders = controledObject.GetComponents<Collider>().ToList();
@@ -111,8 +113,15 @@ public class ObjectControl : MonoBehaviour
 
     void GetObject()
     {
-        if (objectState >= 3 || player_state.Stamina < 40)
+        if (objectState >= 3)
             return;
+
+        if (player_state.Stamina < 40) {
+            controledObject = null;
+            objectState = 0;
+            attractHint.SetActive(false);
+            return;
+        }
 
         int ignoreLayer = 0;
         int pastBool = timeManager.GetComponent<TimeShiftingController>().PastBool;
@@ -130,6 +139,7 @@ public class ObjectControl : MonoBehaviour
             {
                 controledObject = hitObject;
                 objectState = 1;
+                attractHint.SetActive(true);
             }
             else if (hitObject.CompareTag("Item"))
             {
@@ -142,11 +152,13 @@ public class ObjectControl : MonoBehaviour
                         collectedItems.Add(collider.gameObject);
                     }
                 }
+                attractHint.SetActive(true);
             }
             else
             {
                 controledObject = null;
                 objectState = 0;
+                attractHint.SetActive(false);
             }
         }
         else

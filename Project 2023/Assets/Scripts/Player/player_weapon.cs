@@ -391,7 +391,10 @@ public class player_weapon : MonoBehaviour
                     it.enabled = false;
             }
             else{
+                origin.AddComponent<life_time>();
                 origin.GetComponent<MeshFilter>().mesh = mesh;
+                origin.GetComponent<Rigidbody>().drag = 1;
+                origin.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 MeshCollider collider = origin.GetComponent<MeshCollider>();
                 collider.sharedMesh = mesh;
                 collider.convex = true;

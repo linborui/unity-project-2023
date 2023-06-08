@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
@@ -19,15 +20,23 @@ public class Player_interface : MonoBehaviour
     public float toxicDmg = 0;
     public bool dead = false;
     public bool UI = false;
+    public Image dmg_ind;
     public Image Health;
     public Image Energy;
-
-    public void takeDamage(float val,Vector3 pos)
+    public GameObject bloodEffect;
+    private bool invulnerable = false;
+    private float smoothVal;
+    private float smoothVel;
+    public void takeDamage(float val,Vector3 pos, Vector3 enemyPos)
     {
-        if (iFrame > 0 || dead == true) return;
+        if (iFrame > 0 || dead == true || invulnerable) return;
         //audioSource.PlayOneShot(audios[Random.Range(0,audios.Length)]);
-        //GameObject blood = Instantiate(bloodEffect, pos, Quaternion.identity);
-        //blood.GetComponent<ParticleSystem>().Play();
+        GameObject blood = Instantiate(bloodEffect, pos, Quaternion.identity);
+        blood.GetComponent<ParticleSystem>().Play();
+        Vector3 relativePosition = enemyPos - transform.position;
+        float angleRadians = transform.eulerAngles.y - Mathf.Atan2(relativePosition.x, relativePosition.z) * Mathf.Rad2Deg;
+        dmg_ind.GetComponent<RectTransform>().eulerAngles = new Vector3(0, 0, angleRadians);
+
         iFrame = 1f;
         HP -= val;
     }
@@ -55,6 +64,9 @@ public class Player_interface : MonoBehaviour
         if (dead == true) return;
 
         if(HP <= 0) dead = true;
+        
+        if(InputManager.GetButtonDown("invulnerable")) invulnerable = true;
+        
         iFrame = Mathf.Max(iFrame - Time.deltaTime, 0);
         toxicFrame = Mathf.Max(toxicFrame - Time.deltaTime, 0);
         healFrame = Mathf.Max(healFrame - Time.deltaTime, 0);
@@ -81,6 +93,8 @@ public class Player_interface : MonoBehaviour
         Stamina = Mathf.Max(Stamina, 0);
 
         if(UI){
+            smoothVal = Mathf.SmoothDamp(smoothVal, iFrame, ref smoothVel, 0.1f);
+            dmg_ind.color = new Color(255, 255, 255, smoothVal);
             Health.fillAmount = HP / MaxHP;
             Energy.fillAmount = Stamina / MaxStamina;
         }

@@ -355,6 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 2867450015165050292}
+  attractHint: {fileID: 0}
   player_state: {fileID: 2621271659449623547}
   controlPosition: {x: -1, y: 0, z: 2}
   controlCD: 0.5
@@ -527,6 +528,7 @@ GameObject:
   - component: {fileID: 3151526716333109666}
   - component: {fileID: 7968252035271915323}
   - component: {fileID: 2621271659449623547}
+  - component: {fileID: 633869238}
   m_Layer: 3
   m_Name: body
   m_TagString: Player
@@ -542,7 +544,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5011173078405643788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3, z: 0}
+  m_LocalPosition: {x: -98.2, y: 0.3, z: 205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -648,8 +650,33 @@ MonoBehaviour:
   toxicDmg: 0
   dead: 0
   UI: 1
+  dmg_ind: {fileID: 0}
   Health: {fileID: 0}
   Energy: {fileID: 0}
+  bloodEffect: {fileID: 7917723258927772811, guid: ade0eecb8bedf8847b4b47a82ab922c3,
+    type: 3}
+--- !u!114 &633869238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5011173078405643788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b85914361e4d9243be1fcab9aadc305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rendererData: {fileID: 11400000, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
+  featureName: Desaturate
+  DarkPeriod: 0.5
+  StopPeriod: 1
+  BackPeriod: 1
+  frameColor: {r: 0, g: 0, b: 0, a: 0}
+  DeadCanvas: {fileID: 0}
+  fadeInTime: 0.5
+  fadeOutTime: 1
+  Back: 0
 --- !u!1 &8729577191491090748
 GameObject:
   m_ObjectHideFlags: 0

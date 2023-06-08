@@ -6,7 +6,6 @@ public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
 
-
     private void Awake()
     {
         foreach(Sound s in sounds)
