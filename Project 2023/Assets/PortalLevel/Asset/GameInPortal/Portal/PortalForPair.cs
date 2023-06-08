@@ -47,6 +47,7 @@ public class PortalForPair : MonoBehaviour
 
         for (int i = 0; i < portalObjects.Count; ++i)
         {
+            if(portalObjects[i] == null) return;
             Vector3 objPos = transform.InverseTransformPoint(portalObjects[i].transform.position);
 
             if (objPos.z > 0.0f)

@@ -27,12 +27,15 @@ public class PortalPlaceSet : MonoBehaviour
     private int outPortal_In_state0 =3;
     private int inPortal_In_state2 = 1;
     private int outPortal_In_state2 = 2;
+    [Header("Enemy Placement")]
     public PortalContainer _container;
     public PortalPlacement portalplacement;
     public GameObject fantasyWorld;
     public GameObject enemyLevel1;
     public GameObject enemyLevel2;
     public GameObject enemyForest;
+    [Header("Bird")]
+    public GameObject birdControl;
     // state 0 :Level 1 : PortalIn in A , PortalOut in B; when level 1 success, PortalIn will change to 
     // state 1 : when level 1 success, PortalIn in E , PortalOut in D
     // state 2 : when player in forest, PortalOut will be placed in C
@@ -51,7 +54,7 @@ public class PortalPlaceSet : MonoBehaviour
             enemyForest.SetActive(false);
             enemyLevel1.SetActive(true);
             enemyLevel2.SetActive(false);
-            
+            birdControl.SetActive(false);
             FixedPortalOut.transform.position = _B.position;
             FixedPortalOut.transform.rotation = _B.rotation;
             NPC.transform.position = Level1_Placement.transform.position;
@@ -62,6 +65,7 @@ public class PortalPlaceSet : MonoBehaviour
             enemyForest.SetActive(true);
             enemyLevel1.SetActive(false);
             enemyLevel2.SetActive(false);
+            birdControl.SetActive(true);
             timer.GetComponent<TimerControl>().CountStart();
             NPC.transform.position = Forest_Placement.transform.position;
             if(first == true)
@@ -81,6 +85,7 @@ public class PortalPlaceSet : MonoBehaviour
             enemyForest.SetActive(false);
             enemyLevel1.SetActive(false);
             enemyLevel2.SetActive(true);
+            birdControl.SetActive(false);
             NPC.transform.position = Level2_Placement.transform.position;
             portalplacement.portalInNum = inPortal_In_state2;
             portalplacement.portalOutNum = outPortal_In_state2;
@@ -97,7 +102,7 @@ public class PortalPlaceSet : MonoBehaviour
             enemyForest.SetActive(false);
             enemyLevel1.SetActive(false);
             enemyLevel2.SetActive(true);
-            
+            birdControl.SetActive(false);
             _container.AppendGameObject = null;
             NPC.transform.position = Level2_Placement.transform.position;
             if(first == true)

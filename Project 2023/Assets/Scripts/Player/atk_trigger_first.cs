@@ -14,7 +14,7 @@ public class atk_trigger_first : MonoBehaviour
         {
             Vector3 point = other.ClosestPoint(transform.position);
             if(other.GetComponentInParent<Rockman>() != null) 
-                other.GetComponentInParent<AI>().takeDamage(10 * dmg,point);
+                other.GetComponentInParent<AI>().takeDamage(100 * dmg,point);
             else
                 other.GetComponentInParent<AI>().takeDamage(dmg,point);
         }
